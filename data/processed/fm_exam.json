@@ -1,0 +1,62 @@
+[
+  {
+    "exam": "FM",
+    "question": 1,
+    "content": "Bruce deposits 100 into a bank account. His account is credited interest at an annual nominal rate of interest of 4% convertible semiannually.\n\nAt the same time, Peter deposits 100 into a separate account. Peter's account is credited interest at an annual force of interest of $$\\delta$$.\n\nAfter 7.25 years, the value of each account is the same.\n\nCalculate $$\\delta$$.",
+    "choices": [
+      {
+        "letter": "A",
+        "content": "0.0388"
+      },
+      {
+        "letter": "B",
+        "content": "0.0392"
+      },
+      {
+        "letter": "C",
+        "content": "0.0396"
+      },
+      {
+        "letter": "D",
+        "content": "0.0404"
+      },
+      {
+        "letter": "E",
+        "content": "0.0414"
+      }
+    ],
+    "syllabus_category": "Time Value of Money",
+    "severity": 2,
+    "answer": "C"
+  },
+  {
+    "exam": "FM",
+    "question": 2,
+    "content": "Kathryn deposits 100 into an account at the beginning of each 4-year period for 40 years. The account credits interest at an annual effective interest rate of $$i$$.\n\nThe accumulated amount in the account at the end of 40 years is $$X$$, which is 5 times the accumulated amount in the account at the end of 20 years.\n\nCalculate $$X$$.",
+    "choices": [
+      {
+        "letter": "A",
+        "content": "4695"
+      },
+      {
+        "letter": "B",
+        "content": "5070"
+      },
+      {
+        "letter": "C",
+        "content": "5445"
+      },
+      {
+        "letter": "D",
+        "content": "5820"
+      },
+      {
+        "letter": "E",
+        "content": "6195"
+      }
+    ],
+    "syllabus_category": "Annuities",
+    "severity": 3,
+    "answer": "E"
+  }
+]
