@@ -1,10 +1,25 @@
+'use client'
+
 import React from 'react';
 import { Github, BookOpen, Target, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 const LandingPage = () => {
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  const handleStartPracticing = () => {
+    if (session) {
+      router.push('/home');
+    } else {
+      router.push('/login');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <div className="relative overflow-hidden">
@@ -18,11 +33,13 @@ const LandingPage = () => {
                 Personalized practice problems for <strong>P</strong>, <strong>FM</strong>, and more coming soon. Absolutely no strings attached, because exam prep shouldn&apos;t cost a fortune.
               </p>
               <div className="flex justify-center gap-4">
-                <Link href="/problems">
-                  <Button size="lg" className="bg-blue-900 hover:bg-blue-800">
-                    Start Practicing
-                  </Button>
-                </Link>
+                <Button 
+                  size="lg" 
+                  className="bg-blue-900 hover:bg-blue-800"
+                  onClick={handleStartPracticing}
+                >
+                  Start Practicing
+                </Button>
                 <a 
                   href="https://github.com/kleithegreat/openactuaries" 
                   target="_blank" 

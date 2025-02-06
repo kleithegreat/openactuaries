@@ -43,7 +43,7 @@ export default function RegisterPage() {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Register for Open Actuaries</CardTitle>
+          <CardTitle>Register an account</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
