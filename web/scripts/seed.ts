@@ -39,7 +39,8 @@ async function main() {
           choices: problem.choices,
           correctAnswer: problem.answer,
           syllabusCategory: problem.syllabus_category,
-          severity: problem.severity
+          severity: problem.severity,
+          explanation: problem.explanation
         }
       })
       inserted++
