@@ -36,7 +36,7 @@ export function Navbar() {
                   <Button variant="ghost">Login</Button>
                 </Link>
                 <Link href="/register">
-                  <Button>Register</Button>
+                  <Button variant="sky">Register</Button>
                 </Link>
               </>
             )}

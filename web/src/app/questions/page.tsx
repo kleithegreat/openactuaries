@@ -367,12 +367,7 @@ export default function QuestionsPage() {
                     <DrawerTitle>Explanation</DrawerTitle>
                   </DrawerHeader>
                   <div className="p-6 prose max-w-none h-[500px] overflow-auto">
-                    {serializedExplanation && (
-                      <MDXRemote
-                        key={currentProblem.id} // Add key to force re-render
-                        {...serializedExplanation}
-                      />
-                    )}
+                    {serializedExplanation && (<MDXRemote{...serializedExplanation}/>)}
                   </div>
                 </div>
               </DrawerContent>
