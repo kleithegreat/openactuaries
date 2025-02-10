@@ -3,13 +3,13 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
 model Problem {
-  id               String    @id @default(cuid())
+  id               String           @id @default(cuid())
   exam             String
   questionNumber   Int
   statement        String
@@ -18,37 +18,39 @@ model Problem {
   explanation      String
   syllabusCategory String
   severity         Int
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  attempts         ProblemAttempt[]
 
   @@unique([exam, questionNumber])
   @@index([exam, syllabusCategory])
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  password      String
-  accounts      Account[]
-  sessions      Session[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id        String       @id @default(cuid())
+  name      String?
+  email     String       @unique
+  password  String
+  accounts  Account[]
+  sessions  Session[]
+  profile   UserProfile?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -61,4 +63,59 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UserProfile {
+  id                String             @id @default(cuid())
+  userId            String             @unique
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  goalType          String             @default("PROBLEMS") // "PROBLEMS" or "MINUTES"
+  goalAmount        Int                @default(10) // units based on goalType
+  examRegistrations ExamRegistration[]
+  studySessions     StudySession[]
+  problemAttempts   ProblemAttempt[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+}
+
+model ExamRegistration {
+  id        String      @id @default(cuid())
+  profileId String
+  profile   UserProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  examType  String
+  examDate  DateTime
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+model StudySession {
+  id              String           @id @default(cuid())
+  profileId       String
+  profile         UserProfile      @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  startTime       DateTime
+  endTime         DateTime?
+  minutesSpent    Int?
+  notes           String?
+  problemAttempts ProblemAttempt[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+model ProblemAttempt {
+  id             String        @id @default(cuid())
+  profileId      String
+  profile        UserProfile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  problemId      String
+  problem        Problem       @relation(fields: [problemId], references: [id])
+  studySessionId String?
+  studySession   StudySession? @relation(fields: [studySessionId], references: [id])
+  userAnswer     String
+  isCorrect      Boolean
+  timeSpent      Int // in seconds
+  confidence     Int? // confidence rating 5 being highest
+  reviewMarked   Boolean       @default(false)
+  notes          String? // user's notes
+  attemptNumber  Int
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 }
