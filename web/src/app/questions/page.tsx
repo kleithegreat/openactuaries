@@ -314,7 +314,7 @@ export default function QuestionsPage() {
               ))}
 
               {checkedAnswers[currentProblem.id] && (
-                <Alert variant={isCurrentAnswerCorrect ? "default" : "destructive"}>
+                <Alert variant={isCurrentAnswerCorrect ? "green" : "rose"}>
                   <div className="flex items-center gap-2">
                     {isCurrentAnswerCorrect ? (
                       <Check className="h-4 w-4" />
