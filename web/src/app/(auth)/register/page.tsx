@@ -48,7 +48,7 @@ export default function RegisterPage() {
         throw new Error('Failed to sign in after registration')
       }
 
-      router.push('/home')
+      router.push('/setup')
       router.refresh()
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : 'Something went wrong')
