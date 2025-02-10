@@ -27,7 +27,7 @@ export default function LoginPage() {
         return
       }
 
-      router.push('/')
+      router.push('/home')
       router.refresh()
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : 'Something went wrong')

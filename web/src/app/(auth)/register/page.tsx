@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
@@ -12,11 +13,15 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsLoading(true)
+    setError('')
+
     try {
-      const res = await fetch('/api/register', {
+      const registerRes = await fetch('/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -28,14 +33,27 @@ export default function RegisterPage() {
         }),
       })
 
-      if (res.ok) {
-        router.push('/login')
-      } else {
-        const data = await res.json()
-        setError(data.error || 'Something went wrong')
+      if (!registerRes.ok) {
+        const data = await registerRes.json()
+        throw new Error(data.error || 'Registration failed')
       }
+
+      const signInRes = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      })
+
+      if (signInRes?.error) {
+        throw new Error('Failed to sign in after registration')
+      }
+
+      router.push('/home')
+      router.refresh()
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : 'Something went wrong')
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -58,6 +76,7 @@ export default function RegisterPage() {
                 onChange={(e) => setName(e.target.value)}
                 className="w-full p-2 border rounded-md"
                 required
+                disabled={isLoading}
               />
             </div>
             <div className="space-y-2">
@@ -71,6 +90,7 @@ export default function RegisterPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full p-2 border rounded-md"
                 required
+                disabled={isLoading}
               />
             </div>
             <div className="space-y-2">
@@ -84,13 +104,19 @@ export default function RegisterPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full p-2 border rounded-md"
                 required
+                disabled={isLoading}
+                minLength={6}
               />
             </div>
             {error && (
               <div className="text-red-500 text-sm">{error}</div>
             )}
-            <Button type="submit" className="w-full">
-              Register
+            <Button 
+              type="submit" 
+              className="w-full"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Creating account...' : 'Register'}
             </Button>
           </form>
         </CardContent>

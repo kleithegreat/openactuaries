@@ -22,7 +22,7 @@ export function Navbar() {
               <div>Loading...</div>
             ) : session ? (
               <>
-                <span>Signed in as {session.user?.name || session.user?.email}</span>
+                <span>Signed in as <strong>{session.user?.name || session.user?.email}</strong></span>
                 <Button
                   variant="outline"
                   onClick={() => signOut({ callbackUrl: '/' })}

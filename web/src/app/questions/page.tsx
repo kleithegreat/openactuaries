@@ -35,45 +35,36 @@ export default function QuestionsPage() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   useEffect(() => {
-    const savedIndex = localStorage.getItem(LAST_QUESTION_KEY)
-    const savedExam = localStorage.getItem(LAST_EXAM_KEY)
-    const savedCategory = localStorage.getItem(LAST_CATEGORY_KEY)
-    
-    if (savedIndex) {
-      setCurrentProblemIndex(parseInt(savedIndex))
-    }
-    if (savedExam || savedCategory) {
-      setFilters(prev => ({
-        exam: savedExam || prev.exam,
-        syllabusCategory: savedCategory || prev.syllabusCategory
-      }))
-    }
-  }, [])
-
-  useEffect(() => {
-    localStorage.setItem(LAST_QUESTION_KEY, currentProblemIndex.toString())
-    localStorage.setItem(LAST_EXAM_KEY, filters.exam)
-    localStorage.setItem(LAST_CATEGORY_KEY, filters.syllabusCategory)
-  }, [currentProblemIndex, filters])
-
-  useEffect(() => {
     async function fetchProblems() {
       try {
         const response = await fetch('/api/problems')
         if (!response.ok) throw new Error('Failed to fetch problems')
         const data = await response.json()
-        setProblems(data)
         
-        if (data.length > 0 && !localStorage.getItem(LAST_EXAM_KEY)) {
-          setFilters({
-            exam: data[0].exam,
-            syllabusCategory: 'any',
-          })
-        }
-
         if (data.length > 0) {
-          const targetIndex = parseInt(localStorage.getItem(LAST_QUESTION_KEY) || '0')
-          const problem = data[targetIndex] || data[0]
+          const savedExam = localStorage.getItem(LAST_EXAM_KEY)
+          const savedCategory = localStorage.getItem(LAST_CATEGORY_KEY)
+          const savedIndex = parseInt(localStorage.getItem(LAST_QUESTION_KEY) || '0')
+          
+          const initialExam = savedExam || data[0].exam
+          const initialCategory = savedCategory || 'any'
+          
+          const validProblems = data.filter((p: Problem) => 
+            p.exam === initialExam && 
+            (initialCategory === 'any' || p.syllabusCategory === initialCategory)
+          )
+
+          const validIndex = validProblems.length > 0 ? 
+            data.findIndex((p: Problem) => p.id === validProblems[0].id) : 0
+          
+          setProblems(data)
+          setFilters({
+            exam: initialExam,
+            syllabusCategory: initialCategory,
+          })
+          setCurrentProblemIndex(savedIndex < data.length ? savedIndex : validIndex)
+          
+          const problem = data[savedIndex < data.length ? savedIndex : validIndex]
           
           const [serializedStatement, serializedExp] = await Promise.all([
             serialize(problem.statement, {
@@ -115,6 +106,12 @@ export default function QuestionsPage() {
   }, [])
 
   useEffect(() => {
+    localStorage.setItem(LAST_QUESTION_KEY, currentProblemIndex.toString())
+    localStorage.setItem(LAST_EXAM_KEY, filters.exam)
+    localStorage.setItem(LAST_CATEGORY_KEY, filters.syllabusCategory)
+  }, [currentProblemIndex, filters])
+
+  useEffect(() => {
     async function serializeNewProblem() {
       if (!problems.length || currentProblemIndex >= problems.length) return
 
@@ -134,7 +131,7 @@ export default function QuestionsPage() {
           }
         })
       ])
-      
+
       setSerializedContent(serializedStatement)
       setSerializedExplanation(serializedExp)
 
@@ -362,7 +359,7 @@ export default function QuestionsPage() {
                 <Button>View Explanation</Button>
               </DrawerTrigger>
               <DrawerContent>
-                <div className="mx-auto w-full max-w-4xl">
+              <div className="mx-auto w-full max-w-4xl">
                   <DrawerHeader>
                     <DrawerTitle>Explanation</DrawerTitle>
                   </DrawerHeader>
