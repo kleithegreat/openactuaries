@@ -16,4 +16,3 @@ todo:
     - get all P and FM questions
     - start testing on other
 - make a proper README
-- add a license
