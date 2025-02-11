@@ -4,9 +4,9 @@ import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
 
-const NUM_USERS = 50
-const DAYS_OF_HISTORY = 90
-const STUDY_SESSIONS_PER_USER = 30
+const NUM_USERS = 10
+const DAYS_OF_HISTORY = 365
+const STUDY_SESSIONS_PER_USER = 300
 const PROBLEMS_PER_SESSION = 15
 
 type UserWithProfile = User & {

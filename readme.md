@@ -4,8 +4,15 @@ todo:
     - algorithm
 - analytics page
     - frontend
-    - seed sample data for testing
+        - review and perfect each widget
+        - resize some widgets
+        - ensure theming
+        - use more shadcn charts?
+        - fix add widget ordering
+        - move movement arrows outide the grid
+    - API for each widget
     - link short analytics to home page
+    - save user settings to database instead of local storage
 - wiki
     - frontend
     - markdown files (content)
