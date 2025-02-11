@@ -1,5 +1,6 @@
 import { PrismaClient, User, Problem, UserProfile } from '@prisma/client'
 import { faker } from '@faker-js/faker'
+import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
 
@@ -63,11 +64,23 @@ async function clearExistingData() {
 async function createUsers(): Promise<UserWithProfile[]> {
   console.log('Creating test users...')
   
-  const userData = Array.from({ length: NUM_USERS }, () => ({
-    name: faker.person.fullName(),
-    email: faker.internet.email(),
-    password: faker.internet.password(),
-  }))
+  const testPassword = 'password123'
+  const hashedTestPassword = await bcrypt.hash(testPassword, 10)
+  
+  const testUser = {
+    name: 'Test User',
+    email: 'test@example.com',
+    password: hashedTestPassword,
+  }
+  
+  const userData = [
+    testUser,
+    ...await Promise.all(Array.from({ length: NUM_USERS - 1 }, async () => ({
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      password: await bcrypt.hash(faker.internet.password(), 10),
+    })))
+  ]
 
   const users = await prisma.$transaction(
     userData.map(data => 
