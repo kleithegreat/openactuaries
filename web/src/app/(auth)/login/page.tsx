@@ -1,6 +1,6 @@
-'use client'
+"use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
@@ -17,12 +17,33 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  useEffect(() => {
-    if (status === 'authenticated') {
+  const checkProfileAndRedirect = useCallback(async () => {
+    try {
+      const response = await fetch('/api/profile')
+      const data = await response.json()
+      
+      const needsSetup = !data.goalType && 
+                        !data.goalAmount && 
+                        (!data.examRegistrations || data.examRegistrations.length === 0)
+      
+      if (needsSetup) {
+        router.push('/setup')
+      } else {
+        router.push('/home')
+      }
+      router.refresh()
+    } catch (error) {
+      console.error('Error checking profile:', error)
       router.push('/home')
       router.refresh()
     }
-  }, [status, router])
+  }, [router])
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      checkProfileAndRedirect()
+    }
+  }, [status, checkProfileAndRedirect])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -42,8 +63,6 @@ export default function LoginPage() {
         return
       }
 
-      router.push('/home')
-      router.refresh()
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : 'Something went wrong')
       setIsLoading(false)

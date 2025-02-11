@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
@@ -22,6 +22,7 @@ export default function SetupPage() {
   const router = useRouter()
   
   const [isLoading, setIsLoading] = useState(false)
+  const [isNewUser, setIsNewUser] = useState(true)
   const [goalType, setGoalType] = useState('PROBLEMS')
   const [goalAmount, setGoalAmount] = useState('')
   const [selectedExams, setSelectedExams] = useState<{
@@ -39,6 +40,8 @@ export default function SetupPage() {
       fetch('/api/profile')
         .then(res => res.json())
         .then(data => {
+          setIsNewUser(!data.goalType && !data.goalAmount && (!data.examRegistrations || data.examRegistrations.length === 0))
+          
           if (data.goalType) setGoalType(data.goalType)
           if (data.goalAmount) setGoalAmount(data.goalAmount.toString())
           if (data.examRegistrations?.length > 0) {
@@ -117,7 +120,6 @@ export default function SetupPage() {
     setSelectedExams(newExams)
   }
 
-  // Loading overlay
   const LoadingOverlay = () => (
     <div className="fixed inset-0 bg-white/60 backdrop-blur-sm z-50 flex items-center justify-center">
       <div className="bg-white/80 p-4 rounded-lg shadow-lg flex items-center gap-3">
@@ -139,50 +141,60 @@ export default function SetupPage() {
     <div className="min-h-screen bg-stone-50 relative">
       {isLoading && <LoadingOverlay />}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Let&apos;s Customize Your Study Plan
-          </h1>
-          <p className="text-xl text-gray-600">
-            Set your goals and exam dates for a personalized learning experience
-          </p>
-        </div>
+        {isNewUser ? (
+          <>
+            <div className="text-center mb-12">
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                Let&apos;s Customize Your Study Plan
+              </h1>
+              <p className="text-xl text-gray-600">
+                Set your goals and exam dates for a personalized learning experience
+              </p>
+            </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          <Card className="border-0 shadow-lg">
-            <CardContent className="pt-6">
-              <div className="flex flex-col items-center text-center">
-                <Target className="h-12 w-12 text-sky-900 mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Set Your Goals</h3>
-                <p className="text-gray-600">
-                  Choose how you want to track your progress
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="border-0 shadow-lg">
-            <CardContent className="pt-6">
-              <div className="flex flex-col items-center text-center">
-                <CalendarIcon className="h-12 w-12 text-sky-900 mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Plan Your Schedule</h3>
-                <p className="text-gray-600">
-                  Register your exam dates for optimal preparation
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="border-0 shadow-lg">
-            <CardContent className="pt-6">
-              <div className="flex flex-col items-center text-center">
-                <Clock className="h-12 w-12 text-sky-900 mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Track Your Time</h3>
-                <p className="text-gray-600">
-                  Set daily study targets that work for you
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+              <Card className="border-0 shadow-lg">
+                <CardContent className="pt-6">
+                  <div className="flex flex-col items-center text-center">
+                    <Target className="h-12 w-12 text-sky-900 mb-4" />
+                    <h3 className="text-xl font-semibold mb-2">Set Your Goals</h3>
+                    <p className="text-gray-600">
+                      Choose how you want to track your progress
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="border-0 shadow-lg">
+                <CardContent className="pt-6">
+                  <div className="flex flex-col items-center text-center">
+                    <CalendarIcon className="h-12 w-12 text-sky-900 mb-4" />
+                    <h3 className="text-xl font-semibold mb-2">Plan Your Schedule</h3>
+                    <p className="text-gray-600">
+                      Register your exam dates for optimal preparation
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="border-0 shadow-lg">
+                <CardContent className="pt-6">
+                  <div className="flex flex-col items-center text-center">
+                    <Clock className="h-12 w-12 text-sky-900 mb-4" />
+                    <h3 className="text-xl font-semibold mb-2">Track Your Time</h3>
+                    <p className="text-gray-600">
+                      Set daily study targets that work for you
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </>
+        ) : (
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              Study Settings
+            </h1>
+          </div>
+        )}
 
         <Card className="border-0 shadow-lg mb-20">
           <CardHeader>
@@ -324,35 +336,17 @@ export default function SetupPage() {
       </div>
 
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t py-4 px-4 shadow-lg">
-        <div className="max-w-4xl mx-auto flex justify-end">
-          <Button 
-            onClick={handleSubmit} 
-            className="bg-sky-900 hover:bg-sky-800"
-            size="lg"
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Saving...
-              </>
-            ) : (
-              'Save Settings'
-            )}
-          </Button>
-        </div>
-      </div>
-
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t py-4 px-4 shadow-lg">
         <div className="max-w-4xl mx-auto flex justify-end gap-4">
-          <Button 
-            onClick={() => router.push('/home')}
-            variant="outline"
-            size="lg"
-            disabled={isLoading}
-          >
-            Back to Home
-          </Button>
+          {!isNewUser && (
+            <Button 
+              onClick={() => router.push('/home')}
+              variant="outline"
+              size="lg"
+              disabled={isLoading}
+            >
+              Back to Home
+            </Button>
+          )}
           <Button 
             onClick={handleSubmit} 
             className="bg-sky-900 hover:bg-sky-800"

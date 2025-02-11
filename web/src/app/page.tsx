@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Github, BookOpen, Target, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,12 +9,28 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 const LandingPage = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
+  const [isNewUser, setIsNewUser] = useState(true);
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      fetch('/api/profile')
+        .then(res => res.json())
+        .then(data => {
+          setIsNewUser(!data.goalType && !data.goalAmount && (!data.examRegistrations || data.examRegistrations.length === 0))
+        })
+        .catch(err => console.error('Error fetching profile:', err))
+    }
+  }, [status])
 
   const handleStartPracticing = () => {
     if (session) {
-      router.push('/home');
+      if (isNewUser) {
+        router.push('/setup');
+      } else {
+        router.push('/home');
+      }
     } else {
       router.push('/login');
     }
@@ -38,7 +54,7 @@ const LandingPage = () => {
                   className="bg-sky-900 hover:bg-sky-900"
                   onClick={handleStartPracticing}
                 >
-                  {session ? "Go to my home" : "Start Practicing"}
+                  {session ? (isNewUser ? "Complete Setup" : "Go to my home") : "Start Practicing"}
                 </Button>
                 <a 
                   href="https://github.com/kleithegreat/openactuaries" 

@@ -6,12 +6,24 @@ import { usePathname } from "next/navigation"
 import { Button } from "../ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { Menu } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export function Navbar() {
   const { data: session, status } = useSession()
   const pathname = usePathname()
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [isNewUser, setIsNewUser] = useState(true)
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      fetch('/api/profile')
+        .then(res => res.json())
+        .then(data => {
+          setIsNewUser(!data.goalType && !data.goalAmount && (!data.examRegistrations || data.examRegistrations.length === 0))
+        })
+        .catch(err => console.error('Error fetching profile:', err))
+    }
+  }, [status])
 
   const handleMouseMove = (event: React.MouseEvent<HTMLSpanElement>) => {
     const rect = event.currentTarget.getBoundingClientRect()
@@ -23,6 +35,7 @@ export function Navbar() {
 
   const getLinkDestination = () => {
     if (!session) return "/"
+    if (isNewUser) return "/"
     if (pathname === "/home") return "/"
     return "/home"
   }
