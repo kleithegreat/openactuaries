@@ -1,0 +1,24 @@
+.shiny-text {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  --mouse-x: 0px;
+  --mouse-y: 0px;
+}
+
+.shiny-text::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle 80px at var(--mouse-x) var(--mouse-y), rgba(255, 255, 255, 0.6), transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.shiny-text:hover::before {
+  opacity: 1;
+}

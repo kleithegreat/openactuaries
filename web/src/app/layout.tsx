@@ -1,7 +1,8 @@
 import './globals.css'
+import '../components/navbar/shiny-text.css'
 import 'katex/dist/katex.min.css'
 import { Inter } from 'next/font/google'
-import { Navbar } from '@/components/Navbar'
+import { Navbar } from '@/components/navbar/Navbar'
 import AuthProvider from '@/components/AuthProvider'
 
 const inter = Inter({ subsets: ['latin'] })
