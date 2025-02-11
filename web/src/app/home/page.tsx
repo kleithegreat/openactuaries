@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { BookOpen, Target, Clock, History } from 'lucide-react';
+import { Compass, Search, BookOpen, ExternalLink, BarChart } from 'lucide-react';
 import Link from 'next/link';
 
 const HomePage = () => {
@@ -38,69 +38,50 @@ const HomePage = () => {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          <Card className="hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Target className="h-5 w-5 text-sky-900" />
-                Quick Practice
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">
-                Jump right into practice problems tailored to your current progress.
-              </p>
-              <Link href="/questions">
-                <Button className="w-full bg-sky-900 hover:bg-sky-800">
-                  Start Practice
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 auto-rows-fr">
+          <Link href="/guided-practice" className="block h-full">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Compass className="h-5 w-5 text-sky-900" />
+                  Recommended Practice
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">
+                  Get personalized practice problems based on your progress and areas for improvement.
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
 
-          <Card className="hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Clock className="h-5 w-5 text-sky-900" />
-                Timed Quiz
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">
-                Test yourself under exam-like conditions with timed practice sessions.
-              </p>
-              <Link href="/quiz">
-                <Button className="w-full bg-sky-900 hover:bg-sky-800">
-                  Start Quiz
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-
-          <Card className="hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <History className="h-5 w-5 text-sky-900" />
-                Resume Progress
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">
-                Continue where you left off in your last study session.
-              </p>
-              <Link href="/history">
-                <Button className="w-full bg-sky-900 hover:bg-sky-800">
-                  View History
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
+          <Link href="/questions" className="block h-full">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Search className="h-5 w-5 text-sky-900" />
+                  Browse All Questions
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">
+                  Explore our complete question bank and practice specific topics.
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
 
         {/* Study Progress Overview */}
         <Card className="mb-8">
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Your Study Progress</CardTitle>
+            <Link href="/analytics">
+              <Button variant="ghost" size="sm" className="gap-2">
+                <BarChart className="h-4 w-4" />
+                View Analytics
+              </Button>
+            </Link>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
@@ -122,8 +103,14 @@ const HomePage = () => {
 
         {/* Recommended Topics */}
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Recommended Topics</CardTitle>
+            <Link href="/wiki">
+              <Button variant="ghost" size="sm" className="gap-2">
+                <ExternalLink className="h-4 w-4" />
+                Exam Wiki
+              </Button>
+            </Link>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

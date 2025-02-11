@@ -21,6 +21,7 @@ export default function SetupPage() {
   const { status } = useSession()
   const router = useRouter()
   
+  const [isLoading, setIsLoading] = useState(false)
   const [goalType, setGoalType] = useState('PROBLEMS')
   const [goalAmount, setGoalAmount] = useState('')
   const [selectedExams, setSelectedExams] = useState<{
@@ -34,6 +35,7 @@ export default function SetupPage() {
     if (status === 'unauthenticated') {
       router.push('/login')
     } else if (status === 'authenticated') {
+      setIsLoading(true)
       fetch('/api/profile')
         .then(res => res.json())
         .then(data => {
@@ -47,6 +49,7 @@ export default function SetupPage() {
           }
         })
         .catch(err => console.error('Error fetching profile:', err))
+        .finally(() => setIsLoading(false))
     }
   }, [status, router])
 
@@ -67,7 +70,8 @@ export default function SetupPage() {
 
   const handleSubmit = async () => {
     if (!validateForm()) return
-  
+    
+    setIsLoading(true)
     try {
       const response = await fetch('/api/profile/setup', {
         method: 'POST',
@@ -92,6 +96,8 @@ export default function SetupPage() {
       }, 1500)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save settings')
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -111,16 +117,27 @@ export default function SetupPage() {
     setSelectedExams(newExams)
   }
 
+  // Loading overlay
+  const LoadingOverlay = () => (
+    <div className="fixed inset-0 bg-white/60 backdrop-blur-sm z-50 flex items-center justify-center">
+      <div className="bg-white/80 p-4 rounded-lg shadow-lg flex items-center gap-3">
+        <Loader2 className="h-6 w-6 animate-spin text-sky-900" />
+        <span className="text-sky-900 font-medium">Loading...</span>
+      </div>
+    </div>
+  )
+
   if (status === 'loading') {
     return (
       <div className="min-h-screen bg-stone-50 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-sky-900" />
+        <LoadingOverlay />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-stone-50">
+    <div className="min-h-screen bg-stone-50 relative">
+      {isLoading && <LoadingOverlay />}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
@@ -181,6 +198,7 @@ export default function SetupPage() {
                 value={goalType}
                 onValueChange={setGoalType}
                 className="flex flex-col space-y-2"
+                disabled={isLoading}
               >
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="PROBLEMS" id="problems" />
@@ -204,6 +222,7 @@ export default function SetupPage() {
                   className="w-48"
                   min="1"
                   max={goalType === 'MINUTES' ? "720" : "100"}
+                  disabled={isLoading}
                 />
                 <span className="text-gray-500 self-center">
                   {goalType === 'MINUTES' ? 'minutes' : 'problems'} per day
@@ -224,6 +243,7 @@ export default function SetupPage() {
                   onClick={addExam} 
                   type="button"
                   className="border-sky-900 text-sky-900 hover:bg-sky-50"
+                  disabled={isLoading}
                 >
                   Add Another Exam
                 </Button>
@@ -234,6 +254,7 @@ export default function SetupPage() {
                   <Select
                     value={exam.exam}
                     onValueChange={(value) => updateExam(index, 'exam', value)}
+                    disabled={isLoading}
                   >
                     <SelectTrigger className="w-[180px]">
                       <SelectValue placeholder="Select exam" />
@@ -252,6 +273,7 @@ export default function SetupPage() {
                           "w-[240px] justify-start text-left font-normal",
                           !exam.date && "text-muted-foreground"
                         )}
+                        disabled={isLoading}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {exam.date ? format(exam.date, "PPP") : <span>Pick a date</span>}
@@ -275,7 +297,7 @@ export default function SetupPage() {
                     size="icon"
                     onClick={() => removeExam(index)}
                     className="hover:bg-rose-900 hover:text-primary-foreground"
-                    disabled={selectedExams.length === 1}
+                    disabled={selectedExams.length === 1 || isLoading}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -307,8 +329,16 @@ export default function SetupPage() {
             onClick={handleSubmit} 
             className="bg-sky-900 hover:bg-sky-800"
             size="lg"
+            disabled={isLoading}
           >
-            Save Settings
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              'Save Settings'
+            )}
           </Button>
         </div>
       </div>

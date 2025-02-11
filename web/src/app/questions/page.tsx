@@ -13,6 +13,7 @@ import remarkGfm from 'remark-gfm'
 import type { Problem, Choice } from '@/types'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer"
+import { Skeleton } from '@/components/ui/skeleton'
 
 const LAST_QUESTION_KEY = 'lastQuestionIndex'
 const LAST_EXAM_KEY = 'lastExam'
@@ -33,6 +34,47 @@ export default function QuestionsPage() {
     syllabusCategory: 'any',
   })
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+
+  const LoadingState = () => {
+    return (
+      <div className="space-y-8">
+        <div className="flex gap-4">
+          <Skeleton className="h-10 w-[180px]" />
+          <Skeleton className="h-10 w-[280px]" />
+          <Skeleton className="h-10 w-[180px]" />
+        </div>
+  
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-8 w-48" />
+          </CardHeader>
+          <CardContent>
+            <div className="flex gap-6">
+              <div className="flex-1 space-y-4">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-[90%]" />
+                <Skeleton className="h-4 w-[95%]" />
+                <Skeleton className="h-4 w-[85%]" />
+              </div>
+              <div className="w-1/2 space-y-3">
+                {[1, 2, 3, 4].map((i) => (
+                  <Skeleton key={i} className="h-20 w-full" />
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+  
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4">
+          <div className="container mx-auto flex justify-between items-center max-w-4xl">
+            <Skeleton className="h-10 w-24" />
+            <Skeleton className="h-10 w-32" />
+            <Skeleton className="h-10 w-24" />
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   useEffect(() => {
     async function fetchProblems() {
@@ -157,7 +199,11 @@ export default function QuestionsPage() {
   });
 
   if (loading) {
-    return <div className="container mx-auto px-4 py-8">Loading questions...</div>
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <LoadingState />
+      </div>
+    )
   }
 
   if (error) {
@@ -209,11 +255,7 @@ export default function QuestionsPage() {
   const isCurrentAnswerCorrect = selectedAnswers[currentProblem.id] === currentProblem.correctAnswer
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Question Browser</h1>
-      </div>
-  
+    <div className="container mx-auto px-4 py-8">  
       <div className="flex gap-4 mb-8">
         <Select
           value={filters.exam}
