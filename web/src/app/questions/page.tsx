@@ -14,12 +14,14 @@ import type { Problem, Choice } from '@/types'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer"
 import { Skeleton } from '@/components/ui/skeleton'
+import { useRouter } from 'next/navigation'
 
 const LAST_QUESTION_KEY = 'lastQuestionIndex'
 const LAST_EXAM_KEY = 'lastExam'
 const LAST_CATEGORY_KEY = 'lastCategory'
 
 export default function QuestionsPage() {
+  const router = useRouter()
   const [problems, setProblems] = useState<Problem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -255,7 +257,7 @@ export default function QuestionsPage() {
   const isCurrentAnswerCorrect = selectedAnswers[currentProblem.id] === currentProblem.correctAnswer
 
   return (
-    <div className="container mx-auto px-4 py-8">  
+    <div className="container mx-auto px-4 py-8 pb-24">
       <div className="flex gap-4 mb-8">
         <Select
           value={filters.exam}
@@ -334,7 +336,7 @@ export default function QuestionsPage() {
                 <MDXRemote {...serializedContent} />
               </div>
             </div>
-
+  
             <div className="w-1/2 space-y-3">
               {currentProblem.choices.map((choice, index) => (
                 <button
@@ -354,7 +356,7 @@ export default function QuestionsPage() {
                   </div>
                 </button>
               ))}
-
+  
               {checkedAnswers[currentProblem.id] && (
                 <Alert variant={isCurrentAnswerCorrect ? "green" : "rose"}>
                   <div className="flex items-center gap-2">
@@ -375,52 +377,64 @@ export default function QuestionsPage() {
           </div>
         </CardContent>
       </Card>
-
+  
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4">
-        <div className="container mx-auto flex justify-between items-center max-w-4xl">
+        <div className="container mx-auto flex items-center justify-between max-w-4xl">
           <Button
-            variant="outline"
-            onClick={() => navigateQuestion('prev')}
-            disabled={filteredProblems.findIndex(p => p.id === currentProblem.id) === 0}
-            className="w-24 disabled:opacity-50 disabled:cursor-not-allowed"
+            variant="ghost"
+            onClick={() => router.push('/home')}
+            className="text-sky-900 hover:text-sky-800"
           >
-            Previous
+            Back to Home
           </Button>
-
-          {selectedAnswers[currentProblem.id] && !checkedAnswers[currentProblem.id] && (
-            <Button 
-              onClick={() => checkAnswer(currentProblem.id)}
+  
+          <div className="flex items-center gap-4">
+            <Button
+              variant="outline"
+              onClick={() => navigateQuestion('prev')}
+              disabled={filteredProblems.findIndex(p => p.id === currentProblem.id) === 0}
+              className="w-24"
             >
-              Check Answer
+              Previous
             </Button>
-          )}
-
-          {checkedAnswers[currentProblem.id] && (
-            <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-              <DrawerTrigger asChild>
-                <Button>View Explanation</Button>
-              </DrawerTrigger>
-              <DrawerContent>
-              <div className="mx-auto w-full max-w-4xl">
-                  <DrawerHeader>
-                    <DrawerTitle>Explanation</DrawerTitle>
-                  </DrawerHeader>
-                  <div className="p-6 prose max-w-none h-[500px] overflow-auto">
-                    {serializedExplanation && (<MDXRemote{...serializedExplanation}/>)}
-                  </div>
-                </div>
-              </DrawerContent>
-            </Drawer>
-          )}
-
-          <Button
-            variant="outline"
-            onClick={() => navigateQuestion('next')}
-            disabled={filteredProblems.findIndex(p => p.id === currentProblem.id) === filteredProblems.length - 1}
-            className="w-24 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Next
-          </Button>
+  
+            <div className="w-36">
+              {!checkedAnswers[currentProblem.id] ? (
+                <Button 
+                  onClick={() => checkAnswer(currentProblem.id)}
+                  disabled={!selectedAnswers[currentProblem.id]}
+                  className="bg-sky-900 hover:bg-sky-800 w-full"
+                >
+                  Check Answer
+                </Button>
+              ) : (
+                <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+                  <DrawerTrigger asChild>
+                    <Button className="bg-sky-900 hover:bg-sky-800 w-full">View Explanation</Button>
+                  </DrawerTrigger>
+                  <DrawerContent>
+                    <div className="mx-auto w-full max-w-4xl">
+                      <DrawerHeader>
+                        <DrawerTitle>Explanation</DrawerTitle>
+                      </DrawerHeader>
+                      <div className="p-6 prose max-w-none h-[500px] overflow-auto">
+                        {serializedExplanation && (<MDXRemote {...serializedExplanation} />)}
+                      </div>
+                    </div>
+                  </DrawerContent>
+                </Drawer>
+              )}
+            </div>
+  
+            <Button
+              variant="outline"
+              onClick={() => navigateQuestion('next')}
+              disabled={filteredProblems.findIndex(p => p.id === currentProblem.id) === filteredProblems.length - 1}
+              className="w-24"
+            >
+              Next
+            </Button>
+          </div>
         </div>
       </div>
     </div>

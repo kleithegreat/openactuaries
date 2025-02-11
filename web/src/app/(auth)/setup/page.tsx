@@ -342,6 +342,34 @@ export default function SetupPage() {
           </Button>
         </div>
       </div>
+
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t py-4 px-4 shadow-lg">
+        <div className="max-w-4xl mx-auto flex justify-end gap-4">
+          <Button 
+            onClick={() => router.push('/home')}
+            variant="outline"
+            size="lg"
+            disabled={isLoading}
+          >
+            Back to Home
+          </Button>
+          <Button 
+            onClick={handleSubmit} 
+            className="bg-sky-900 hover:bg-sky-800"
+            size="lg"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              'Save Settings'
+            )}
+          </Button>
+        </div>
+      </div>
     </div>
   )
 }

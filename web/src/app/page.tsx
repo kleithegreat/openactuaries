@@ -38,7 +38,7 @@ const LandingPage = () => {
                   className="bg-sky-900 hover:bg-sky-900"
                   onClick={handleStartPracticing}
                 >
-                  Start Practicing
+                  {session ? "Go to my home" : "Start Practicing"}
                 </Button>
                 <a 
                   href="https://github.com/kleithegreat/openactuaries" 

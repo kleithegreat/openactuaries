@@ -2,6 +2,7 @@
 
 import { useSession, signOut } from "next-auth/react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Button } from "../ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { Menu } from "lucide-react"
@@ -9,6 +10,7 @@ import { useState } from "react"
 
 export function Navbar() {
   const { data: session, status } = useSession()
+  const pathname = usePathname()
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
 
   const handleMouseMove = (event: React.MouseEvent<HTMLSpanElement>) => {
@@ -19,12 +21,18 @@ export function Navbar() {
     })
   }
 
+  const getLinkDestination = () => {
+    if (!session) return "/"
+    if (pathname === "/home") return "/"
+    return "/home"
+  }
+
   return (
     <nav className="bg-white shadow-sm border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link href={session ? "/home" : "/"} className="text-xl font-bold relative group">
+            <Link href={getLinkDestination()} className="text-xl font-bold relative group">
               <span
                 className="shiny-text"
                 onMouseMove={handleMouseMove}
