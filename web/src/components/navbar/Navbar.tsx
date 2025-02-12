@@ -1,29 +1,48 @@
 'use client'
 
-import { useSession, signOut } from "next-auth/react"
+import { signOut } from "next-auth/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "../ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { Menu } from "lucide-react"
 import { useState, useEffect } from "react"
+import type { User } from "next-auth"
 
-export function Navbar() {
-  const { data: session, status } = useSession()
+interface NavbarProps {
+  user: User | null | undefined
+}
+
+export function Navbar({ user }: NavbarProps) {
   const pathname = usePathname()
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const [isNewUser, setIsNewUser] = useState(true)
+  const [isNewUser, setIsNewUser] = useState<boolean | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    if (status === 'authenticated') {
-      fetch('/api/profile')
-        .then(res => res.json())
-        .then(data => {
-          setIsNewUser(!data.goalType && !data.goalAmount && (!data.examRegistrations || data.examRegistrations.length === 0))
-        })
-        .catch(err => console.error('Error fetching profile:', err))
+    const fetchUserProfile = async () => {
+      if (!user) {
+        setIsLoading(false)
+        return
+      }
+
+      try {
+        const res = await fetch('/api/profile')
+        if (!res.ok) {
+          throw new Error('Failed to fetch profile')
+        }
+        const data = await res.json()
+        setIsNewUser(!data.goalType && !data.goalAmount && (!data.examRegistrations || data.examRegistrations.length === 0))
+      } catch (err) {
+        console.error('Error fetching profile:', err)
+        setIsNewUser(true)
+      } finally {
+        setIsLoading(false)
+      }
     }
-  }, [status])
+
+    fetchUserProfile()
+  }, [user])
 
   const handleMouseMove = (event: React.MouseEvent<HTMLSpanElement>) => {
     const rect = event.currentTarget.getBoundingClientRect()
@@ -34,37 +53,41 @@ export function Navbar() {
   }
 
   const getLinkDestination = () => {
-    if (!session) return "/"
+    if (!user) return "/"
     if (isNewUser) return "/"
     if (pathname === "/home") return "/"
     return "/home"
   }
 
   return (
-    <nav className="bg-white shadow-sm border-b">
+    <nav className="bg-white border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <Link href={getLinkDestination()} className="text-xl font-bold relative group">
-              <span
-                className="shiny-text"
+          <div className="flex">
+            <Link href={getLinkDestination()} className="flex items-center">
+              <span 
+                className="text-xl font-bold shiny-text"
                 onMouseMove={handleMouseMove}
                 style={{
-                  ["--mouse-x" as string]: `${mousePosition.x}px`,
-                  ["--mouse-y" as string]: `${mousePosition.y}px`,
+                  '--mouse-x': `${mousePosition.x}px`,
+                  '--mouse-y': `${mousePosition.y}px`,
                 } as React.CSSProperties}
               >
                 open/actuaries
               </span>
             </Link>
           </div>
-
-          <div className="flex items-center space-x-4">
-            {status === 'loading' ? (
-              <div>Loading...</div>
-            ) : session ? (
+          <div className="flex items-center gap-4">
+            {isLoading ? (
+              <div className="animate-pulse">Loading...</div>
+            ) : user ? (
               <>
-                <span>Signed in as <strong>{session.user?.name || session.user?.email}</strong></span>
+                <span>
+                  Signed in as{' '}
+                  <strong>
+                    {user.name || user.email || 'User'}
+                  </strong>
+                </span>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon">

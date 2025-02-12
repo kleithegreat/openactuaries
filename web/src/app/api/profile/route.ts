@@ -22,8 +22,16 @@ export async function GET() {
       }
     })
 
-    if (!user?.profile) {
-      return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+    }
+
+    if (!user.profile) {
+      return NextResponse.json({
+        goalType: null,
+        goalAmount: null,
+        examRegistrations: []
+      })
     }
 
     return NextResponse.json(user.profile)
