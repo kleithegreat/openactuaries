@@ -3,10 +3,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { MOCK_STUDY_TIME } from '@/lib/mock/analytics'
+import { WidgetSettings } from '@/types/analytics'
 
-export function StudyTimeWidget({ settings, onUpdateSettings }) {
-  const [data, setData] = useState(MOCK_STUDY_TIME)
-  const displayType = settings?.displayType || 'chart'
+interface StudyTimeWidgetProps {
+  settings?: WidgetSettings;
+  onUpdateSettings: (settings: WidgetSettings) => void;
+}
+
+export function StudyTimeWidget({ settings, onUpdateSettings }: StudyTimeWidgetProps) {
+  const [data, _setData] = useState(MOCK_STUDY_TIME)
+  const displayType = (settings?.displayType ?? 'chart') as 'chart' | 'numbers'
 
   return (
     <Card className="w-full h-full">
@@ -14,7 +20,7 @@ export function StudyTimeWidget({ settings, onUpdateSettings }) {
         <CardTitle>Study Time</CardTitle>
         <Select
           value={displayType}
-          onValueChange={(value) => onUpdateSettings({ ...settings, displayType: value })}
+          onValueChange={(value: 'chart' | 'numbers') => onUpdateSettings({ ...settings, displayType: value })}
         >
           <SelectTrigger className="w-32">
             <SelectValue>{displayType}</SelectValue>

@@ -3,8 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts'
 import { MOCK_TOPIC_BREAKDOWN } from '@/lib/mock/analytics'
 
-export function TopicBreakdownWidget({ settings, onUpdateSettings }) {
-  const [data, setData] = useState(MOCK_TOPIC_BREAKDOWN)
+export function TopicBreakdownWidget() {
+  const [data, _setData] = useState(MOCK_TOPIC_BREAKDOWN)
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8']
 
   return (

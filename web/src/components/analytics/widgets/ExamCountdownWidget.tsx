@@ -3,8 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { differenceInDays, differenceInHours, differenceInMinutes } from 'date-fns'
 import { MOCK_EXAM_INFO } from '@/lib/mock/analytics'
 
-export function ExamCountdownWidget({ settings, onUpdateSettings }) {
-  const [examInfo, setExamInfo] = useState(MOCK_EXAM_INFO)
+export function ExamCountdownWidget() {
+  const [examInfo, _setExamInfo] = useState(MOCK_EXAM_INFO)
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0 })
 
   useEffect(() => {

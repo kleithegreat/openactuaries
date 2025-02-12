@@ -3,8 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Calendar } from '@/components/ui/calendar'
 import { MOCK_STUDY_STREAK } from '@/lib/mock/analytics'
 
-export function StudyStreakWidget({ settings, onUpdateSettings }) {
-  const [data, setData] = useState(MOCK_STUDY_STREAK)
+export function StudyStreakWidget() {
+  const [data, _setData] = useState(MOCK_STUDY_STREAK)
 
   return (
     <Card className="w-full h-full">

@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { MOCK_CONFIDENCE_MATRIX } from '@/lib/mock/analytics'
 
-export function ConfidenceMatrixWidget({ settings, onUpdateSettings }) {
-  const [matrix, setMatrix] = useState(MOCK_CONFIDENCE_MATRIX)
+export function ConfidenceMatrixWidget() {
+  const [matrix, _setMatrix] = useState(MOCK_CONFIDENCE_MATRIX)
   const confidenceLevels = ['Very Low', 'Low', 'Medium', 'High', 'Very High']
 
   return (

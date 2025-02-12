@@ -28,7 +28,6 @@ interface ProblemsSolvedWidgetProps {
 export function ProblemsSolvedWidget({ settings, size = "normal", onUpdateSettings }: ProblemsSolvedWidgetProps) {
   const [data] = useState(MOCK_PROBLEMS_SOLVED)
 
-  // Adjust margins based on widget size
   const getChartMargins = (size: WidgetSize) => {
     switch (size) {
       case "wide":
@@ -42,7 +41,6 @@ export function ProblemsSolvedWidget({ settings, size = "normal", onUpdateSettin
     }
   }
 
-  // Adjust content height based on widget size
   const getContentHeight = (size: WidgetSize) => {
     switch (size) {
       case "tall":

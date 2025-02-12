@@ -3,8 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { MOCK_ACCURACY_TREND } from '@/lib/mock/analytics'
 
-export function AccuracyTrendWidget({ settings, onUpdateSettings }) {
-  const [data, setData] = useState(MOCK_ACCURACY_TREND)
+export function AccuracyTrendWidget() {
+  const [data, _setData] = useState(MOCK_ACCURACY_TREND)
 
   return (
     <Card className="w-full h-full">

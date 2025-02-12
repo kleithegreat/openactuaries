@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button'
 import { Clock, CheckCircle2, XCircle } from 'lucide-react'
 import { MOCK_REVIEW_LIST } from '@/lib/mock/analytics'
 
-export function ReviewListWidget({ settings, onUpdateSettings }) {
-  const [problems, setProblems] = useState(MOCK_REVIEW_LIST)
+export function ReviewListWidget() {
+  const [problems, _setProblems] = useState(MOCK_REVIEW_LIST)
 
   return (
     <Card className="w-full h-full">
