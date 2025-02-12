@@ -127,6 +127,12 @@ export function useAnalyticsDashboard() {
     ))
   }
 
+  const updateWidgetSize = (id: string, size: Widget['size']) => {
+    setWidgets(widgets.map(widget =>
+      widget.id === id ? { ...widget, size } : widget
+    ))
+  }
+
   return {
     widgets,
     availableWidgets: AVAILABLE_WIDGETS,
@@ -134,5 +140,6 @@ export function useAnalyticsDashboard() {
     removeWidget,
     moveWidget,
     updateWidgetSettings,
+    updateWidgetSize,
   }
 }

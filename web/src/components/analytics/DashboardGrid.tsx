@@ -1,38 +1,37 @@
-import React from 'react'
-import { Widget, WidgetType } from '@/types/analytics'
-import { WidgetWrapper } from './WidgetWrapper'
-import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd'
-import { WidgetSettings } from '@/types/analytics'
-import { Button } from '@/components/ui/button'
-import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { AVAILABLE_WIDGETS } from '@/hooks/useAnalyticsDashboard'
+"use client"
+
+import { useRef, useState } from "react"
+import type { Widget, WidgetType, WidgetSize } from "@/types/analytics"
+import { WidgetWrapper } from "./WidgetWrapper"
+import { DragDropContext, Droppable, Draggable, type DropResult } from "@hello-pangea/dnd"
+import type { WidgetSettings } from "@/types/analytics"
+import { Button } from "@/components/ui/button"
+import { ChevronLeft, ChevronRight, Plus } from "lucide-react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { AVAILABLE_WIDGETS } from "@/hooks/useAnalyticsDashboard"
 
 interface DashboardGridProps {
   widgets: Widget[]
   onRemoveWidget: (id: string) => void
   onMoveWidget: (id: string, newPosition: number) => void
   onUpdateSettings: (id: string, settings: WidgetSettings) => void
-  onAddWidget: (type: WidgetType, row: 'top' | 'bottom') => void
+  onAddWidget: (type: WidgetType, row: "top" | "bottom") => void
+  onUpdateWidgetSize: (id: string, size: WidgetSize) => void
 }
 
-export function DashboardGrid({ 
-  widgets, 
-  onRemoveWidget, 
+export function DashboardGrid({
+  widgets,
+  onRemoveWidget,
   onMoveWidget,
   onUpdateSettings,
-  onAddWidget
+  onAddWidget,
+  onUpdateWidgetSize,
 }: DashboardGridProps) {
-  const [scrollPosition, setScrollPosition] = React.useState(0)
-  const gridRef = React.useRef<HTMLDivElement>(null)
+  const gridRef = useRef<HTMLDivElement>(null)
+  const [scrollPosition, setScrollPosition] = useState(0)
   const getColumnCount = (widgets: Widget[]) => {
     return widgets.reduce((acc, widget) => {
-      return acc + (widget.size === 'wide' || widget.size === 'large' ? 2 : 1)
+      return acc + (widget.size === "wide" || widget.size === "large" ? 2 : 1)
     }, 0)
   }
   const totalColumns = getColumnCount(widgets) + 1
@@ -48,28 +47,25 @@ export function DashboardGrid({
 
   const scrollLeft = () => {
     if (gridRef.current) {
-      gridRef.current.scrollBy({ left: -384, behavior: 'smooth' })
-      setScrollPosition(prev => Math.max(0, prev - 1))
+      gridRef.current.scrollBy({ left: -384, behavior: "smooth" })
+      setScrollPosition((prev) => Math.max(0, prev - 1))
     }
   }
 
   const scrollRight = () => {
     if (gridRef.current) {
-      gridRef.current.scrollBy({ left: 384, behavior: 'smooth' })
-      setScrollPosition(prev => Math.min(prev + 1, totalColumns - 3))
+      gridRef.current.scrollBy({ left: 384, behavior: "smooth" })
+      setScrollPosition((prev) => Math.min(prev + 1, totalColumns - 3))
     }
   }
 
   const canScrollLeft = scrollPosition > 0
   const canScrollRight = scrollPosition < totalColumns - 3
 
-  const AddWidgetCell = ({ row }: { row: 'top' | 'bottom' }) => (
+  const AddWidgetCell = ({ row }: { row: "top" | "bottom" }) => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          className="w-full h-full min-h-[20rem] flex flex-col gap-2"
-        >
+        <Button variant="outline" className="w-full h-full min-h-[20rem] flex flex-col gap-2">
           <Plus className="h-6 w-6" />
           Add Widget
         </Button>
@@ -78,14 +74,11 @@ export function DashboardGrid({
         {Object.entries(AVAILABLE_WIDGETS).map(([type, info]) => {
           const widgetType = type as WidgetType
           // Skip tall/large widgets in bottom row
-          if (row === 'bottom' && (widgetType === 'studyStreak' || widgetType === 'confidenceMatrix')) {
+          if (row === "bottom" && (widgetType === "studyStreak" || widgetType === "confidenceMatrix")) {
             return null
           }
           return (
-            <DropdownMenuItem
-              key={type}
-              onClick={() => onAddWidget(widgetType, row)}
-            >
+            <DropdownMenuItem key={type} onClick={() => onAddWidget(widgetType, row)}>
               {info.title}
             </DropdownMenuItem>
           )
@@ -121,19 +114,15 @@ export function DashboardGrid({
       </div>
 
       {/* Main grid container */}
-      <div 
+      <div
         ref={gridRef}
         className="overflow-x-auto overflow-y-hidden scrollbar-hide"
-        style={{ scrollSnapType: 'x mandatory' }}
+        style={{ scrollSnapType: "x mandatory" }}
       >
         <DragDropContext onDragEnd={handleDragEnd}>
           <Droppable droppableId="dashboard" direction="horizontal">
             {(provided) => (
-              <div
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-                className="inline-flex gap-6 p-6"
-              >
+              <div ref={provided.innerRef} {...provided.droppableProps} className="inline-flex gap-6 p-6">
                 {/* Widget grid */}
                 <div className="grid grid-rows-2 grid-flow-col gap-6 auto-cols-[360px] h-[42rem]">
                   {widgets.map((widget, index) => (
@@ -144,10 +133,11 @@ export function DashboardGrid({
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           className={`
-                            h-[20rem]
-                            ${widget.size === 'wide' ? 'col-span-2 w-[744px]' : 'w-[360px]'}
-                            ${widget.size === 'tall' ? 'row-span-2 h-[41rem]' : ''}
-                            ${widget.size === 'large' ? 'col-span-2 row-span-2 w-[744px] h-[41rem]' : ''}
+                            overflow-hidden
+                            ${widget.size === "normal" ? "h-[20rem] w-[360px]" : ""}
+                            ${widget.size === "wide" ? "col-span-2 w-[744px] h-[20rem]" : ""}
+                            ${widget.size === "tall" ? "row-span-2 w-[360px] h-[41rem]" : ""}
+                            ${widget.size === "large" ? "col-span-2 row-span-2 w-[744px] h-[41rem]" : ""}
                           `}
                           style={{ ...provided.draggableProps.style }}
                         >
@@ -155,6 +145,7 @@ export function DashboardGrid({
                             widget={widget}
                             onRemove={() => onRemoveWidget(widget.id)}
                             onUpdateSettings={(settings) => onUpdateSettings(widget.id, settings)}
+                            onUpdateSize={(size) => onUpdateWidgetSize(widget.id, size)}
                           />
                         </div>
                       )}

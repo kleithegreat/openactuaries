@@ -14,7 +14,8 @@ export default function AnalyticsPage() {
     addWidget,
     removeWidget,
     moveWidget,
-    updateWidgetSettings
+    updateWidgetSettings,
+    updateWidgetSize
   } = useAnalyticsDashboard()
 
   useEffect(() => {
@@ -57,6 +58,7 @@ export default function AnalyticsPage() {
               onMoveWidget={moveWidget}
               onUpdateSettings={updateWidgetSettings}
               onAddWidget={addWidget}
+              onUpdateWidgetSize={updateWidgetSize}
             />
           </div>
         </div>
