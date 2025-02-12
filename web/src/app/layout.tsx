@@ -4,6 +4,7 @@ import 'katex/dist/katex.min.css'
 import { Inter } from 'next/font/google'
 import { Navbar } from '@/components/navbar/Navbar'
 import AuthProvider from '@/components/AuthProvider'
+import { getServerSessionUser } from '@/lib/auth/server'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -12,16 +13,18 @@ export const metadata = {
   description: 'Study platform for actuarial exams',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const user = await getServerSessionUser()
+
   return (
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
-          <Navbar />
+          <Navbar key={user?.id ?? 'no-user'} user={user} />
           {children}
         </AuthProvider>
       </body>

@@ -1,40 +1,13 @@
-'use client'
-
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Github, BookOpen, Target, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { getServerSessionUser } from '@/lib/auth/server';
+import { StartPracticingButton } from '@/components/landing/StartPracticingButton';
 
-const LandingPage = () => {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-  const [isNewUser, setIsNewUser] = useState(true);
-
-  useEffect(() => {
-    if (status === 'authenticated') {
-      fetch('/api/profile')
-        .then(res => res.json())
-        .then(data => {
-          setIsNewUser(!data.goalType && !data.goalAmount && (!data.examRegistrations || data.examRegistrations.length === 0))
-        })
-        .catch(err => console.error('Error fetching profile:', err))
-    }
-  }, [status])
-
-  const handleStartPracticing = () => {
-    if (session) {
-      if (isNewUser) {
-        router.push('/setup');
-      } else {
-        router.push('/home');
-      }
-    } else {
-      router.push('/login');
-    }
-  };
+export default async function LandingPage() {
+  const user = await getServerSessionUser();
 
   return (
     <div className="min-h-screen bg-stone-50">
@@ -49,13 +22,7 @@ const LandingPage = () => {
                 Personalized practice problems for <strong>P</strong>, <strong>FM</strong>, and more coming soon. Absolutely no strings attached, because exam prep shouldn&apos;t cost a fortune.
               </p>
               <div className="flex justify-center gap-4">
-                <Button 
-                  size="lg" 
-                  className="bg-sky-900 hover:bg-sky-900"
-                  onClick={handleStartPracticing}
-                >
-                  {session ? (isNewUser ? "Complete Setup" : "Go to my home") : "Start Practicing"}
-                </Button>
+                <StartPracticingButton user={user} />
                 <a 
                   href="https://github.com/kleithegreat/openactuaries" 
                   target="_blank" 
@@ -151,6 +118,4 @@ const LandingPage = () => {
       </footer>
     </div>
   );
-};
-
-export default LandingPage;
+}

@@ -1,28 +1,12 @@
-'use client'
-
 import React from 'react';
-import { useSession } from 'next-auth/react';
-import { redirect } from 'next/navigation';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Compass, Search, BookOpen, ExternalLink, BarChart } from 'lucide-react';
 import Link from 'next/link';
+import { getRequiredServerSession } from '@/lib/auth/server';
 
-const HomePage = () => {
-  const { data: session, status } = useSession({
-    required: true,
-    onUnauthenticated() {
-      redirect('/login');
-    },
-  });
-
-  if (status === 'loading') {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <p>Loading...</p>
-      </div>
-    );
-  }
+export default async function HomePage() {
+  const session = await getRequiredServerSession();
 
   return (
     <div className="min-h-screen bg-stone-50 p-6">
@@ -30,7 +14,7 @@ const HomePage = () => {
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">
-            Welcome back, {session?.user?.name || 'Student'}!
+            Welcome back{session.user?.name ? `, ${session.user.name}` : ''}!
           </h1>
           <p className="text-gray-600 mt-2">
             Ready to continue your exam preparation journey?
@@ -136,6 +120,4 @@ const HomePage = () => {
       </div>
     </div>
   );
-};
-
-export default HomePage;
+}
