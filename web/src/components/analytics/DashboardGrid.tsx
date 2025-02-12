@@ -41,11 +41,14 @@ export function DashboardGrid({
   const AddWidgetCell = ({ index }: { index: number }) => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="w-full h-full min-h-[20rem] flex flex-col gap-2">
-          <Plus className="h-6 w-6" />
-          Add Widget
-        </Button>
-      </DropdownMenuTrigger>
+      <Button
+        variant="outline"
+        className="w-full h-full min-h-[20.25rem] flex flex-col gap-2 rounded-lg"
+      >
+        <Plus className="h-6 w-6" />
+        Add Widget
+      </Button>
+    </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         {Object.entries(AVAILABLE_WIDGETS).map(([type, info]) => {
           const widgetType = type as WidgetType
@@ -88,10 +91,10 @@ export function DashboardGrid({
                         {...provided.dragHandleProps}
                         className={`
                           overflow-hidden
-                          ${widget.size === "normal" ? "h-[19.5rem] w-[360px]" : ""}
-                          ${widget.size === "wide" ? "col-span-2 w-[744px] h-[19.5rem]" : ""}
-                          ${widget.size === "tall" ? "row-span-2 w-[360px] h-[41rem]" : ""}
-                          ${widget.size === "large" ? "col-span-2 row-span-2 w-[744px] h-[41rem]" : ""}
+                          ${widget.size === "normal" ? "h-[20.25rem] w-[360px]" : ""}
+                          ${widget.size === "wide" ? "col-span-2 w-[744px] h-[20.25rem]" : ""}
+                          ${widget.size === "tall" ? "row-span-2 w-[360px] h-[42rem]" : ""}
+                          ${widget.size === "large" ? "col-span-2 row-span-2 w-[744px] h-[42rem]" : ""}
                         `}
                         style={{ ...provided.draggableProps.style }}
                       >
