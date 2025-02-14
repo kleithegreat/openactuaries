@@ -62,7 +62,6 @@ export function DashboardGrid({
     </DropdownMenu>
   )
 
-  // Handle wheel events for smooth scrolling
   const handleWheel = (e: React.WheelEvent) => {
     if (!gridRef.current) return
     e.preventDefault()
@@ -74,7 +73,7 @@ export function DashboardGrid({
     <div
       ref={gridRef}
       className="overflow-x-auto overflow-y-hidden scrollbar-hide scroll-smooth"
-      style={{ scrollSnapType: "x mandatory" }}
+      style={{ scrollSnapType: "x mandatory", overscrollBehavior: "contain" }}
       onWheel={handleWheel}
     >
       <DragDropContext onDragEnd={handleDragEnd}>
