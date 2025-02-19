@@ -30,4 +30,6 @@ todo:
 - make a proper README
 
 
-- overall color scheme: clean solarized/gruvbox ish?
+- overall visual scheme
+    - clean solarized/gruvbox ish?
+    - ibm plex serif (and sans?)
