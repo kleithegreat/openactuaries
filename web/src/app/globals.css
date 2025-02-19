@@ -2,63 +2,108 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    /* Base/Background Colors */
+    --background: 60 10% 96%;     /* #F5F5F0 */
+    --background-secondary: 48 19% 88%;   /* #E8E4D8 */
+    --background-tertiary: 43 36% 75%;    /* #D4C9A8 */
+    --background-highlight: 190 45% 95%;  /* #EBF5F7 */
+    
+    /* Text Colors */
+    --foreground: 180 8% 20%;   /* #2C3333 */
+    --foreground-secondary: 180 11% 31%;/* #475657 */
+    --muted-foreground: 197 11% 53%;    /* #7A8D94 */
+    --foreground-inverted: 0 0% 100%;   /* #FFFFFF */
+    
+    /* Brand/Interactive Colors */
+    --primary: 190 52% 35%; /* #2A7D8B */
+    --primary-dark: 191 47% 24%;    /* #204E58 */
+    --primary-light: 190 39% 53%;   /* #5BA7B3 */
+    --accent: 29 54% 60%;         /* #DC9656 */
+    
+    /* UI States */
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    --card-foreground: 180 8% 20%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --popover-foreground: 180 8% 20%;
+    --primary-foreground: 0 0% 100%;  /* White text on primary */
+    --secondary: 43 36% 75%;   /* Using our tertiary background */
+    --secondary-foreground: 180 8% 20%;
+    --muted: 60 10% 96%;
+    --accent-foreground: 0 0% 100%;
+    
+    /* Functional Colors */
+    --success: 138 29% 42%;       /* #4D8C63 */
+    --destructive: 3 41% 54%;     /* #C25450 */
+    --destructive-foreground: 0 0% 100%;
+    --info: 218 51% 67%;          /* #7E9CD8 */
+    --warning: 29 54% 60%;        /* Same as accent #DC9656 */
+    --neutral: 55 7% 54%;         /* #939183 */
+    
+    /* UI Element Colors */
+    --border: 60 10% 80%;         /* #D0D0C5 */
+    --input: 60 20% 92%;          /* #F0F0E8 */
+    --ring: 190 51% 52%;          /* #47AEC1 */
+    
+    /* Chart Colors */
+    --chart-1: 190 52% 35%;       /* #2A7D8B */
+    --chart-2: 29 54% 60%;        /* #DC9656 */
+    --chart-3: 138 29% 42%;       /* #4D8C63 */
+    --chart-4: 218 51% 67%;       /* #7E9CD8 */
+    --chart-5: 18 36% 59%;        /* #BD846F */
+    --chart-6: 164 26% 58%;       /* #83A598 */
+    
     --radius: 0.5rem;
   }
+  
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    /* Dark mode - inverting the color scheme */
+    --background: 180 10% 10%;          /* Dark background */
+    --background-secondary: 180 10% 15%; /* Slightly lighter dark background */
+    --background-tertiary: 180 8% 20%;  /* Even lighter dark background */
+    --background-highlight: 190 20% 18%; /* Highlighted dark background */
+    
+    --foreground: 60 10% 90%;           /* Light text */
+    --foreground-secondary: 60 10% 75%; /* Slightly darker light text */
+    --muted-foreground: 60 5% 60%;      /* Muted light text */
+    --foreground-inverted: 180 8% 10%;  /* Dark text (for light backgrounds) */
+    
+    --primary: 190 40% 45%;             /* Slightly lighter primary in dark mode */
+    --primary-dark: 190 40% 30%;
+    --primary-light: 190 40% 60%;
+    --accent: 29 45% 50%;              /* Slightly darker accent in dark mode */
+    
+    /* UI States */
+    --card: 180 10% 15%;
+    --card-foreground: 60 10% 90%;
+    --popover: 180 10% 15%;
+    --popover-foreground: 60 10% 90%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 180 8% 20%;
+    --secondary-foreground: 60 10% 90%;
+    --muted: 180 5% 20%;
+    --accent-foreground: 0 0% 100%;
+    
+    /* Functional Colors - adjusted for dark mode */
+    --success: 138 25% 38%;
+    --destructive: 3 35% 45%;
+    --destructive-foreground: 0 0% 100%;
+    --info: 218 40% 57%;
+    --warning: 29 45% 50%;
+    --neutral: 55 5% 50%;
+    
+    --border: 180 5% 25%;
+    --input: 180 5% 20%;
+    --ring: 190 45% 45%;
+    
+    /* Chart Colors - slightly adjusted for dark mode */
+    --chart-1: 190 45% 45%;
+    --chart-2: 29 45% 55%;
+    --chart-3: 138 25% 40%;
+    --chart-4: 218 40% 60%;
+    --chart-5: 18 30% 55%;
+    --chart-6: 164 20% 55%;
   }
 }
 
@@ -69,6 +114,24 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+  p, span, a, button, input, select, textarea {
+    @apply font-sans;
+  }
+}
+
+.font-logo {
+  font-family: var(--font-inter);
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
 }
 
 .scrollbar-hide {
@@ -78,4 +141,13 @@ body {
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;  /* Chrome, Safari and Opera */
+}
+
+.btn-hover-effect {
+  transition: all 0.2s ease;
+}
+
+.btn-hover-effect:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
