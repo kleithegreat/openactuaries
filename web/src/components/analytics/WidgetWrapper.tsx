@@ -65,12 +65,7 @@ export function WidgetWrapper({ widget, onRemove, onUpdateSettings, onUpdateSize
           settings={widget.settings}
           size={widget.size}
           onUpdateSettings={(settings) => {
-            if (
-              typeof settings.timeRange === 'string' &&
-              ['day', 'week', 'month', 'year'].includes(settings.timeRange)
-            ) {
-              onUpdateSettings(settings as WidgetSettings)
-            }
+            onUpdateSettings(settings);
           }}
         />
       </ErrorBoundary>

@@ -1,19 +1,32 @@
-import { addDays, subDays, format } from 'date-fns'
+import { format, subDays, addDays } from 'date-fns'
 
 const today = new Date()
 
-export const MOCK_PROBLEMS_SOLVED = Array.from({ length: 30 }, (_, i) => ({
-  date: format(subDays(today, 29 - i), 'MMM dd'),
-  problems: Math.floor(Math.random() * 20) + 5
-}))
+export const MOCK_PROBLEMS_SOLVED = (() => {
+  const sixMonthsData = []
+  
+  for (let i = 179; i >= 0; i--) {
+    const date = subDays(today, i)
+    sixMonthsData.push({
+      date: format(date, 'yyyy-MM-dd'),
+      dateFormatted: format(date, 'MMM dd'),
+      problems: Math.floor(Math.random() * 20) + 5,
+      trend: Math.floor(Math.sin(i/30) * 5 + (180-i)/20)
+    })
+  }
+  
+  return sixMonthsData
+})()
 
 export const MOCK_STUDY_TIME = Array.from({ length: 30 }, (_, i) => ({
-  date: format(subDays(today, 29 - i), 'MMM dd'),
+  date: format(subDays(today, 29 - i), 'yyyy-MM-dd'),
+  dateFormatted: format(subDays(today, 29 - i), 'MMM dd'),
   hours: Number((Math.random() * 4 + 1).toFixed(1))
 }))
 
 export const MOCK_ACCURACY_TREND = Array.from({ length: 30 }, (_, i) => ({
-  date: format(subDays(today, 29 - i), 'MMM dd'),
+  date: format(subDays(today, 29 - i), 'yyyy-MM-dd'),
+  dateFormatted: format(subDays(today, 29 - i), 'MMM dd'),
   accuracy: Math.floor(Math.random() * 30 + 70) // 70-100% accuracy
 }))
 

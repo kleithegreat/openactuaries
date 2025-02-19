@@ -5,10 +5,11 @@ todo:
 - analytics page
     - frontend
         - review and perfect each widget
-        - resize some widgets
-        - ensure theming
+            - each size must look good
+            - ensure theming
         - use more shadcn charts?
         - fix add widget ordering
+        - fix the corner radii
     - API for each widget
     - link short analytics to home page
     - save user settings to database instead of local storage
@@ -17,8 +18,16 @@ todo:
     - markdown files (content)
     - semantic search functionality?
     - recommendations on homepage?
+- home page
+    - make it look better
+    - overhaul layout
+    - show user's progress/goal and registered exam day(s)
 - data
     - improve prompts
     - get all P and FM questions
     - start testing on other
+- dark mode toggle
 - make a proper README
+
+
+- overall color scheme: clean solarized/gruvbox ish?

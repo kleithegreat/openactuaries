@@ -12,8 +12,10 @@ export type WidgetType =
 
 export type WidgetSize = 'normal' | 'wide' | 'tall' | 'large'
 
+export type TimeRangeOption = "week" | "month" | "6months" | "day" | "year";
+
 export interface WidgetSettings {
-  timeRange?: 'day' | 'week' | 'month' | 'year';
+  timeRange?: TimeRangeOption;
   displayType?: 'chart' | 'numbers';
   showLabels?: boolean;
   colorScheme?: string;
