@@ -119,7 +119,7 @@ export function ProblemsSolvedWidget({ settings, size = "normal", onUpdateSettin
     <Card className="w-full h-full">
       <CardHeader
         className={cn(
-          "flex flex-row items-center justify-between space-y-0",
+          "flex flex-row items-center justify-between space-y-0 pt-4",
           size === "tall" || size === "large" ? "pb-4" : "pb-2",
         )}
       >
