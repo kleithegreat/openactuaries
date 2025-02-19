@@ -1,12 +1,11 @@
 import { type RefObject } from "react"
-import type { Widget, WidgetType, WidgetSize } from "@/types/analytics"
-import { WidgetWrapper } from "./WidgetWrapper"
 import { DragDropContext, Droppable, Draggable, type DropResult } from "@hello-pangea/dnd"
-import type { WidgetSettings } from "@/types/analytics"
 import { Plus } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
+import { WidgetWrapper } from "./WidgetWrapper"
 import { AVAILABLE_WIDGETS } from "@/hooks/useAnalyticsDashboard"
+import type { Widget, WidgetType, WidgetSize, WidgetSettings } from "@/types/analytics"
 
 interface DashboardGridProps {
   widgets: Widget[]
@@ -31,24 +30,18 @@ export function DashboardGrid({
 }: DashboardGridProps) {
   const handleDragEnd = (result: DropResult) => {
     if (!result.destination) return
-    const sourceIndex = result.source.index
-    const destinationIndex = result.destination.index
-    if (sourceIndex === destinationIndex) return
-    const widgetId = result.draggableId
-    onMoveWidget(widgetId, destinationIndex)
+    if (result.source.index === result.destination.index) return
+    onMoveWidget(result.draggableId, result.destination.index)
   }
 
   const AddWidgetCell = ({ index }: { index: number }) => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-      <Button
-        variant="outline"
-        className="w-full h-full min-h-[20.25rem] flex flex-col gap-2 rounded-lg"
-      >
-        <Plus className="h-6 w-6" />
-        Add Widget
-      </Button>
-    </DropdownMenuTrigger>
+        <Button variant="outline" className="w-full h-full">
+          <Plus className="h-6 w-6" />
+          Add Widget
+        </Button>
+      </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         {Object.entries(AVAILABLE_WIDGETS).map(([type, info]) => {
           const widgetType = type as WidgetType
@@ -72,29 +65,32 @@ export function DashboardGrid({
   return (
     <div
       ref={gridRef}
-      className="overflow-x-auto overflow-y-hidden scrollbar-hide scroll-smooth"
+      className="w-full h-full overflow-x-auto overflow-y-hidden scrollbar-hide scroll-smooth"
       style={{ scrollSnapType: "x mandatory", overscrollBehavior: "contain" }}
       onWheel={handleWheel}
     >
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="dashboard" direction="horizontal">
           {(provided) => (
-            <div ref={provided.innerRef} {...provided.droppableProps} className="inline-flex gap-6 p-6">
-              <div className="grid grid-rows-2 grid-flow-col gap-6 auto-cols-[360px] h-[42rem]">
-                {widgets.map((widget, index) => (
+            <div ref={provided.innerRef} {...provided.droppableProps} className="grid grid-flow-col gap-4"
+              style={{
+                gridTemplateRows: "20.5rem 20.5rem",
+                height: "42rem",
+                gridAutoColumns: "360px",
+              }}
+            >
+              {widgets.map((widget, index) => {
+                const colSpan = (widget.size === "wide" || widget.size === "large") ? 2 : 1
+                const rowSpan = (widget.size === "tall" || widget.size === "large") ? 2 : 1
+
+                return (
                   <Draggable key={widget.id} draggableId={widget.id} index={index}>
                     {(provided) => (
                       <div
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        className={`
-                          overflow-hidden
-                          ${widget.size === "normal" ? "h-[20.25rem] w-[360px]" : ""}
-                          ${widget.size === "wide" ? "col-span-2 w-[744px] h-[20.25rem]" : ""}
-                          ${widget.size === "tall" ? "row-span-2 w-[360px] h-[42rem]" : ""}
-                          ${widget.size === "large" ? "col-span-2 row-span-2 w-[744px] h-[42rem]" : ""}
-                        `}
+                        className={`col-span-${colSpan} row-span-${rowSpan} w-full h-full rounded-md overflow-hidden`}
                         style={{ ...provided.draggableProps.style }}
                       >
                         <WidgetWrapper
@@ -106,16 +102,19 @@ export function DashboardGrid({
                       </div>
                     )}
                   </Draggable>
-                ))}
+                )
+              })}
 
-                {/* Add Widget cells */}
-                {[...Array(2)].map((_, i) => (
-                  <div key={`add-widget-${i}`} className="h-[20rem] w-[360px]">
-                    <AddWidgetCell index={widgets.length + i} />
-                  </div>
-                ))}
-                {provided.placeholder}
-              </div>
+              {[...Array(2)].map((_, i) => (
+                <div
+                  key={`add-widget-${i}`}
+                  className="col-span-1 row-span-1 w-full h-full overflow-hidden rounded-md"
+                >
+                  <AddWidgetCell index={widgets.length + i} />
+                </div>
+              ))}
+
+              {provided.placeholder}
             </div>
           )}
         </Droppable>

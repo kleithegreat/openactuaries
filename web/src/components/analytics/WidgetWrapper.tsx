@@ -1,6 +1,5 @@
 "use client"
 
-import type React from "react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { X, GripHorizontal, Maximize2 } from "lucide-react"
@@ -51,26 +50,31 @@ export function WidgetWrapper({ widget, onRemove, onUpdateSettings, onUpdateSize
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
+
         <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={() => setShowDeleteDialog(true)}>
           <X className="h-3 w-3" />
         </Button>
       </div>
+
       <div className="absolute top-1.5 left-1.5 opacity-0 group-hover:opacity-100 transition-opacity z-10">
         <GripHorizontal className="h-3 w-3 text-gray-400 cursor-move" />
       </div>
       
       <ErrorBoundary FallbackComponent={WidgetErrorFallback}>
-        <WidgetComponent 
-          settings={widget.settings} 
-          size={widget.size} 
+        <WidgetComponent
+          settings={widget.settings}
+          size={widget.size}
           onUpdateSettings={(settings) => {
-            if (typeof settings.timeRange === 'string' && ['day', 'week', 'month', 'year'].includes(settings.timeRange)) {
+            if (
+              typeof settings.timeRange === 'string' &&
+              ['day', 'week', 'month', 'year'].includes(settings.timeRange)
+            ) {
               onUpdateSettings(settings as WidgetSettings)
             }
-          }} 
+          }}
         />
       </ErrorBoundary>
-      
+
       <DeleteWidgetDialog
         open={showDeleteDialog}
         onOpenChange={setShowDeleteDialog}

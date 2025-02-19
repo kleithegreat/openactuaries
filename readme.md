@@ -9,7 +9,6 @@ todo:
         - ensure theming
         - use more shadcn charts?
         - fix add widget ordering
-        - move movement arrows outide the grid
     - API for each widget
     - link short analytics to home page
     - save user settings to database instead of local storage

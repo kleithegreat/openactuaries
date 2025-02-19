@@ -8,13 +8,13 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import type { Widget, WidgetType } from "@/types/analytics"
 
-const COLUMN_WIDTH = 384 // 360px width + 24px gap
+// const CONTAINER_WIDTH = 1112
 
 export default function AnalyticsPage() {
   const [isClient, setIsClient] = useState(false)
   const [scrollPosition, setScrollPosition] = useState(0)
   const gridRef = useRef<HTMLDivElement>(null)
-  
+
   const {
     widgets,
     addWidget: addWidgetOriginal,
@@ -24,62 +24,65 @@ export default function AnalyticsPage() {
     updateWidgetSize,
   } = useAnalyticsDashboard()
 
+  /**
+   * Count how many columns we have total.
+   * Normal widgets = 1 col, wide/large = 2 cols, plus 2 "Add Widget" cells.
+   */
   const getColumnCount = (widgets: Widget[]) => {
-    return widgets.reduce((acc, widget) => {
-      return acc + (widget.size === "wide" || widget.size === "large" ? 2 : 1)
+    return widgets.reduce((acc, w) => {
+      return acc + (w.size === "wide" || w.size === "large" ? 2 : 1)
     }, 0)
   }
-  const totalColumns = getColumnCount(widgets) + 2 // +2 for the "Add Widget" cells
+  const totalColumns = getColumnCount(widgets) + 2
 
-  const handleScroll = (direction: 'left' | 'right') => {
+  const handleScroll = (direction: "left" | "right") => {
     if (!gridRef.current) return
 
-    const currentPosition = Math.round(gridRef.current.scrollLeft / COLUMN_WIDTH)
-    const visibleColumns = Math.floor(gridRef.current.clientWidth / COLUMN_WIDTH)
-    const newPosition = direction === 'left' 
-      ? Math.max(0, currentPosition - 1)
-      : Math.min(currentPosition + 1, totalColumns - visibleColumns)
+    // Each "column" (including the gap) is ~376px or so,
+    // but we can measure it exactly or just use 360+16.
+    const columnPlusGap = 376 // Approx. 360 + (16 / # columns). Adjust as needed.
 
-    gridRef.current.scrollTo({ 
-      left: newPosition * COLUMN_WIDTH,
-      behavior: 'smooth'
+    const currentPosition = Math.round(gridRef.current.scrollLeft / columnPlusGap)
+    const visibleColumns = 3 // We always show exactly 3 columns in the container
+    const newPosition =
+      direction === "left"
+        ? Math.max(0, currentPosition - 1)
+        : Math.min(currentPosition + 1, totalColumns - visibleColumns)
+
+    gridRef.current.scrollTo({
+      left: newPosition * columnPlusGap,
+      behavior: "smooth",
     })
-
     setScrollPosition(newPosition)
   }
 
-  // Add scroll event listener to keep track of scroll position
+  // Track scroll position to disable left/right buttons
   useEffect(() => {
     const grid = gridRef.current
     if (!grid) return
 
     const handleScrollEvent = () => {
-      const newPosition = Math.round(grid.scrollLeft / COLUMN_WIDTH)
+      // Approx. measure how many columns we've scrolled
+      const columnPlusGap = 376
+      const newPosition = Math.round(grid.scrollLeft / columnPlusGap)
       setScrollPosition(newPosition)
     }
 
-    // Initial scroll position
-    grid.scrollTo({
-      left: 0,
-      behavior: 'smooth'
-    })
-
-    grid.addEventListener('scroll', handleScrollEvent)
-    return () => grid.removeEventListener('scroll', handleScrollEvent)
+    grid.scrollTo({ left: 0 })
+    grid.addEventListener("scroll", handleScrollEvent)
+    return () => grid.removeEventListener("scroll", handleScrollEvent)
   }, [])
 
-  // Reset scroll position when widgets change
+  // Reset scroll when widget count changes
   useEffect(() => {
     if (!gridRef.current) return
-    gridRef.current.scrollTo({
-      left: 0,
-      behavior: 'smooth'
-    })
+    gridRef.current.scrollTo({ left: 0, behavior: "smooth" })
     setScrollPosition(0)
   }, [widgets.length])
 
+  // Example: top row if index===0, else bottom
   const addWidget = (type: WidgetType, index: number) => {
-    addWidgetOriginal(type, index === 0 ? 'top' : 'bottom')
+    addWidgetOriginal(type, index === 0 ? "top" : "bottom")
   }
 
   useEffect(() => {
@@ -97,13 +100,15 @@ export default function AnalyticsPage() {
     )
   }
 
-  const visibleColumns = gridRef.current ? Math.floor(gridRef.current.clientWidth / COLUMN_WIDTH) : 3
+  // We only show 3 columns at once
+  const visibleColumns = 3
   const canScrollLeft = scrollPosition > 0
   const canScrollRight = scrollPosition < totalColumns - visibleColumns
 
   return (
     <div className="min-h-screen bg-stone-50 p-6">
       <div className="max-w-7xl mx-auto">
+        {/* Header */}
         <div className="mb-8 flex items-center gap-4">
           <Link href="/home">
             <Button variant="ghost" size="icon" className="h-10 w-10">
@@ -122,14 +127,13 @@ export default function AnalyticsPage() {
           <Button
             variant="secondary"
             size="icon"
-            onClick={() => handleScroll('left')}
+            onClick={() => handleScroll("left")}
             disabled={!canScrollLeft}
             className="rounded-full shadow-lg shrink-0"
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-
-          <div className="border rounded-lg bg-white shadow-sm flex-1 overflow-hidden">
+          <div className="border rounded-lg bg-white shadow-sm overflow-hidden p-4">
             <DashboardGrid
               widgets={widgets}
               onRemoveWidget={removeWidget}
@@ -145,7 +149,7 @@ export default function AnalyticsPage() {
           <Button
             variant="secondary"
             size="icon"
-            onClick={() => handleScroll('right')}
+            onClick={() => handleScroll("right")}
             disabled={!canScrollRight}
             className="rounded-full shadow-lg shrink-0"
           >
