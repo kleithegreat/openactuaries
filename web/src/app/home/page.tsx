@@ -9,7 +9,7 @@ export default async function HomePage() {
   const session = await getRequiredServerSession();
 
   return (
-    <div className="min-h-screen bg-stone-50 p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="max-w-6xl mx-auto">
         {/* Welcome Section */}
         <div className="mb-8">
@@ -24,7 +24,7 @@ export default async function HomePage() {
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 auto-rows-fr">
           <Link href="/guided-practice" className="block h-full">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
+            <Card className="hover:shadow-lg bg-background transition-shadow cursor-pointer h-full">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Compass className="h-5 w-5 text-sky-900" />
@@ -40,7 +40,7 @@ export default async function HomePage() {
           </Link>
 
           <Link href="/questions" className="block h-full">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
+            <Card className="hover:shadow-lg bg-background transition-shadow cursor-pointer h-full">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Search className="h-5 w-5 text-sky-900" />
@@ -57,7 +57,7 @@ export default async function HomePage() {
         </div>
 
         {/* Study Progress Overview */}
-        <Card className="mb-8">
+        <Card className="mb-8 bg-background">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Your Study Progress</CardTitle>
             <Link href="/analytics">
@@ -86,8 +86,8 @@ export default async function HomePage() {
         </Card>
 
         {/* Recommended Topics */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
+        <Card className="bg-background">
+          <CardHeader className="flex flex-row items-center justify-between ">
             <CardTitle>Recommended Topics</CardTitle>
             <Link href="/wiki">
               <Button variant="ghost" size="sm" className="gap-2">

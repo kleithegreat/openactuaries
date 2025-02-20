@@ -62,6 +62,17 @@ export function DashboardGrid({
     onScroll(direction)
   }
 
+  const getWidgetStyles = (widget: Widget) => {
+    // Apply widget size styling directly with inline styles instead of className
+    const colSpan = (widget.size === "wide" || widget.size === "large") ? 2 : 1;
+    const rowSpan = (widget.size === "tall" || widget.size === "large") ? 2 : 1;
+    
+    return {
+      gridColumn: `span ${colSpan}`,
+      gridRow: `span ${rowSpan}`,
+    };
+  };
+
   return (
     <div
       ref={gridRef}
@@ -72,43 +83,50 @@ export function DashboardGrid({
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="dashboard" direction="horizontal">
           {(provided) => (
-            <div ref={provided.innerRef} {...provided.droppableProps} className="grid grid-flow-col gap-4"
+            <div 
+              ref={provided.innerRef} 
+              {...provided.droppableProps} 
+              className="grid grid-flow-col gap-4"
               style={{
                 gridTemplateRows: "20.5rem 20.5rem",
                 height: "42rem",
                 gridAutoColumns: "360px",
               }}
             >
-              {widgets.map((widget, index) => {
-                const colSpan = (widget.size === "wide" || widget.size === "large") ? 2 : 1
-                const rowSpan = (widget.size === "tall" || widget.size === "large") ? 2 : 1
-
-                return (
-                  <Draggable key={widget.id} draggableId={widget.id} index={index}>
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        className={`col-span-${colSpan} row-span-${rowSpan} w-full h-full rounded-md overflow-hidden`}
-                        style={{ ...provided.draggableProps.style }}
-                      >
-                        <WidgetWrapper
-                          widget={widget}
-                          onRemove={() => onRemoveWidget(widget.id)}
-                          onUpdateSettings={(settings) => onUpdateSettings(widget.id, settings)}
-                          onUpdateSize={(size) => onUpdateWidgetSize(widget.id, size)}
-                        />
-                      </div>
-                    )}
-                  </Draggable>
-                )
-              })}
+              {widgets.map((widget, index) => (
+                <Draggable key={widget.id} draggableId={widget.id} index={index}>
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      style={{
+                        ...provided.draggableProps.style,
+                        ...getWidgetStyles(widget),
+                        width: "100%", 
+                        height: "100%",
+                      }}
+                      className="rounded-md overflow-hidden"
+                    >
+                      <WidgetWrapper
+                        widget={widget}
+                        onRemove={() => onRemoveWidget(widget.id)}
+                        onUpdateSettings={(settings) => onUpdateSettings(widget.id, settings)}
+                        onUpdateSize={(size) => onUpdateWidgetSize(widget.id, size)}
+                      />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
 
               {[...Array(2)].map((_, i) => (
                 <div
                   key={`add-widget-${i}`}
-                  className="col-span-1 row-span-1 w-full h-full overflow-hidden rounded-md"
+                  style={{ 
+                    gridColumn: "span 1",
+                    gridRow: "span 1"
+                  }}
+                  className="w-full h-full overflow-hidden rounded-md"
                 >
                   <AddWidgetCell index={widgets.length + i} />
                 </div>

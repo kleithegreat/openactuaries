@@ -106,7 +106,7 @@ export default function AnalyticsPage() {
   const canScrollRight = scrollPosition < totalColumns - visibleColumns
 
   return (
-    <div className="min-h-screen bg-stone-50 p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8 flex items-center gap-4">
@@ -133,7 +133,7 @@ export default function AnalyticsPage() {
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <div className="border rounded-lg bg-white shadow-sm overflow-hidden p-4">
+          <div className="border rounded-lg shadow-sm overflow-hidden p-4">
             <DashboardGrid
               widgets={widgets}
               onRemoveWidget={removeWidget}
