@@ -33,7 +33,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${ibmPlexSerif.variable} ${ibmPlexSans.variable} font-sans`}>
+      <body className={`${inter.variable} ${ibmPlexSerif.variable} ${ibmPlexSans.variable} font-sans bg-background text-foreground`}>
         <AuthProvider>
           <Navbar key={user?.id ?? 'no-user'} user={user} />
           {children}

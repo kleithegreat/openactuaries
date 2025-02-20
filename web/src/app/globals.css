@@ -5,105 +5,56 @@
 @layer base {
   :root {
     /* Base/Background Colors */
-    --background: 60 10% 96%;     /* #F5F5F0 */
-    --background-secondary: 48 19% 88%;   /* #E8E4D8 */
-    --background-tertiary: 43 36% 75%;    /* #D4C9A8 */
-    --background-highlight: 190 45% 95%;  /* #EBF5F7 */
+    --background: 43 45% 96%;     /* #FAF7EF */
+    --background-secondary: 44 40% 92%;   /* #F5F0E0 */
+    --background-tertiary: 44 35% 88%;    /* #EDE5D0 */
+    --background-highlight: 43 55% 98%;  /* #FDF9F3 */
     
     /* Text Colors */
-    --foreground: 180 8% 20%;   /* #2C3333 */
-    --foreground-secondary: 180 11% 31%;/* #475657 */
-    --muted-foreground: 197 11% 53%;    /* #7A8D94 */
+    --foreground: 195 75% 16%;   /* #093948 */
+    --foreground-secondary: 195 60% 22%;/* #124A5F */
+    --muted-foreground: 195 30% 40%;    /* #486A7A */
     --foreground-inverted: 0 0% 100%;   /* #FFFFFF */
     
     /* Brand/Interactive Colors */
-    --primary: 190 52% 35%; /* #2A7D8B */
-    --primary-dark: 191 47% 24%;    /* #204E58 */
-    --primary-light: 190 39% 53%;   /* #5BA7B3 */
-    --accent: 29 54% 60%;         /* #DC9656 */
+    --primary: 183 57% 24%; /* #195C62 */
+    --primary-dark: 183 60% 18%;    /* #124548 */
+    --primary-light: 183 40% 42%;   /* #387D83 */
+    --accent: 324 50% 33%;         /* #7C2C61 */
     
     /* UI States */
     --card: 0 0% 100%;
-    --card-foreground: 180 8% 20%;
+    --card-foreground: 195 75% 16%;
     --popover: 0 0% 100%;
-    --popover-foreground: 180 8% 20%;
+    --popover-foreground: 195 75% 16%;
     --primary-foreground: 0 0% 100%;  /* White text on primary */
-    --secondary: 43 36% 75%;   /* Using our tertiary background */
-    --secondary-foreground: 180 8% 20%;
-    --muted: 60 10% 96%;
+    --secondary: 164 31% 75%;   /* #AECFC6 */
+    --secondary-foreground: 195 75% 16%;
+    --muted: 43 45% 96%;
     --accent-foreground: 0 0% 100%;
     
     /* Functional Colors */
-    --success: 138 29% 42%;       /* #4D8C63 */
-    --destructive: 3 41% 54%;     /* #C25450 */
+    --success: 155 40% 42%;       /* #3D9A72 */
+    --destructive: 0 65% 50%;     /* #D92929 */
     --destructive-foreground: 0 0% 100%;
-    --info: 218 51% 67%;          /* #7E9CD8 */
-    --warning: 29 54% 60%;        /* Same as accent #DC9656 */
-    --neutral: 55 7% 54%;         /* #939183 */
+    --info: 205 65% 55%;          /* #4A90E2 */
+    --warning: 38 95% 55%;        /* #F5A623 */
+    --neutral: 44 10% 60%;         /* #A3A095 */
     
     /* UI Element Colors */
-    --border: 60 10% 80%;         /* #D0D0C5 */
-    --input: 60 20% 92%;          /* #F0F0E8 */
-    --ring: 190 51% 52%;          /* #47AEC1 */
+    --border: 43 20% 85%;         /* #DFD8C5 */
+    --input: 43 30% 93%;          /* #F2EDE2 */
+    --ring: 183 57% 24%;          /* #195C62 */
     
     /* Chart Colors */
-    --chart-1: 190 52% 35%;       /* #2A7D8B */
-    --chart-2: 29 54% 60%;        /* #DC9656 */
-    --chart-3: 138 29% 42%;       /* #4D8C63 */
-    --chart-4: 218 51% 67%;       /* #7E9CD8 */
-    --chart-5: 18 36% 59%;        /* #BD846F */
-    --chart-6: 164 26% 58%;       /* #83A598 */
+    --chart-1: 183 57% 24%;       /* #195C62 */
+    --chart-2: 324 50% 33%;       /* #7C2C61 */
+    --chart-3: 155 40% 42%;       /* #3D9A72 */
+    --chart-4: 164 31% 75%;       /* #AECFC6 */
+    --chart-5: 45 70% 65%;        /* #EFC75E */
+    --chart-6: 195 60% 45%;       /* #2A7EA6 */
     
     --radius: 0.5rem;
-  }
-  
-  .dark {
-    /* Dark mode - inverting the color scheme */
-    --background: 180 10% 10%;          /* Dark background */
-    --background-secondary: 180 10% 15%; /* Slightly lighter dark background */
-    --background-tertiary: 180 8% 20%;  /* Even lighter dark background */
-    --background-highlight: 190 20% 18%; /* Highlighted dark background */
-    
-    --foreground: 60 10% 90%;           /* Light text */
-    --foreground-secondary: 60 10% 75%; /* Slightly darker light text */
-    --muted-foreground: 60 5% 60%;      /* Muted light text */
-    --foreground-inverted: 180 8% 10%;  /* Dark text (for light backgrounds) */
-    
-    --primary: 190 40% 45%;             /* Slightly lighter primary in dark mode */
-    --primary-dark: 190 40% 30%;
-    --primary-light: 190 40% 60%;
-    --accent: 29 45% 50%;              /* Slightly darker accent in dark mode */
-    
-    /* UI States */
-    --card: 180 10% 15%;
-    --card-foreground: 60 10% 90%;
-    --popover: 180 10% 15%;
-    --popover-foreground: 60 10% 90%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 180 8% 20%;
-    --secondary-foreground: 60 10% 90%;
-    --muted: 180 5% 20%;
-    --accent-foreground: 0 0% 100%;
-    
-    /* Functional Colors - adjusted for dark mode */
-    --success: 138 25% 38%;
-    --destructive: 3 35% 45%;
-    --destructive-foreground: 0 0% 100%;
-    --info: 218 40% 57%;
-    --warning: 29 45% 50%;
-    --neutral: 55 5% 50%;
-    
-    --border: 180 5% 25%;
-    --input: 180 5% 20%;
-    --ring: 190 45% 45%;
-    
-    /* Chart Colors - slightly adjusted for dark mode */
-    --chart-1: 190 45% 45%;
-    --chart-2: 29 45% 55%;
-    --chart-3: 138 25% 40%;
-    --chart-4: 218 40% 60%;
-    --chart-5: 18 30% 55%;
-    --chart-6: 164 20% 55%;
   }
 }
 
@@ -150,4 +101,21 @@
 .btn-hover-effect:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(to right, rgba(25, 92, 98, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(25, 92, 98, 0.05) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
 }

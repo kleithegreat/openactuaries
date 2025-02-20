@@ -60,17 +60,18 @@ export function Navbar({ user }: NavbarProps) {
   }
 
   return (
-    <nav className="bg-white border-b">
+    <nav className="bg-background border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
             <Link href={getLinkDestination()} className="flex items-center">
               <span 
-                className="text-xl font-bold shiny-text"
+                className="text-xl font-bold shiny-text font-logo"
                 onMouseMove={handleMouseMove}
                 style={{
                   '--mouse-x': `${mousePosition.x}px`,
                   '--mouse-y': `${mousePosition.y}px`,
+                  'color': '#093948',
                 } as React.CSSProperties}
               >
                 open/actuaries
@@ -79,18 +80,18 @@ export function Navbar({ user }: NavbarProps) {
           </div>
           <div className="flex items-center gap-4">
             {isLoading ? (
-              <div className="animate-pulse">Loading...</div>
+              <div className="animate-pulse text-foreground-secondary">Loading...</div>
             ) : user ? (
               <>
-                <span>
+                <span className="text-foreground-secondary">
                   Signed in as{' '}
-                  <strong>
+                  <strong className="text-foreground">
                     {user.name || user.email || 'User'}
                   </strong>
                 </span>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon" className="text-foreground">
                       <Menu className="h-5 w-5" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -109,10 +110,10 @@ export function Navbar({ user }: NavbarProps) {
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="ghost">Login</Button>
+                  <Button variant="ghost" className="text-foreground hover:text-foreground hover:bg-foreground/5">Login</Button>
                 </Link>
                 <Link href="/register">
-                  <Button variant="sky">Register</Button>
+                  <Button variant="primary">Register</Button>
                 </Link>
               </>
             )}
@@ -120,5 +121,5 @@ export function Navbar({ user }: NavbarProps) {
         </div>
       </div>
     </nav>
-  )
+  );
 }

@@ -72,6 +72,13 @@ export default {
           '4': 'hsl(var(--chart-4))',
           '5': 'hsl(var(--chart-5))',
           '6': 'hsl(var(--chart-6))'
+        },
+        palette: {
+          text: '#093948',
+          background: '#faf7ef',
+          primary: '#195c62',
+          secondary: '#aecfc6',
+          accent: '#7c2c61',
         }
       },
       borderRadius: {
