@@ -71,7 +71,7 @@ export function Navbar({ user }: NavbarProps) {
                 style={{
                   '--mouse-x': `${mousePosition.x}px`,
                   '--mouse-y': `${mousePosition.y}px`,
-                  'color': '#093948',
+                  'color': '#000000',
                 } as React.CSSProperties}
               >
                 open/actuaries

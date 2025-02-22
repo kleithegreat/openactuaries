@@ -23,7 +23,7 @@ export default function LoginPage() {
       const data = await response.json()
       
       const needsSetup = !data.goalType && 
-                        !data.goalAmount && 
+                         !data.goalAmount && 
                         (!data.examRegistrations || data.examRegistrations.length === 0)
       
       if (needsSetup) {
@@ -70,7 +70,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-background">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Login</CardTitle>
@@ -106,7 +106,7 @@ export default function LoginPage() {
               />
             </div>
             {error && (
-              <div className="text-red-500 text-sm">{error}</div>
+              <div className="text-destructive text-sm">{error}</div>
             )}
             <Button 
               type="submit" 
@@ -127,7 +127,7 @@ export default function LoginPage() {
         <CardFooter className="flex justify-center">
           <p className="text-sm">
             Don&apos;t have an account?{' '}
-            <Link href="/register" className="text-blue-500 hover:underline">
+            <Link href="/register" className="text-info hover:underline">
               Register
             </Link>
           </p>

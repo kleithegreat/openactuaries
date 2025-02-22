@@ -41,42 +41,32 @@ export default function QuestionsPage() {
     return (
       <div className="space-y-8">
         <div className="flex gap-4">
-          <Skeleton className="h-10 w-[180px]" />
-          <Skeleton className="h-10 w-[280px]" />
-          <Skeleton className="h-10 w-[180px]" />
+          <Skeleton className="h-10 w-[180px] bg-background-secondary" />
+          <Skeleton className="h-10 w-[280px] bg-background-secondary" />
+          <Skeleton className="h-10 w-[180px] bg-background-secondary" />
         </div>
-  
-        <Card>
+        <Card className="bg-background-highlight">
           <CardHeader>
-            <Skeleton className="h-8 w-48" />
+            <Skeleton className="h-8 w-48 bg-background-secondary" />
           </CardHeader>
           <CardContent>
             <div className="flex gap-6">
               <div className="flex-1 space-y-4">
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-[90%]" />
-                <Skeleton className="h-4 w-[95%]" />
-                <Skeleton className="h-4 w-[85%]" />
+                {[1, 2, 3, 4].map((i) => (
+                  <Skeleton key={i} className="h-4 w-full bg-background-secondary" />
+                ))}
               </div>
               <div className="w-1/2 space-y-3">
                 {[1, 2, 3, 4].map((i) => (
-                  <Skeleton key={i} className="h-20 w-full" />
+                  <Skeleton key={i} className="h-20 w-full bg-background-secondary" />
                 ))}
               </div>
             </div>
           </CardContent>
         </Card>
-  
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4">
-          <div className="container mx-auto flex justify-between items-center max-w-4xl">
-            <Skeleton className="h-10 w-24" />
-            <Skeleton className="h-10 w-32" />
-            <Skeleton className="h-10 w-24" />
-          </div>
-        </div>
       </div>
-    )
-  }
+    );
+  };
 
   useEffect(() => {
     async function fetchProblems() {
@@ -262,17 +252,21 @@ export default function QuestionsPage() {
         <Select
           value={filters.exam}
           onValueChange={(value) => {
-            setFilters(prev => ({ ...prev, exam: value, syllabusCategory: 'any' }))
-            const newIndex = problems.findIndex(p => p.exam === value)
-            if (newIndex !== -1) setCurrentProblemIndex(newIndex)
+            setFilters(prev => ({ ...prev, exam: value, syllabusCategory: 'any' }));
+            const newIndex = problems.findIndex(p => p.exam === value);
+            if (newIndex !== -1) setCurrentProblemIndex(newIndex);
           }}
         >
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[180px] bg-background-highlight border-border hover:bg-background-secondary transition-colors">
             <SelectValue placeholder="Select Exam" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-background-highlight border-border">
             {Array.from(new Set(problems.map(p => p.exam))).map(exam => (
-              <SelectItem key={exam} value={exam}>
+              <SelectItem 
+                key={exam} 
+                value={exam} 
+                className="text-foreground hover:bg-background-secondary"
+              >
                 Exam {exam}
               </SelectItem>
             ))}
@@ -282,23 +276,29 @@ export default function QuestionsPage() {
         <Select
           value={filters.syllabusCategory}
           onValueChange={(value) => {
-            setFilters(prev => ({ ...prev, syllabusCategory: value }))
+            setFilters(prev => ({ ...prev, syllabusCategory: value }));
             if (value !== 'any') {
               const newIndex = problems.findIndex(p => 
                 p.exam === filters.exam && 
                 p.syllabusCategory === value
-              )
-              if (newIndex !== -1) setCurrentProblemIndex(newIndex)
+              );
+              if (newIndex !== -1) setCurrentProblemIndex(newIndex);
             }
           }}
         >
-          <SelectTrigger className="w-[280px]">
+          <SelectTrigger className="w-[280px] bg-background-highlight border-border hover:bg-background-secondary transition-colors">
             <SelectValue placeholder="Select Topic" />
           </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="any">Any Topic</SelectItem>
+          <SelectContent className="bg-background-highlight border-border">
+            <SelectItem value="any" className="text-foreground hover:bg-background-secondary">
+              Any Topic
+            </SelectItem>
             {uniqueSyllabusCategories.map(category => (
-              <SelectItem key={category} value={category}>
+              <SelectItem 
+                key={category} 
+                value={category} 
+                className="text-foreground hover:bg-background-secondary"
+              >
                 {category}
               </SelectItem>
             ))}
@@ -308,16 +308,20 @@ export default function QuestionsPage() {
         <Select
           value={currentProblem.id}
           onValueChange={(value) => {
-            const newIndex = problems.findIndex(p => p.id === value)
-            if (newIndex !== -1) setCurrentProblemIndex(newIndex)
+            const newIndex = problems.findIndex(p => p.id === value);
+            if (newIndex !== -1) setCurrentProblemIndex(newIndex);
           }}
         >
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[180px] bg-background-highlight border-border hover:bg-background-secondary transition-colors">
             <SelectValue placeholder="Select Question" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-background-highlight border-border">
             {filteredProblems.map((problem) => (
-              <SelectItem key={problem.id} value={problem.id}>
+              <SelectItem 
+                key={problem.id} 
+                value={problem.id}
+                className="text-foreground hover:bg-background-secondary"
+              >
                 Question {problem.questionNumber}
               </SelectItem>
             ))}
@@ -325,14 +329,14 @@ export default function QuestionsPage() {
         </Select>
       </div>
   
-      <Card>
-        <CardHeader>
-          <CardTitle>Question {currentProblem.questionNumber}</CardTitle>
+      <Card className="bg-background-highlight border-border">
+        <CardHeader className="border-b border-border">
+          <CardTitle className="text-foreground font-serif">Question {currentProblem.questionNumber}</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6">
           <div className="flex gap-6">
             <div className="flex-1">
-              <div className="prose max-w-none [&_table]:w-auto [&_table]:border-collapse [&_table]:my-4 [&_th]:border [&_th]:border-gray-300 [&_th]:bg-gray-50 [&_th]:p-2 [&_th]:text-left [&_td]:border [&_td]:border-gray-300 [&_td]:p-2 [&_th]:text-sm [&_td]:text-sm [&_table]:mx-auto [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:space-y-2 [&_ol]:my-4">
+              <div className="prose max-w-none text-foreground [&_table]:w-auto [&_table]:border-collapse [&_table]:my-4 [&_th]:border [&_th]:border-border [&_th]:bg-background-secondary [&_th]:p-2 [&_th]:text-left [&_td]:border [&_td]:border-border [&_td]:p-2 [&_th]:text-sm [&_td]:text-sm [&_table]:mx-auto [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:space-y-2 [&_ol]:my-4">
                 <MDXRemote {...serializedContent} />
               </div>
             </div>
@@ -344,12 +348,12 @@ export default function QuestionsPage() {
                   onClick={() => handleAnswerSelect(currentProblem.id, choice.letter)}
                   className={`w-full p-4 text-left rounded-lg border transition-colors ${
                     selectedAnswers[currentProblem.id] === choice.letter
-                      ? 'border-blue-500 bg-blue-50'
-                      : 'border-gray-200 hover:border-gray-300'
+                      ? 'bg-primary/10 border-primary text-foreground'
+                      : 'border-border hover:bg-background-secondary text-foreground'
                   }`}
                 >
                   <div className="flex">
-                    <span className="font-medium mr-2 min-w-[1.5rem]">{choice.letter}) </span>
+                    <span className="font-medium mr-2 min-w-[1.5rem]">{choice.letter})</span>
                     <div className="flex-1">
                       {serializedChoices[index] && <MDXRemote {...serializedChoices[index]} />}
                     </div>
@@ -358,7 +362,15 @@ export default function QuestionsPage() {
               ))}
   
               {checkedAnswers[currentProblem.id] && (
-                <Alert variant={isCurrentAnswerCorrect ? "green" : "rose"}>
+                <Alert 
+                  variant={isCurrentAnswerCorrect ? "success" : "destructive"}
+                  className={`
+                    ${isCurrentAnswerCorrect 
+                      ? "bg-success/10 text-success border-success/20" 
+                      : "bg-destructive/10 text-destructive border-destructive/20"
+                    }
+                  `}
+                >
                   <div className="flex items-center gap-2">
                     {isCurrentAnswerCorrect ? (
                       <Check className="h-4 w-4" />
@@ -378,12 +390,12 @@ export default function QuestionsPage() {
         </CardContent>
       </Card>
   
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4">
+      <div className="fixed bottom-0 left-0 right-0 bg-background-highlight border-t border-border p-4">
         <div className="container mx-auto flex items-center justify-between max-w-4xl">
           <Button
             variant="ghost"
             onClick={() => router.push('/home')}
-            className="text-sky-900 hover:text-sky-800"
+            className="text-primary hover:text-primary-dark hover:bg-background-secondary transition-colors"
           >
             Back to Home
           </Button>
@@ -393,7 +405,7 @@ export default function QuestionsPage() {
               variant="outline"
               onClick={() => navigateQuestion('prev')}
               disabled={filteredProblems.findIndex(p => p.id === currentProblem.id) === 0}
-              className="w-24"
+              className="w-24 border-border text-foreground hover:bg-background-secondary disabled:opacity-50 transition-colors"
             >
               Previous
             </Button>
@@ -403,22 +415,24 @@ export default function QuestionsPage() {
                 <Button 
                   onClick={() => checkAnswer(currentProblem.id)}
                   disabled={!selectedAnswers[currentProblem.id]}
-                  className="bg-sky-900 hover:bg-sky-800 w-full"
+                  className="bg-primary hover:bg-primary-dark text-white w-full disabled:opacity-50 transition-colors"
                 >
                   Check Answer
                 </Button>
               ) : (
                 <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
                   <DrawerTrigger asChild>
-                    <Button className="bg-sky-900 hover:bg-sky-800 w-full">View Explanation</Button>
+                    <Button className="bg-primary hover:bg-primary-dark text-white w-full transition-colors">
+                      View Explanation
+                    </Button>
                   </DrawerTrigger>
-                  <DrawerContent>
+                  <DrawerContent className="bg-background-highlight">
                     <div className="mx-auto w-full max-w-4xl">
-                      <DrawerHeader>
-                        <DrawerTitle>Explanation</DrawerTitle>
+                      <DrawerHeader className="border-b border-border">
+                        <DrawerTitle className="text-foreground font-serif">Explanation</DrawerTitle>
                       </DrawerHeader>
-                      <div className="p-6 prose max-w-none h-[500px] overflow-auto">
-                        {serializedExplanation && (<MDXRemote {...serializedExplanation} />)}
+                      <div className="p-6 prose max-w-none h-[500px] overflow-auto text-foreground">
+                        {serializedExplanation && <MDXRemote {...serializedExplanation} />}
                       </div>
                     </div>
                   </DrawerContent>
@@ -430,7 +444,7 @@ export default function QuestionsPage() {
               variant="outline"
               onClick={() => navigateQuestion('next')}
               disabled={filteredProblems.findIndex(p => p.id === currentProblem.id) === filteredProblems.length - 1}
-              className="w-24"
+              className="w-24 border-border text-foreground hover:bg-background-secondary disabled:opacity-50 transition-colors"
             >
               Next
             </Button>
@@ -438,5 +452,5 @@ export default function QuestionsPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

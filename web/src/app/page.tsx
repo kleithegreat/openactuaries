@@ -1,6 +1,5 @@
 import React from 'react';
 import { Github, BookOpen, Target, Sparkles } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { getServerSessionUser } from '@/lib/auth/server';
 import { StartPracticingButton } from '@/components/landing/StartPracticingButton';
 
@@ -29,16 +28,7 @@ export default async function LandingPage() {
                   href="https://github.com/kleithegreat/openactuaries" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                >
-                  <Button 
-                    size="lg" 
-                    variant="outline" 
-                    className="gap-2 border-primary text-primary hover:bg-primary/5 w-full sm:w-auto"
-                  >
-                    <Github className="h-5 w-5" />
-                    View Source
-                  </Button>
-                </a>
+                />
               </div>
             </div>
           </div>
