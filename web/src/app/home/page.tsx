@@ -13,7 +13,7 @@ export default async function HomePage() {
       <div className="max-w-6xl mx-auto">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-text">
             Welcome back{session.user?.name ? `, ${session.user.name}` : ''}!
           </h1>
           <p className="text-gray-600 mt-2">

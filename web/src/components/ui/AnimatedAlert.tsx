@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 
 interface AnimatedAlertProps {
   message: string
-  variant?: "default" | "destructive" | "green" | "rose"
+  variant?: "default" | "destructive" | "success"
   onClose?: () => void
 }
 

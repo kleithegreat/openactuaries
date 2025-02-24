@@ -121,33 +121,33 @@ export default function SetupPage() {
   }
 
   const LoadingOverlay = () => (
-    <div className="fixed inset-0 bg-white/60 backdrop-blur-sm z-50 flex items-center justify-center">
-      <div className="bg-white/80 p-4 rounded-lg shadow-lg flex items-center gap-3">
-        <Loader2 className="h-6 w-6 animate-spin text-sky-900" />
-        <span className="text-sky-900 font-medium">Loading...</span>
+    <div className="fixed inset-0 bg-background/60 backdrop-blur-sm z-50 flex items-center justify-center">
+      <div className="bg-background/80 p-4 rounded-lg shadow-lg flex items-center gap-3">
+        <Loader2 className="h-6 w-6 animate-spin text-text" />
+        <span className="text-text font-medium">Loading...</span>
       </div>
     </div>
   )
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-stone-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <LoadingOverlay />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-stone-50 relative">
+    <div className="min-h-screen bg-background relative">
       {isLoading && <LoadingOverlay />}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {isNewUser ? (
           <>
             <div className="text-center mb-12">
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              <h1 className="text-4xl font-bold text-text mb-4">
                 Let&apos;s Customize Your Study Plan
               </h1>
-              <p className="text-xl text-gray-600">
+              <p className="text-xl text-text">
                 Set your goals and exam dates for a personalized learning experience
               </p>
             </div>
@@ -156,9 +156,9 @@ export default function SetupPage() {
               <Card className="border-0 shadow-lg">
                 <CardContent className="pt-6">
                   <div className="flex flex-col items-center text-center">
-                    <Target className="h-12 w-12 text-sky-900 mb-4" />
+                    <Target className="h-12 w-12 text-primary mb-4" />
                     <h3 className="text-xl font-semibold mb-2">Set Your Goals</h3>
-                    <p className="text-gray-600">
+                    <p className="text-text">
                       Choose how you want to track your progress
                     </p>
                   </div>
@@ -167,9 +167,9 @@ export default function SetupPage() {
               <Card className="border-0 shadow-lg">
                 <CardContent className="pt-6">
                   <div className="flex flex-col items-center text-center">
-                    <CalendarIcon className="h-12 w-12 text-sky-900 mb-4" />
+                    <CalendarIcon className="h-12 w-12 text-primary mb-4" />
                     <h3 className="text-xl font-semibold mb-2">Plan Your Schedule</h3>
-                    <p className="text-gray-600">
+                    <p className="text-text">
                       Register your exam dates for optimal preparation
                     </p>
                   </div>
@@ -178,9 +178,9 @@ export default function SetupPage() {
               <Card className="border-0 shadow-lg">
                 <CardContent className="pt-6">
                   <div className="flex flex-col items-center text-center">
-                    <Clock className="h-12 w-12 text-sky-900 mb-4" />
+                    <Clock className="h-12 w-12 text-primary mb-4" />
                     <h3 className="text-xl font-semibold mb-2">Track Your Time</h3>
-                    <p className="text-gray-600">
+                    <p className="text-text">
                       Set daily study targets that work for you
                     </p>
                   </div>
@@ -190,13 +190,13 @@ export default function SetupPage() {
           </>
         ) : (
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            <h1 className="text-4xl font-bold text-text mb-4">
               Study Settings
             </h1>
           </div>
         )}
 
-        <Card className="border-0 shadow-lg mb-20">
+        <Card className="border-0 bg-background-highlight shadow-lg mb-20">
           <CardHeader>
             <CardTitle>Study Goals Setup</CardTitle>
             <CardDescription>
@@ -236,11 +236,11 @@ export default function SetupPage() {
                   max={goalType === 'MINUTES' ? "720" : "100"}
                   disabled={isLoading}
                 />
-                <span className="text-gray-500 self-center">
+                <span className="text-primary self-center">
                   {goalType === 'MINUTES' ? 'minutes' : 'problems'} per day
                 </span>
               </div>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-primary">
                 {goalType === 'MINUTES' 
                   ? 'The SOA recommends around 100 minutes of study time per exam hour.' 
                   : 'Start with a manageable number and adjust as needed.'}
@@ -254,7 +254,7 @@ export default function SetupPage() {
                   variant="outline" 
                   onClick={addExam} 
                   type="button"
-                  className="border-sky-900 text-sky-900 hover:bg-sky-50"
+                  className="border-primary text-text"
                   disabled={isLoading}
                 >
                   Add Another Exam
@@ -308,7 +308,7 @@ export default function SetupPage() {
                     variant="ghost"
                     size="icon"
                     onClick={() => removeExam(index)}
-                    className="hover:bg-rose-900 hover:text-primary-foreground"
+                    className="hover:bg-destructive hover:text-primary-foreground"
                     disabled={selectedExams.length === 1 || isLoading}
                   >
                     <Trash2 className="h-4 w-4" />
@@ -319,7 +319,7 @@ export default function SetupPage() {
             {error && (
             <AnimatedAlert 
                 message={error}
-                variant="rose"
+                variant="destructive"
                 onClose={() => setError('')}
             />
             )}
@@ -327,7 +327,7 @@ export default function SetupPage() {
             {success && (
             <AnimatedAlert 
                 message="Settings saved successfully!"
-                variant="green"
+                variant="success"
                 onClose={() => setSuccess(false)}
             />
             )}
@@ -335,7 +335,7 @@ export default function SetupPage() {
         </Card>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t py-4 px-4 shadow-lg">
+      <div className="fixed bottom-0 left-0 right-0 bg-background border-t py-4 px-4 shadow-lg">
         <div className="max-w-4xl mx-auto flex justify-end gap-4">
           {!isNewUser && (
             <Button 
@@ -348,8 +348,8 @@ export default function SetupPage() {
             </Button>
           )}
           <Button 
-            onClick={handleSubmit} 
-            className="bg-sky-900 hover:bg-sky-800"
+            onClick={handleSubmit}
+            variant="primary"
             size="lg"
             disabled={isLoading}
           >

@@ -100,7 +100,6 @@ export default function AnalyticsPage() {
     )
   }
 
-  // We only show 3 columns at once
   const visibleColumns = 3
   const canScrollLeft = scrollPosition > 0
   const canScrollRight = scrollPosition < totalColumns - visibleColumns
@@ -116,8 +115,8 @@ export default function AnalyticsPage() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">My Analytics</h1>
-            <p className="text-gray-600 mt-2">
+            <h1 className="text-3xl font-bold text-text">My Analytics</h1>
+            <p className="text-foreground-muted mt-2">
               Customize your analytics view by adding, removing, and rearranging widgets
             </p>
           </div>
