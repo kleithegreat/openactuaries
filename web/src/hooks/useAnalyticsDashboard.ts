@@ -1,13 +1,13 @@
 'use client'
 
 import { useLocalStorage } from './useLocalStorage'
-import { Widget, WidgetType, WidgetSettings } from '@/types/analytics'
+import { Widget, WidgetType, WidgetSettings, WidgetSize } from '@/types/analytics'
 
 export const AVAILABLE_WIDGETS: Record<WidgetType, {
   title: string
   description: string
   icon: string
-  defaultSize: Widget['size']
+  defaultSize: WidgetSize
 }> = {
   problemsSolved: {
     title: 'Problems Solved',
@@ -71,66 +71,79 @@ export const AVAILABLE_WIDGETS: Record<WidgetType, {
   },
 }
 
+const _determineWidgetPlacement = (widgets: Widget[], size: WidgetSize): number => {
+  if (size === 'tall' || size === 'large') {
+    return 0;
+  }
+  
+  return widgets.length;
+}
+
 export function useAnalyticsDashboard() {
   const [widgets, setWidgets] = useLocalStorage<Widget[]>('analytics-widgets', [])
 
-  const addWidget = (type: WidgetType, row: 'top' | 'bottom') => {
-    const defaultSize = AVAILABLE_WIDGETS[type].defaultSize
+  const addWidget = (type: WidgetType, _row: 'top' | 'bottom') => {
+    const defaultSize = AVAILABLE_WIDGETS[type].defaultSize;
+    
     const newWidget: Widget = {
       id: Math.random().toString(36).substr(2, 9),
       type,
       size: defaultSize,
       position: widgets.length
-    }
-
-    const updatedWidgets = [...widgets]
-    if (row === 'top') {
-      updatedWidgets.unshift(newWidget)
-    } else {
-      const insertIndex = updatedWidgets.filter(w => w.size === 'tall' || w.size === 'large').length
-      updatedWidgets.splice(insertIndex, 0, newWidget)
-    }
-
+    };
+    
+    const updatedWidgets = [...widgets, newWidget];
+    
     updatedWidgets.forEach((w, index) => {
-      w.position = index
-    })
-
-    setWidgets(updatedWidgets)
+      w.position = index;
+    });
+    
+    setWidgets(updatedWidgets);
   }
 
   const removeWidget = (id: string) => {
-    const updatedWidgets = widgets.filter(widget => widget.id !== id)
+    const updatedWidgets = widgets.filter(widget => widget.id !== id);
+    
     updatedWidgets.forEach((w, index) => {
-      w.position = index
-    })
-    setWidgets(updatedWidgets)
+      w.position = index;
+    });
+    
+    setWidgets(updatedWidgets);
   }
 
   const moveWidget = (id: string, newPosition: number) => {
-    const updatedWidgets = [...widgets]
-    const widgetIndex = updatedWidgets.findIndex(w => w.id === id)
-    const widget = updatedWidgets[widgetIndex]
+    const widgetIndex = widgets.findIndex(w => w.id === id);
+    if (widgetIndex === -1) return;
     
-    updatedWidgets.splice(widgetIndex, 1)
-    updatedWidgets.splice(newPosition, 0, widget)
+    const sortedWidgets = [...widgets].sort((a, b) => a.position - b.position);
     
-    updatedWidgets.forEach((w, index) => {
-      w.position = index
-    })
+    const [removedWidget] = sortedWidgets.splice(widgetIndex, 1);
     
-    setWidgets(updatedWidgets)
+    sortedWidgets.splice(newPosition, 0, removedWidget);
+    
+    const updatedWidgets = sortedWidgets.map((widget, index) => ({
+      ...widget,
+      position: index
+    }));
+    
+    setWidgets(updatedWidgets);
   }
 
   const updateWidgetSettings = (id: string, settings: WidgetSettings) => {
     setWidgets(widgets.map(widget => 
       widget.id === id ? { ...widget, settings } : widget
-    ))
+    ));
   }
 
-  const updateWidgetSize = (id: string, size: Widget['size']) => {
-    setWidgets(widgets.map(widget =>
+  const updateWidgetSize = (id: string, size: WidgetSize) => {
+    const widgetIndex = widgets.findIndex(w => w.id === id);
+    if (widgetIndex === -1) return;
+    
+    const updatedWidgets = widgets.map((widget, _index) => 
       widget.id === id ? { ...widget, size } : widget
-    ))
+    );
+    
+    setWidgets(updatedWidgets);
   }
 
   return {

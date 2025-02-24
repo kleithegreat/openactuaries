@@ -6,9 +6,7 @@ import { useAnalyticsDashboard } from "@/hooks/useAnalyticsDashboard"
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import type { Widget, WidgetType } from "@/types/analytics"
-
-// const CONTAINER_WIDTH = 1112
+import type { WidgetType } from "@/types/analytics"
 
 export default function AnalyticsPage() {
   const [isClient, setIsClient] = useState(false)
@@ -24,85 +22,68 @@ export default function AnalyticsPage() {
     updateWidgetSize,
   } = useAnalyticsDashboard()
 
-  /**
-   * Count how many columns we have total.
-   * Normal widgets = 1 col, wide/large = 2 cols, plus 2 "Add Widget" cells.
-   */
-  const getColumnCount = (widgets: Widget[]) => {
-    return widgets.reduce((acc, w) => {
-      return acc + (w.size === "wide" || w.size === "large" ? 2 : 1)
-    }, 0)
-  }
-  const totalColumns = getColumnCount(widgets) + 2
+  const getContentWidth = () => {
+    if (!gridRef.current) return 0;
+    const containerWidth = gridRef.current.clientWidth;
+    const scrollWidth = gridRef.current.scrollWidth;
+    return scrollWidth - containerWidth;
+  };
 
   const handleScroll = (direction: "left" | "right") => {
-    if (!gridRef.current) return
+    if (!gridRef.current) return;
 
-    // Each "column" (including the gap) is ~376px or so,
-    // but we can measure it exactly or just use 360+16.
-    const columnPlusGap = 376 // Approx. 360 + (16 / # columns). Adjust as needed.
-
-    const currentPosition = Math.round(gridRef.current.scrollLeft / columnPlusGap)
-    const visibleColumns = 3 // We always show exactly 3 columns in the container
-    const newPosition =
-      direction === "left"
-        ? Math.max(0, currentPosition - 1)
-        : Math.min(currentPosition + 1, totalColumns - visibleColumns)
+    const scrollAmount = 376; // 360px (widget) + 16px (gap)
+    const currentScroll = gridRef.current.scrollLeft;
+    const targetScroll = direction === "left" 
+      ? Math.max(0, currentScroll - scrollAmount)
+      : currentScroll + scrollAmount;
 
     gridRef.current.scrollTo({
-      left: newPosition * columnPlusGap,
+      left: targetScroll,
       behavior: "smooth",
-    })
-    setScrollPosition(newPosition)
-  }
+    });
+  };
 
-  // Track scroll position to disable left/right buttons
   useEffect(() => {
-    const grid = gridRef.current
-    if (!grid) return
+    const grid = gridRef.current;
+    if (!grid) return;
 
     const handleScrollEvent = () => {
-      // Approx. measure how many columns we've scrolled
-      const columnPlusGap = 376
-      const newPosition = Math.round(grid.scrollLeft / columnPlusGap)
-      setScrollPosition(newPosition)
-    }
+      setScrollPosition(grid.scrollLeft);
+    };
 
-    grid.scrollTo({ left: 0 })
-    grid.addEventListener("scroll", handleScrollEvent)
-    return () => grid.removeEventListener("scroll", handleScrollEvent)
-  }, [])
-
-  // Reset scroll when widget count changes
-  useEffect(() => {
-    if (!gridRef.current) return
-    gridRef.current.scrollTo({ left: 0, behavior: "smooth" })
-    setScrollPosition(0)
-  }, [widgets.length])
-
-  // Example: top row if index===0, else bottom
-  const addWidget = (type: WidgetType, index: number) => {
-    addWidgetOriginal(type, index === 0 ? "top" : "bottom")
-  }
+    grid.addEventListener("scroll", handleScrollEvent);
+    return () => grid.removeEventListener("scroll", handleScrollEvent);
+  }, []);
 
   useEffect(() => {
-    setIsClient(true)
-  }, [])
+    if (!gridRef.current) return;
+    gridRef.current.scrollTo({ left: 0, behavior: "smooth" });
+    setScrollPosition(0);
+  }, [widgets.length]);
+
+  const addWidget = (type: WidgetType, rowIndex: number) => {
+    addWidgetOriginal(type, rowIndex === 0 ? "top" : "bottom");
+  };
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   if (!isClient) {
     return (
-      <div className="min-h-screen bg-stone-50 p-6">
+      <div className="min-h-screen bg-background p-6">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl font-bold text-gray-900">My Analytics</h1>
-          <p className="text-gray-600 mt-2">Loading...</p>
+          <h1 className="text-3xl font-bold text-text">My Analytics</h1>
+          <p className="text-foreground-muted mt-2">Loading...</p>
         </div>
       </div>
-    )
+    );
   }
 
-  const visibleColumns = 3
-  const canScrollLeft = scrollPosition > 0
-  const canScrollRight = scrollPosition < totalColumns - visibleColumns
+  // const containerWidth = gridRef.current?.clientWidth || 0;
+  const canScrollLeft = scrollPosition > 0;
+  const canScrollRight = scrollPosition < getContentWidth();
 
   return (
     <div className="min-h-screen bg-background p-6">
@@ -132,7 +113,8 @@ export default function AnalyticsPage() {
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <div className="border rounded-lg shadow-sm overflow-hidden p-4">
+          
+          <div className="border rounded-lg shadow-sm overflow-hidden p-4 w-full">
             <DashboardGrid
               widgets={widgets}
               onRemoveWidget={removeWidget}
@@ -157,5 +139,5 @@ export default function AnalyticsPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
