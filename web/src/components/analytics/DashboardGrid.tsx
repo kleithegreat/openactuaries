@@ -88,7 +88,7 @@ export function DashboardGrid({
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           data-grid-item="true"
-                          className={`rounded-md overflow-hidden transition-shadow ${
+                          className={`rounded-xl overflow-hidden transition-shadow ${
                             snapshot.isDragging ? 'shadow-xl' : 'shadow'
                           }`}
                           style={{

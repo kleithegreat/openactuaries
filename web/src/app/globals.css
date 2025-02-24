@@ -85,6 +85,20 @@
   font-family: var(--font-sans);
 }
 
+.prose .math,
+.prose .math-inline,
+.prose .math-display {
+  font-family: KaTeX_Main, serif !important;
+}
+
+.question-statement {
+  font-family: var(--font-serif);
+}
+
+.question-content {
+  font-family: var(--font-serif);
+}
+
 .scrollbar-hide {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
@@ -118,4 +132,24 @@
   to {
     background-position: 200% center;
   }
+}
+
+.prose p, 
+.prose li,
+.prose strong,
+.question-statement,
+.card-title {
+  font-family: var(--font-serif) !important;
+}
+
+.w-1\/2.space-y-3 button .flex-1 {
+  font-family: var(--font-serif) !important;
+}
+
+.katex, 
+.katex *, 
+.math,
+.math-inline,
+.math-display {
+  font-family: KaTeX_Main, serif !important;
 }

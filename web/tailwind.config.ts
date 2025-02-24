@@ -14,6 +14,7 @@ export default {
         sans: ['var(--font-sans)'],
         serif: ['var(--font-serif)'],
         logo: ['var(--font-inter)'],
+        math: ['KaTeX_Main', 'serif'],
       },
       colors: {
         background: {
@@ -90,6 +91,39 @@ export default {
         'soft': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
         'medium': '0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04)',
         'hard': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            '--tw-prose-body': 'var(--font-serif)',
+            '--tw-prose-headings': 'var(--font-serif)',
+            maxWidth: '65ch',
+            p: {
+              fontFamily: 'var(--font-serif)'
+            },
+            h1: {
+              fontFamily: 'var(--font-serif)'
+            },
+            h2: {
+              fontFamily: 'var(--font-serif)'
+            },
+            h3: {
+              fontFamily: 'var(--font-serif)'
+            },
+            h4: {
+              fontFamily: 'var(--font-serif)'
+            },
+            li: {
+              fontFamily: 'var(--font-serif)'
+            },
+            blockquote: {
+              fontFamily: 'var(--font-serif)'
+            },
+            '.math, .math-inline, .math-display': {
+              fontFamily: 'KaTeX_Main, serif !important'
+            }
+          }
+        }
       }
     }
   },

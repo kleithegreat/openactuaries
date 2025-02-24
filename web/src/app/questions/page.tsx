@@ -336,11 +336,11 @@ export default function QuestionsPage() {
         <CardContent className="p-6">
           <div className="flex gap-6">
             <div className="flex-1">
-              <div className="prose max-w-none text-foreground [&_table]:w-auto [&_table]:border-collapse [&_table]:my-4 [&_th]:border [&_th]:border-border [&_th]:bg-background-secondary [&_th]:p-2 [&_th]:text-left [&_td]:border [&_td]:border-border [&_td]:p-2 [&_th]:text-sm [&_td]:text-sm [&_table]:mx-auto [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:space-y-2 [&_ol]:my-4">
+              <div className="prose max-w-none !font-serif text-foreground [&_table]:w-auto [&_table]:border-collapse [&_table]:my-4 [&_th]:border [&_th]:border-border [&_th]:bg-background-secondary [&_th]:p-2 [&_th]:text-left [&_td]:border [&_td]:border-border [&_td]:p-2 [&_th]:text-sm [&_td]:text-sm [&_table]:mx-auto [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:space-y-2 [&_ol]:my-4 debug-fonts">
                 <MDXRemote {...serializedContent} />
               </div>
             </div>
-  
+
             <div className="w-1/2 space-y-3">
               {currentProblem.choices.map((choice, index) => (
                 <button
@@ -353,8 +353,8 @@ export default function QuestionsPage() {
                   }`}
                 >
                   <div className="flex">
-                    <span className="font-medium mr-2 min-w-[1.5rem]">{choice.letter})</span>
-                    <div className="flex-1">
+                    <span className="font-medium !font-serif mr-2 min-w-[1.5rem]">{choice.letter})</span>
+                    <div className="flex-1 !font-serif debug-fonts">
                       {serializedChoices[index] && <MDXRemote {...serializedChoices[index]} />}
                     </div>
                   </div>
@@ -431,7 +431,7 @@ export default function QuestionsPage() {
                       <DrawerHeader className="border-b border-border">
                         <DrawerTitle className="text-foreground font-serif">Explanation</DrawerTitle>
                       </DrawerHeader>
-                      <div className="p-6 prose max-w-none h-[500px] overflow-auto text-foreground">
+                      <div className="p-6 prose max-w-none h-[500px] overflow-auto text-foreground font-serif [&_.math]:font-sans">
                         {serializedExplanation && <MDXRemote {...serializedExplanation} />}
                       </div>
                     </div>

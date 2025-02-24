@@ -29,7 +29,7 @@ export function WidgetWrapper({ widget, onRemove, onUpdateSettings, onUpdateSize
   if (!WidgetComponent) return null
 
   return (
-    <div className="relative group h-full">
+    <div className="relative group h-full rounded-xl overflow-hidden">
       <div className="absolute top-1.5 right-1.5 opacity-0 group-hover:opacity-100 transition-opacity z-10 flex gap-1">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
