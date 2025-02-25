@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { format } from 'date-fns'
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { CheckCircle, XCircle, ArrowRight, TrendingUp } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
-// Mock data for demonstration
+// Mock data for now
 const accuracyHistoryData = [
   { month: 'Jun', value: 60 },
   { month: 'Jul', value: 58 },
@@ -62,7 +62,6 @@ const recentProblems = [
 const HistorySection = () => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 h-full">
-      {/* Long-term trends */}
       <div className="bg-background-highlight p-4 rounded-xl border border-border">
         <h3 className="font-serif text-base font-semibold mb-3">Accuracy History</h3>
         <div className="h-56">
@@ -129,7 +128,6 @@ const HistorySection = () => {
         </div>
       </div>
       
-      {/* Recent problems */}
       <div className="bg-background-highlight p-4 rounded-xl border border-border lg:col-span-2">
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-serif text-base font-semibold">Recently Solved Problems</h3>
@@ -185,7 +183,6 @@ const HistorySection = () => {
         </div>
       </div>
       
-      {/* Insights */}
       <div className="bg-background-secondary/50 p-4 rounded-xl border border-border lg:col-span-2">
         <h3 className="font-serif text-base font-semibold mb-3 flex items-center gap-1.5">
           <TrendingUp className="h-4 w-4 text-primary" />

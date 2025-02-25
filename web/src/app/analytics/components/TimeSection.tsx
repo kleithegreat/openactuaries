@@ -2,7 +2,7 @@ import React from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts'
 import { Calendar } from '@/components/ui/calendar'
 
-// Mock data for demonstration
+// Mock data for now
 const weekdayDistribution = [
   { name: 'Mon', hours: 2.5 },
   { name: 'Tue', hours: 1.8 },
@@ -13,9 +13,9 @@ const weekdayDistribution = [
   { name: 'Sun', hours: 3.8 },
 ]
 
-// Create random study dates for the calendar
+// random study dates for the calendar
 const today = new Date()
-const studyDates = []
+const studyDates: Date[] = []
 
 for (let i = 0; i < 20; i++) {
   const date = new Date()
@@ -36,7 +36,6 @@ const COLORS = ['#3D9A72', '#AECFC6', '#AECFC6', '#3D9A72', '#AECFC6']
 const TimeSection = () => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
-      {/* Calendar with streak info */}
       <div className="bg-background-highlight p-4 rounded-xl border border-border xl:col-span-1 flex flex-col h-full">
         <h3 className="font-serif text-base font-semibold mb-3">Study Calendar</h3>
         <div className="flex flex-col h-full">
@@ -64,7 +63,6 @@ const TimeSection = () => {
         </div>
       </div>
       
-      {/* Day of week distribution */}
       <div className="bg-background-highlight p-4 rounded-xl border border-border flex flex-col h-full">
         <h3 className="font-serif text-base font-semibold mb-3">Day of Week Distribution</h3>
         <div className="flex-grow w-full">
@@ -112,7 +110,6 @@ const TimeSection = () => {
         </div>
       </div>
       
-      {/* Performance by time of day */}
       <div className="bg-background-highlight p-4 rounded-xl border border-border flex flex-col h-full">
         <h3 className="font-serif text-base font-semibold mb-3">Performance by Time of Day</h3>
         <div className="flex-grow w-full">
@@ -158,10 +155,10 @@ const TimeSection = () => {
                   fontSize: "12px"
                 }}
                 formatter={(value, entry) => {
-                  const { payload } = entry;
+                  const val = entry && entry.payload ? entry.payload.value : 0;
                   return (
                     <span style={{ color: 'hsl(var(--foreground))', fontSize: '12px' }}>
-                      {value}: {payload.value}%
+                      {value}: {val}%
                     </span>
                   );
                 }}
@@ -171,7 +168,6 @@ const TimeSection = () => {
         </div>
       </div>
 
-      {/* Recommendation */}
       <div className="bg-primary/10 p-4 rounded-xl border border-primary/20 xl:col-span-3">
         <div className="flex items-center gap-2">
           <div className="rounded-full bg-success h-3 w-3"></div>

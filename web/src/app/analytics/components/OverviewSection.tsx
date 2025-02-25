@@ -1,11 +1,10 @@
 import React from 'react'
-import { Card, CardContent } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import { CheckCircle, Clock, Award, Calendar } from 'lucide-react'
+import { CheckCircle, Clock, Award } from 'lucide-react'
 import { addDays, format } from 'date-fns'
 
-// Mock data for demonstration
+// Mock data for now
 const accuracyData = [
   { date: '1/15', value: 68 },
   { date: '1/22', value: 72 },
@@ -20,7 +19,6 @@ const examDate = addDays(new Date(), 45)
 const OverviewSection = () => {
   return (
     <div className="space-y-6">
-      {/* Exam countdown and progress banner */}
       <div className="bg-background-highlight p-6 rounded-xl border border-border">
         <div className="flex flex-col md:flex-row gap-6 items-center">
           <div className="flex-1">
@@ -67,7 +65,6 @@ const OverviewSection = () => {
         </div>
       </div>
       
-      {/* Charts row */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-background-highlight p-6 rounded-xl border border-border">
           <h3 className="font-serif text-base font-semibold mb-4">Accuracy Trend</h3>
@@ -143,7 +140,6 @@ const OverviewSection = () => {
         </div>
       </div>
       
-      {/* Weekly report */}
       <div className="bg-background-highlight p-6 rounded-xl border border-border">
         <h3 className="font-serif text-base font-semibold mb-4">Weekly Report</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

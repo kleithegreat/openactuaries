@@ -2,10 +2,9 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Target, Calendar, Book, BarChart4, Award, Clock } from 'lucide-react'
+import { ArrowLeft, Calendar, Book, BarChart4, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { getRequiredServerSession } from '@/lib/auth/server'
 import { Skeleton } from '@/components/ui/skeleton'
 import OverviewSection from './components/OverviewSection'
 import TopicsSection from './components/TopicsSection'
@@ -15,7 +14,7 @@ import HistorySection from './components/HistorySection'
 export default function AnalyticsPage() {
   const [loading, setLoading] = useState(true)
 
-  // Simulate data loading (this would be replaced with real data fetching)
+  // Simulate data loading
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false)
@@ -27,7 +26,6 @@ export default function AnalyticsPage() {
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="mb-8 flex items-center gap-4">
           <Link href="/home">
             <Button variant="ghost" size="icon" className="h-10 w-10">
@@ -42,7 +40,6 @@ export default function AnalyticsPage() {
           </div>
         </div>
 
-        {/* Main content */}
         <Tabs defaultValue="overview" className="space-y-6">
           <TabsList className="bg-background-secondary h-12 p-1">
             <TabsTrigger value="overview" className="flex items-center gap-2 h-10 data-[state=active]:bg-background data-[state=active]:shadow-sm">
