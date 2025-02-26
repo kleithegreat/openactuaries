@@ -32,14 +32,14 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-6xl mx-auto">
-        <div className="mb-5 bg-background-highlight rounded-xl p-5 border border-border shadow-sm">
+        <div className="mb-5 p-5">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
               <h1 className="text-3xl font-serif font-bold text-foreground">
                 Welcome back{session.user?.name ? `, ${session.user.name}` : ''}!
               </h1>
               <p className="text-foreground-secondary mt-1">
-                You have an exam in <span className="font-medium text-primary">{format(examDate, 'MMMM d, yyyy')}</span> (45 days remaining)
+                You have an exam on <span className="font-medium text-primary">{format(examDate, 'MMMM d, yyyy')}</span> (45 days remaining)
               </p>
             </div>
             
