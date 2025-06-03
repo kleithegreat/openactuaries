@@ -1,12 +1,10 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { Calendar } from '@/components/ui/calendar'
 
 interface DayHours { name: string; hours: number }
 interface Performance { name: string; value: number; optimal: boolean }
-
-const COLORS = ['#3D9A72', '#AECFC6', '#AECFC6', '#3D9A72', '#AECFC6']
 
 const TimeSection = () => {
   const [weekdayDistribution, setWeekdayDistribution] = useState<DayHours[]>([])
@@ -32,11 +30,11 @@ const TimeSection = () => {
       <div className="bg-background-highlight p-4 rounded-xl border border-border xl:col-span-1 flex flex-col h-full">
         <h3 className="font-serif text-base font-semibold mb-3">Study Calendar</h3>
         <div className="flex flex-col h-full">
-          <div className="flex-grow">
+          <div className="flex-grow w-full">
             <Calendar
               mode="multiple"
               selected={studyDates}
-              className="rounded-md border bg-background w-full h-full"
+              className="rounded-md border bg-background w-full h-full mx-auto"
             />
           </div>
           <div className="flex mt-2 divide-x divide-border">
@@ -107,27 +105,10 @@ const TimeSection = () => {
         <h3 className="font-serif text-base font-semibold mb-3">Performance by Time of Day</h3>
         <div className="flex-grow w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={timePerformanceData}
-                cx="50%"
-                cy="50%"
-                innerRadius={60}
-                outerRadius={80}
-                paddingAngle={2}
-                dataKey="value"
-                startAngle={90}
-                endAngle={-270}
-              >
-                {timePerformanceData.map((entry, index) => (
-                  <Cell 
-                    key={`cell-${index}`} 
-                    fill={COLORS[index % COLORS.length]}
-                    stroke="hsl(var(--background))"
-                    strokeWidth={1}
-                  />
-                ))}
-              </Pie>
+            <BarChart data={timePerformanceData} margin={{ top: 5, right: 5, left: 0, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.5} />
+              <XAxis dataKey="name" stroke="hsl(var(--foreground-secondary))" fontSize={12} tickLine={false} axisLine={false} />
+              <YAxis type="number" domain={[0, 100]} stroke="hsl(var(--foreground-secondary))" tickFormatter={(v) => `${v}%`} fontSize={12} />
               <Tooltip
                 formatter={(value) => [`${value}%`, 'Accuracy']}
                 contentStyle={{
@@ -139,24 +120,8 @@ const TimeSection = () => {
                   fontSize: '12px'
                 }}
               />
-              <Legend 
-                verticalAlign="bottom"
-                layout="vertical"
-                align="right"
-                wrapperStyle={{
-                  paddingLeft: "10px",
-                  fontSize: "12px"
-                }}
-                formatter={(value, entry) => {
-                  const val = entry && entry.payload ? entry.payload.value : 0;
-                  return (
-                    <span style={{ color: 'hsl(var(--foreground))', fontSize: '12px' }}>
-                      {value}: {val}%
-                    </span>
-                  );
-                }}
-              />
-            </PieChart>
+              <Bar dataKey="value" fill="hsl(var(--primary))" radius={[4,4,0,0]} barSize={30} />
+            </BarChart>
           </ResponsiveContainer>
         </div>
       </div>

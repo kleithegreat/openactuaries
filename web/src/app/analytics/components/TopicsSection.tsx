@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { PieChart, Pie, Cell, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer } from 'recharts'
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { TriangleAlert } from 'lucide-react'
 
 interface BreakdownEntry { name: string; value: number; color: string }
@@ -58,26 +58,20 @@ const TopicsSection = () => {
           <h3 className="font-serif text-base font-semibold mb-4">Topic Performance</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <RadarChart cx="50%" cy="50%" outerRadius="80%" data={performanceData}>
-                <PolarGrid stroke="hsl(var(--border))" />
-                <PolarAngleAxis 
-                  dataKey="subject" 
-                  tick={{ fill: 'hsl(var(--foreground-secondary))', fontSize: 12 }}
+              <BarChart data={performanceData} layout="vertical" margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="hsl(var(--border))" />
+                <XAxis type="number" domain={[0, 100]} tickFormatter={(v) => `${v}%`} stroke="hsl(var(--foreground-secondary))" />
+                <YAxis type="category" dataKey="subject" stroke="hsl(var(--foreground-secondary))" width={90} />
+                <Tooltip
+                  formatter={(value: number) => [`${value}%`, 'Accuracy']}
+                  contentStyle={{
+                    backgroundColor: 'hsl(var(--background-highlight))',
+                    borderColor: 'hsl(var(--border))',
+                    borderRadius: '0.375rem'
+                  }}
                 />
-                <PolarRadiusAxis
-                  angle={90}
-                  domain={[0, 100]}
-                  tick={{ fill: 'hsl(var(--foreground-secondary))', fontSize: 10 }}
-                  tickFormatter={(value) => `${value}%`}
-                />
-                <Radar
-                  name="Accuracy"
-                  dataKey="accuracy"
-                  stroke="hsl(var(--primary))"
-                  fill="hsl(var(--primary))"
-                  fillOpacity={0.5}
-                />
-              </RadarChart>
+                <Bar dataKey="accuracy" fill="hsl(var(--primary))" radius={[0, 4, 4, 0]} barSize={20} />
+              </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
