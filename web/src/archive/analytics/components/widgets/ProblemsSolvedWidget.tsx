@@ -182,13 +182,13 @@ export function ProblemsSolvedWidget({ settings, size = "normal", onUpdateSettin
                     )
                     
                     return (
-                      <div className="bg-white p-2 rounded shadow border text-xs">
+                      <div className="bg-background p-2 rounded shadow border text-xs">
                         <div className="font-medium mb-1">Week of {weekStart} - {weekEnd}</div>
                         <div className="text-sm">
-                          <span className="font-medium text-sky-900">
+                          <span className="font-medium text-primary-dark">
                             {data.problems} problems
                           </span>
-                          <span className="text-gray-500 ml-1">avg/day</span>
+                          <span className="text-muted-foreground ml-1">avg/day</span>
                         </div>
                       </div>
                     )

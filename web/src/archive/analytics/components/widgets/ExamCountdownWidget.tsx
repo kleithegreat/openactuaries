@@ -37,22 +37,22 @@ export function ExamCountdownWidget() {
           <div className="text-2xl font-bold mb-4">{examInfo.examType}</div>
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <div className="text-3xl font-bold text-sky-900">
+              <div className="text-3xl font-bold text-primary-dark">
                 {countdown.days}
               </div>
-              <div className="text-sm text-gray-600">Days</div>
+              <div className="text-sm text-muted-foreground">Days</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-sky-900">
+              <div className="text-3xl font-bold text-primary-dark">
                 {countdown.hours}
               </div>
-              <div className="text-sm text-gray-600">Hours</div>
+              <div className="text-sm text-muted-foreground">Hours</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-sky-900">
+              <div className="text-3xl font-bold text-primary-dark">
                 {countdown.minutes}
               </div>
-              <div className="text-sm text-gray-600">Minutes</div>
+              <div className="text-sm text-muted-foreground">Minutes</div>
             </div>
           </div>
         </div>

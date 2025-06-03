@@ -66,13 +66,13 @@ export function Navbar({ user }: NavbarProps) {
         <div className="flex justify-between h-16">
           <div className="flex">
             <Link href={getLinkDestination()} className="flex items-center">
-              <span 
+              <span
                 className="text-xl font-bold shiny-text font-logo"
                 onMouseMove={handleMouseMove}
                 style={{
                   '--mouse-x': `${mousePosition.x}px`,
                   '--mouse-y': `${mousePosition.y}px`,
-                  'color': '#000000',
+                  color: 'hsl(var(--foreground))',
                 } as React.CSSProperties}
               >
                 open/actuaries

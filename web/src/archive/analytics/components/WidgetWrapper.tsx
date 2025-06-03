@@ -57,7 +57,7 @@ export function WidgetWrapper({ widget, onRemove, onUpdateSettings, onUpdateSize
       </div>
 
       <div className="absolute top-1.5 left-1.5 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-        <GripHorizontal className="h-3 w-3 text-gray-400 cursor-move" />
+        <GripHorizontal className="h-3 w-3 text-muted-foreground cursor-move" />
       </div>
       
       <ErrorBoundary FallbackComponent={WidgetErrorFallback}>

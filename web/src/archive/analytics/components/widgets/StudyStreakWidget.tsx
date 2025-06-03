@@ -13,8 +13,8 @@ export function StudyStreakWidget() {
       </CardHeader>
       <CardContent>
         <div className="text-center mb-6">
-          <div className="text-4xl font-bold text-sky-900">{data.currentStreak}</div>
-          <div className="text-gray-600">Day Streak</div>
+          <div className="text-4xl font-bold text-primary-dark">{data.currentStreak}</div>
+          <div className="text-muted-foreground">Day Streak</div>
         </div>
         <Calendar
           mode="multiple"
