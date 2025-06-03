@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { MOCK_PROBLEMS_SOLVED } from "@/lib/mock/analytics"
 import { useState, useEffect } from "react"
-import type { WidgetSize } from "@/types/analytics"
+import type { WidgetSize } from "@/archive/analytics/types/analytics"
 import { cn } from "@/lib/utils"
 import { format, parseISO } from "date-fns"
 
@@ -17,7 +17,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-import type { TimeRangeOption, WidgetSettings } from "@/types/analytics"
+import type { TimeRangeOption, WidgetSettings } from "@/archive/analytics/types/analytics"
 
 interface ProblemsSolvedWidgetProps {
   settings?: WidgetSettings

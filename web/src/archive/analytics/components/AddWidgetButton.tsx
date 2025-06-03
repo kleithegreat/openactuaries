@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { AVAILABLE_WIDGETS } from '@/hooks/useAnalyticsDashboard'
+import { AVAILABLE_WIDGETS } from '@/archive/analytics/hooks/useAnalyticsDashboard'
 import { WidgetType } from '@/types'
 
 interface AddWidgetButtonProps {

@@ -1,7 +1,7 @@
 'use client'
 
-import { useLocalStorage } from './useLocalStorage'
-import { Widget, WidgetType, WidgetSettings, WidgetSize } from '@/types/analytics'
+import { useLocalStorage } from '../../../hooks/useLocalStorage'
+import { Widget, WidgetType, WidgetSettings, WidgetSize } from '@/archive/analytics/types/analytics'
 
 export const AVAILABLE_WIDGETS: Record<WidgetType, {
   title: string

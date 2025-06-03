@@ -3,10 +3,10 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { X, GripHorizontal, Maximize2 } from "lucide-react"
-import type { Widget, WidgetSettings, WidgetSize } from "@/types/analytics"
+import type { Widget, WidgetSettings, WidgetSize } from "@/archive/analytics/types/analytics"
 import * as Widgets from "./widgets"
 import { DeleteWidgetDialog } from "./DeleteWidgetDialog"
-import { AVAILABLE_WIDGETS } from "@/hooks/useAnalyticsDashboard"
+import { AVAILABLE_WIDGETS } from "@/archive/analytics/hooks/useAnalyticsDashboard"
 import { ErrorBoundary } from "react-error-boundary"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 

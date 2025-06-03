@@ -4,8 +4,8 @@ import { Plus } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { WidgetWrapper } from "./WidgetWrapper"
-import { AVAILABLE_WIDGETS } from "@/hooks/useAnalyticsDashboard"
-import type { WidgetType, WidgetSize, WidgetSettings } from "@/types/analytics"
+import { AVAILABLE_WIDGETS } from "@/archive/analytics/hooks/useAnalyticsDashboard"
+import type { WidgetType, WidgetSize, WidgetSettings } from "@/archive/analytics/types/analytics"
 
 interface DashboardGridProps {
   widgets: {

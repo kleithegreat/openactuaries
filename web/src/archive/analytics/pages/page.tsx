@@ -1,12 +1,12 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
-import { DashboardGrid } from "@/components/analytics/DashboardGrid"
-import { useAnalyticsDashboard } from "@/hooks/useAnalyticsDashboard"
+import { DashboardGrid } from "@/archive/analytics/components/DashboardGrid"
+import { useAnalyticsDashboard } from "@/archive/analytics/hooks/useAnalyticsDashboard"
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import type { WidgetType } from "@/types/analytics"
+import type { WidgetType } from "@/archive/analytics/types/analytics"
 
 export default function AnalyticsPage() {
   const [isClient, setIsClient] = useState(false)
