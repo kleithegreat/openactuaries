@@ -5,6 +5,7 @@ import { Inter } from 'next/font/google'
 import { IBM_Plex_Serif, IBM_Plex_Sans } from 'next/font/google'
 import { Navbar } from '@/components/navbar/Navbar'
 import AuthProvider from '@/components/AuthProvider'
+import Script from 'next/script'
 import { getServerSessionUser } from '@/lib/auth/server'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
@@ -33,6 +34,9 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
+      <Script id="init-theme" strategy="beforeInteractive" dangerouslySetInnerHTML={{
+        __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}})();`
+      }} />
       <body className={`${inter.variable} ${ibmPlexSerif.variable} ${ibmPlexSans.variable} font-sans bg-background text-foreground`}>
         <AuthProvider>
           <Navbar key={user?.id ?? 'no-user'} user={user} />

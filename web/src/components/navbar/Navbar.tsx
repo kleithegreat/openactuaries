@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation"
 import { Button } from "../ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { Menu } from "lucide-react"
+import DarkModeToggle from "../DarkModeToggle"
 import { useState, useEffect } from "react"
 import type { User } from "next-auth"
 
@@ -79,6 +80,7 @@ export function Navbar({ user }: NavbarProps) {
             </Link>
           </div>
           <div className="flex items-center gap-4">
+            <DarkModeToggle />
             {isLoading ? (
               <div className="animate-pulse text-foreground-secondary">Loading...</div>
             ) : user ? (
