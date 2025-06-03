@@ -1,4 +1,6 @@
-import React from 'react'
+'use client'
+
+import React, { useEffect, useState } from 'react'
 import { Progress } from '@/components/ui/progress'
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { CheckCircle, Clock, Award } from 'lucide-react'
@@ -16,7 +18,21 @@ const accuracyData = [
 
 const examDate = addDays(new Date(), 45)
 
+interface OverviewData {
+  totalProblemsSolved: number
+  totalStudyHours: number
+  accuracy: number
+}
+
 const OverviewSection = () => {
+  const [data, setData] = useState<OverviewData | null>(null)
+
+  useEffect(() => {
+    fetch('/api/analytics/overview')
+      .then(res => res.ok ? res.json() : null)
+      .then(res => setData(res))
+      .catch(() => setData(null))
+  }, [])
   return (
     <div className="space-y-6">
       <div className="bg-background-highlight p-6 rounded-xl border border-border">
@@ -42,7 +58,9 @@ const OverviewSection = () => {
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-2">
                 <CheckCircle className="h-7 w-7 text-primary" />
               </div>
-              <div className="text-2xl font-semibold text-foreground">219</div>
+              <div className="text-2xl font-semibold text-foreground">
+                {data ? data.totalProblemsSolved : '–'}
+              </div>
               <div className="text-xs text-foreground-secondary">Problems Solved</div>
             </div>
             
@@ -50,7 +68,9 @@ const OverviewSection = () => {
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-2">
                 <Clock className="h-7 w-7 text-primary" />
               </div>
-              <div className="text-2xl font-semibold text-foreground">24</div>
+              <div className="text-2xl font-semibold text-foreground">
+                {data ? data.totalStudyHours : '–'}
+              </div>
               <div className="text-xs text-foreground-secondary">Study Hours</div>
             </div>
             
@@ -58,7 +78,9 @@ const OverviewSection = () => {
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-2">
                 <Award className="h-7 w-7 text-primary" />
               </div>
-              <div className="text-2xl font-semibold text-foreground">78%</div>
+              <div className="text-2xl font-semibold text-foreground">
+                {data ? `${data.accuracy}%` : '–'}
+              </div>
               <div className="text-xs text-foreground-secondary">Accuracy</div>
             </div>
           </div>
