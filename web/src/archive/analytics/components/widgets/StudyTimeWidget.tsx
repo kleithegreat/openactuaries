@@ -18,7 +18,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import { MOCK_STUDY_TIME } from '@/lib/mock/analytics'
-import { WidgetSettings } from '@/types/analytics'
+import { WidgetSettings } from '@/archive/analytics/types/analytics'
 import { cn } from "@/lib/utils"
 
 interface StudyTimeWidgetProps {
