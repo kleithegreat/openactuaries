@@ -1,65 +1,31 @@
-import React from 'react'
+'use client'
+import React, { useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { CheckCircle, XCircle, ArrowRight, TrendingUp } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
-// Mock data for now
-const accuracyHistoryData = [
-  { month: 'Jun', value: 60 },
-  { month: 'Jul', value: 58 },
-  { month: 'Aug', value: 65 },
-  { month: 'Sep', value: 68 },
-  { month: 'Oct', value: 72 },
-  { month: 'Nov', value: 75 },
-  { month: 'Dec', value: 78 },
-  { month: 'Jan', value: 80 },
-  { month: 'Feb', value: 82 },
-]
-
-const volumeHistoryData = [
-  { month: 'Jun', problems: 45 },
-  { month: 'Jul', problems: 62 },
-  { month: 'Aug', problems: 85 },
-  { month: 'Sep', problems: 75 },
-  { month: 'Oct', problems: 110 },
-  { month: 'Nov', problems: 125 },
-  { month: 'Dec', problems: 95 },
-  { month: 'Jan', problems: 140 },
-  { month: 'Feb', problems: 155 },
-]
-
-const recentProblems = [
-  {
-    id: '1',
-    questionNumber: 42,
-    exam: 'P',
-    date: new Date(2025, 1, 24),
-    category: 'Statistics',
-    isCorrect: true,
-    timeSpent: 95,
-  },
-  {
-    id: '2',
-    questionNumber: 18,
-    exam: 'P',
-    date: new Date(2025, 1, 24),
-    category: 'Probability',
-    isCorrect: false,
-    timeSpent: 120,
-  },
-  {
-    id: '3',
-    questionNumber: 35,
-    exam: 'P',
-    date: new Date(2025, 1, 22),
-    category: 'Risk Theory',
-    isCorrect: true,
-    timeSpent: 85,
-  },
-]
+interface AccuracyPoint { month: string; value: number }
+interface VolumePoint { month: string; problems: number }
+interface RecentProblem { id: string; questionNumber: number; exam: string; date: string; category: string; isCorrect: boolean; timeSpent: number }
 
 const HistorySection = () => {
+  const [accuracyHistoryData, setAccuracyHistoryData] = useState<AccuracyPoint[]>([])
+  const [volumeHistoryData, setVolumeHistoryData] = useState<VolumePoint[]>([])
+  const [recentProblems, setRecentProblems] = useState<RecentProblem[]>([])
+
+  useEffect(() => {
+    fetch('/api/analytics/history')
+      .then(res => res.ok ? res.json() : null)
+      .then(res => {
+        if (res) {
+          setAccuracyHistoryData(res.accuracyHistory)
+          setVolumeHistoryData(res.volumeHistory)
+          setRecentProblems(res.recentProblems)
+        }
+      })
+  }, [])
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 h-full">
       <div className="bg-background-highlight p-4 rounded-xl border border-border">

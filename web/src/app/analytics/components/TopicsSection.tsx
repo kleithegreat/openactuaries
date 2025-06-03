@@ -1,46 +1,28 @@
-import React from 'react'
+'use client'
+import React, { useEffect, useState } from 'react'
 import { PieChart, Pie, Cell, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer } from 'recharts'
 import { TriangleAlert } from 'lucide-react'
 
-// Mock data for demonstration
-const topicBreakdown = [
-  { name: 'Probability', value: 35, color: 'hsl(var(--chart-1))' },
-  { name: 'Statistics', value: 25, color: 'hsl(var(--chart-2))' },
-  { name: 'Risk Theory', value: 20, color: 'hsl(var(--chart-3))' },
-  { name: 'Financial Math', value: 15, color: 'hsl(var(--chart-4))' },
-  { name: 'Other', value: 5, color: 'hsl(var(--chart-5))' },
-]
-
-const performanceData = [
-  { subject: 'Probability', accuracy: 85 },
-  { subject: 'Statistics', accuracy: 65 },
-  { subject: 'Risk Theory', accuracy: 90 },
-  { subject: 'Financial Math', accuracy: 70 },
-  { subject: 'Other', accuracy: 75 },
-]
-
-const topicsToImprove = [
-  { 
-    topic: 'Joint Distributions', 
-    accuracy: 58, 
-    problems: 12,
-    description: 'Focus on the concept of covariance and correlation between random variables.' 
-  },
-  { 
-    topic: 'Sampling Distributions', 
-    accuracy: 62, 
-    problems: 8,
-    description: 'Review properties of the t-distribution and chi-square distribution.' 
-  },
-  { 
-    topic: 'Central Limit Theorem', 
-    accuracy: 65, 
-    problems: 10,
-    description: 'Practice applications of CLT in various contexts.' 
-  },
-]
+interface BreakdownEntry { name: string; value: number; color: string }
+interface PerformanceEntry { subject: string; accuracy: number }
+interface FocusEntry { topic: string; accuracy: number; problems: number; description: string }
 
 const TopicsSection = () => {
+  const [topicBreakdown, setTopicBreakdown] = useState<BreakdownEntry[]>([])
+  const [performanceData, setPerformanceData] = useState<PerformanceEntry[]>([])
+  const [topicsToImprove, setTopicsToImprove] = useState<FocusEntry[]>([])
+
+  useEffect(() => {
+    fetch('/api/analytics/topics')
+      .then(res => res.ok ? res.json() : null)
+      .then((res: { breakdown: { topic: string; value: number }[]; performance: PerformanceEntry[]; toFocus: { topic: string; accuracy: number; problems: number }[] } | null) => {
+        if (res) {
+          setTopicBreakdown(res.breakdown.map((b, i) => ({ name: b.topic, value: b.value, color: `hsl(var(--chart-${(i%5)+1}))` })))
+          setPerformanceData(res.performance)
+          setTopicsToImprove(res.toFocus.map(t => ({ ...t, description: '' })))
+        }
+      })
+  }, [])
   return (
     <div className="space-y-6">
       {/* Topic distribution and performance */}

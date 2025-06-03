@@ -1,39 +1,32 @@
-import React from 'react'
+'use client'
+import React, { useEffect, useState } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts'
 import { Calendar } from '@/components/ui/calendar'
 
-// Mock data for now
-const weekdayDistribution = [
-  { name: 'Mon', hours: 2.5 },
-  { name: 'Tue', hours: 1.8 },
-  { name: 'Wed', hours: 3.2 },
-  { name: 'Thu', hours: 1.5 },
-  { name: 'Fri', hours: 1.0 },
-  { name: 'Sat', hours: 4.5 },
-  { name: 'Sun', hours: 3.8 },
-]
-
-// random study dates for the calendar
-const today = new Date()
-const studyDates: Date[] = []
-
-for (let i = 0; i < 20; i++) {
-  const date = new Date()
-  date.setDate(today.getDate() - Math.floor(Math.random() * 60))
-  studyDates.push(date)
-}
-
-const timePerformanceData = [
-  { name: 'Morning (5AM-9AM)', value: 78, optimal: true },
-  { name: 'Midday (9AM-2PM)', value: 72, optimal: false },
-  { name: 'Afternoon (2PM-6PM)', value: 65, optimal: false },
-  { name: 'Evening (6PM-10PM)', value: 85, optimal: true },
-  { name: 'Night (10PM-1AM)', value: 70, optimal: false },
-]
+interface DayHours { name: string; hours: number }
+interface Performance { name: string; value: number; optimal: boolean }
 
 const COLORS = ['#3D9A72', '#AECFC6', '#AECFC6', '#3D9A72', '#AECFC6']
 
 const TimeSection = () => {
+  const [weekdayDistribution, setWeekdayDistribution] = useState<DayHours[]>([])
+  const [studyDates, setStudyDates] = useState<Date[]>([])
+  const [timePerformanceData, setTimePerformanceData] = useState<Performance[]>([])
+  const [streak, setStreak] = useState<{ currentStreak: number; longestStreak: number; monthDays: number } | null>(null)
+
+  useEffect(() => {
+    fetch('/api/analytics/time')
+      .then(res => res.ok ? res.json() : null)
+      .then(res => {
+        if (res) {
+          setWeekdayDistribution(res.weekdayDistribution)
+          setStudyDates(res.studyDates.map((d: string) => new Date(d)))
+          setTimePerformanceData(res.timePerformance)
+          setStreak(res.streak)
+        }
+      })
+  }, [])
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
       <div className="bg-background-highlight p-4 rounded-xl border border-border xl:col-span-1 flex flex-col h-full">
@@ -48,15 +41,15 @@ const TimeSection = () => {
           </div>
           <div className="flex mt-2 divide-x divide-border">
             <div className="flex-1 text-center px-2">
-              <div className="text-xl font-semibold text-foreground">7</div>
+              <div className="text-xl font-semibold text-foreground">{streak ? streak.currentStreak : '–'}</div>
               <div className="text-foreground-secondary text-xs">Current streak</div>
             </div>
             <div className="flex-1 text-center px-2">
-              <div className="text-xl font-semibold text-foreground">12</div>
+              <div className="text-xl font-semibold text-foreground">{streak ? streak.longestStreak : '–'}</div>
               <div className="text-foreground-secondary text-xs">Longest streak</div>
             </div>
             <div className="flex-1 text-center px-2">
-              <div className="text-xl font-semibold text-foreground">18</div>
+              <div className="text-xl font-semibold text-foreground">{streak ? streak.monthDays : '–'}</div>
               <div className="text-foreground-secondary text-xs">Days this month</div>
             </div>
           </div>
