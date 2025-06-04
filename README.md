@@ -11,3 +11,9 @@ todo:
     - start testing on other
 - dark mode (gruvbox dark medium)
 - make a proper README
+
+## Environment Variables
+
+Configuration values for the web app are loaded and validated in
+`web/src/lib/env.ts`. Create a `.env` file by copying `web/.env.example`
+and update the values before starting development.
