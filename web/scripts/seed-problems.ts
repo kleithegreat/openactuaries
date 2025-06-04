@@ -2,6 +2,22 @@ import { PrismaClient } from '@prisma/client';
 import fs from 'fs/promises';
 import path from 'path';
 
+async function readExamProblems(filePath: string): Promise<any[]> {
+  try {
+    await fs.access(filePath);
+  } catch {
+    throw new Error(`Exam file not found: ${filePath}`);
+  }
+
+  const fileData = await fs.readFile(filePath, 'utf-8');
+
+  try {
+    return JSON.parse(fileData);
+  } catch (err) {
+    throw new Error(`Invalid JSON in ${filePath}: ${(err as Error).message}`);
+  }
+}
+
 const prisma = new PrismaClient();
 
 async function main() {
@@ -17,8 +33,7 @@ async function main() {
       'p_exam.json',
     );
     console.log('Reading P exam from:', pExamPath);
-    const pExamData = await fs.readFile(pExamPath, 'utf-8');
-    const pExamProblems = JSON.parse(pExamData);
+    const pExamProblems = await readExamProblems(pExamPath);
     console.log(`Found ${pExamProblems.length} P exam problems`);
 
     // Read FM exam problems
@@ -30,8 +45,7 @@ async function main() {
       'fm_exam.json',
     );
     console.log('Reading FM exam from:', fmExamPath);
-    const fmExamData = await fs.readFile(fmExamPath, 'utf-8');
-    const fmExamProblems = JSON.parse(fmExamData);
+    const fmExamProblems = await readExamProblems(fmExamPath);
     console.log(`Found ${fmExamProblems.length} FM exam problems`);
 
     const allProblems = [...pExamProblems, ...fmExamProblems];
