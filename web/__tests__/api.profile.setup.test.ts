@@ -97,9 +97,7 @@ describe('POST /api/profile/setup', () => {
       body: JSON.stringify({
         goalType: 'Exam',
         goalAmount: 5,
-        examRegistrations: [
-          { exam: 'P', date: '2023-01-01T00:00:00.000Z' },
-        ],
+        examRegistrations: [{ exam: 'P', date: '2023-01-01T00:00:00.000Z' }],
       }),
     });
 

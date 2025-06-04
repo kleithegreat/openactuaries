@@ -60,7 +60,9 @@ describe('POST /api/practice/save-session', () => {
 
   it('saves session and attempts', async () => {
     (getServerSession as jest.Mock).mockResolvedValue({ user: { id: '1' } });
-    (prisma.userProfile.findUnique as jest.Mock).mockResolvedValue({ id: 'p1' });
+    (prisma.userProfile.findUnique as jest.Mock).mockResolvedValue({
+      id: 'p1',
+    });
     (prisma.studySession.create as jest.Mock).mockResolvedValue({ id: 's1' });
 
     const answers = [

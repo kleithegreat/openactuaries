@@ -60,14 +60,19 @@ const OverviewSection = () => {
         const profileRes = await fetch('/api/profile');
         const profile = profileRes.ok ? await profileRes.json() : null;
         if (profile?.examRegistrations?.length) {
-          const regs = profile.examRegistrations.map((reg: { examType: string; examDate: string }) => {
-            const date = new Date(reg.examDate);
-            return {
-              examType: reg.examType,
-              examDate: date,
-              daysLeft: Math.max(0, differenceInCalendarDays(date, new Date())),
-            };
-          });
+          const regs = profile.examRegistrations.map(
+            (reg: { examType: string; examDate: string }) => {
+              const date = new Date(reg.examDate);
+              return {
+                examType: reg.examType,
+                examDate: date,
+                daysLeft: Math.max(
+                  0,
+                  differenceInCalendarDays(date, new Date()),
+                ),
+              };
+            },
+          );
           setExams(regs);
         }
 
@@ -131,19 +136,27 @@ const OverviewSection = () => {
             {exams.length > 0 ? (
               <div className="space-y-4">
                 {exams.map((exam, i) => {
-                  const progress = Math.max(0, Math.min(100, 100 - Math.round((exam.daysLeft / 90) * 100)));
+                  const progress = Math.max(
+                    0,
+                    Math.min(100, 100 - Math.round((exam.daysLeft / 90) * 100)),
+                  );
                   return (
                     <div key={i} className="space-y-2">
                       <h3 className="font-serif text-lg font-semibold text-foreground">
-                        Exam {exam.examType}: {format(exam.examDate, 'MMMM d, yyyy')}
+                        Exam {exam.examType}:{' '}
+                        {format(exam.examDate, 'MMMM d, yyyy')}
                       </h3>
                       <p className="text-foreground-secondary text-sm">
                         {exam.daysLeft} days remaining
                       </p>
                       <div className="space-y-1">
                         <div className="flex justify-between items-center">
-                          <span className="text-sm text-foreground-secondary">Study Progress</span>
-                          <span className="text-sm font-medium">{progress}%</span>
+                          <span className="text-sm text-foreground-secondary">
+                            Study Progress
+                          </span>
+                          <span className="text-sm font-medium">
+                            {progress}%
+                          </span>
                         </div>
                         <Progress value={progress} className="h-2" />
                       </div>
@@ -152,9 +165,13 @@ const OverviewSection = () => {
                 })}
               </div>
             ) : (
-              <h3 className="font-serif text-lg font-semibold text-foreground">No Exam Registered</h3>
+              <h3 className="font-serif text-lg font-semibold text-foreground">
+                No Exam Registered
+              </h3>
             )}
-            <p className="text-sm text-foreground-secondary mt-2">Based on your targeted study plan</p>
+            <p className="text-sm text-foreground-secondary mt-2">
+              Based on your targeted study plan
+            </p>
           </div>
 
           <div className="flex gap-4 md:gap-6 w-full md:w-auto">

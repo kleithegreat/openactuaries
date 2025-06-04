@@ -53,7 +53,9 @@ describe('GET /api/analytics/topics', () => {
 
   it('returns topic stats', async () => {
     (getServerSession as jest.Mock).mockResolvedValue({ user: { id: '1' } });
-    (prisma.userProfile.findUnique as jest.Mock).mockResolvedValue({ id: 'p1' });
+    (prisma.userProfile.findUnique as jest.Mock).mockResolvedValue({
+      id: 'p1',
+    });
     (prisma.problemAttempt.findMany as jest.Mock).mockResolvedValue([
       { isCorrect: true, problem: { syllabusCategory: 'Alg' } },
       { isCorrect: false, problem: { syllabusCategory: 'Calc' } },
