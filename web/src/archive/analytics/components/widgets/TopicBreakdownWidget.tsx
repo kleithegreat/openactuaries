@@ -1,11 +1,18 @@
-import React, { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts'
-import { MOCK_TOPIC_BREAKDOWN } from '@/lib/mock/analytics'
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Legend,
+  Tooltip,
+} from 'recharts';
+import { MOCK_TOPIC_BREAKDOWN } from '@/lib/mock/analytics';
 
 export function TopicBreakdownWidget() {
-  const [data, _setData] = useState(MOCK_TOPIC_BREAKDOWN)
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8']
+  const [data, _setData] = useState(MOCK_TOPIC_BREAKDOWN);
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
   return (
     <Card className="w-full h-full">
@@ -25,7 +32,10 @@ export function TopicBreakdownWidget() {
               label
             >
               {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                <Cell
+                  key={`cell-${index}`}
+                  fill={COLORS[index % COLORS.length]}
+                />
               ))}
             </Pie>
             <Tooltip />
@@ -34,5 +44,5 @@ export function TopicBreakdownWidget() {
         </ResponsiveContainer>
       </CardContent>
     </Card>
-  )
+  );
 }

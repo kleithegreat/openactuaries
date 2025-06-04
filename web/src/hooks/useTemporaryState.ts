@@ -1,17 +1,20 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 
-export function useTemporaryState<T>(initialState: T, duration: number = 3000): [T, (value: T) => void] {
-  const [state, setState] = useState<T>(initialState)
+export function useTemporaryState<T>(
+  initialState: T,
+  duration: number = 3000,
+): [T, (value: T) => void] {
+  const [state, setState] = useState<T>(initialState);
 
   useEffect(() => {
     if (state) {
       const timer = setTimeout(() => {
-        setState(initialState)
-      }, duration)
+        setState(initialState);
+      }, duration);
 
-      return () => clearTimeout(timer)
+      return () => clearTimeout(timer);
     }
-  }, [state, initialState, duration])
+  }, [state, initialState, duration]);
 
-  return [state, setState]
+  return [state, setState];
 }

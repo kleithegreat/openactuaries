@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { MOCK_CONFIDENCE_MATRIX } from '@/lib/mock/analytics'
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { MOCK_CONFIDENCE_MATRIX } from '@/lib/mock/analytics';
 
 export function ConfidenceMatrixWidget() {
-  const [matrix, _setMatrix] = useState(MOCK_CONFIDENCE_MATRIX)
-  const confidenceLevels = ['Very Low', 'Low', 'Medium', 'High', 'Very High']
+  const [matrix, _setMatrix] = useState(MOCK_CONFIDENCE_MATRIX);
+  const confidenceLevels = ['Very Low', 'Low', 'Medium', 'High', 'Very High'];
 
   return (
     <Card className="w-full h-full">
@@ -14,7 +14,7 @@ export function ConfidenceMatrixWidget() {
       <CardContent>
         <div className="grid grid-cols-4 gap-1">
           <div className="col-span-1"></div>
-          {['Incorrect', 'Correct', 'Total'].map((header) => (
+          {['Incorrect', 'Correct', 'Total'].map(header => (
             <div key={header} className="text-sm font-medium text-center">
               {header}
             </div>
@@ -28,20 +28,18 @@ export function ConfidenceMatrixWidget() {
                   key={j}
                   className="p-2 text-center rounded"
                   style={{
-                    backgroundColor: `rgba(37, 99, 235, ${value/100})`,
-                    color: value > 50 ? 'white' : 'black'
+                    backgroundColor: `rgba(37, 99, 235, ${value / 100})`,
+                    color: value > 50 ? 'white' : 'black',
                   }}
                 >
                   {value}%
                 </div>
               ))}
-              <div className="p-2 text-center">
-                {matrix[i][2]}
-              </div>
+              <div className="p-2 text-center">{matrix[i][2]}</div>
             </React.Fragment>
           ))}
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

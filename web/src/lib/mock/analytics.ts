@@ -1,69 +1,69 @@
-import { format, subDays, addDays } from 'date-fns'
+import { format, subDays, addDays } from 'date-fns';
 
-const today = new Date()
+const today = new Date();
 
 export const MOCK_PROBLEMS_SOLVED = (() => {
-  const sixMonthsData = []
-  
+  const sixMonthsData = [];
+
   for (let i = 179; i >= 0; i--) {
-    const date = subDays(today, i)
+    const date = subDays(today, i);
     sixMonthsData.push({
       date: format(date, 'yyyy-MM-dd'),
       dateFormatted: format(date, 'MMM dd'),
       problems: Math.floor(Math.random() * 20) + 5,
-      trend: Math.floor(Math.sin(i/30) * 5 + (180-i)/20)
-    })
+      trend: Math.floor(Math.sin(i / 30) * 5 + (180 - i) / 20),
+    });
   }
-  
-  return sixMonthsData
-})()
+
+  return sixMonthsData;
+})();
 
 export const MOCK_STUDY_TIME = Array.from({ length: 30 }, (_, i) => ({
   date: format(subDays(today, 29 - i), 'yyyy-MM-dd'),
   dateFormatted: format(subDays(today, 29 - i), 'MMM dd'),
-  hours: Number((Math.random() * 4 + 1).toFixed(1))
-}))
+  hours: Number((Math.random() * 4 + 1).toFixed(1)),
+}));
 
 export const MOCK_ACCURACY_TREND = Array.from({ length: 30 }, (_, i) => ({
   date: format(subDays(today, 29 - i), 'yyyy-MM-dd'),
   dateFormatted: format(subDays(today, 29 - i), 'MMM dd'),
-  accuracy: Math.floor(Math.random() * 30 + 70) // 70-100% accuracy
-}))
+  accuracy: Math.floor(Math.random() * 30 + 70), // 70-100% accuracy
+}));
 
 export const MOCK_TOPIC_BREAKDOWN = [
   { topic: 'Probability', value: 35 },
   { topic: 'Statistics', value: 25 },
   { topic: 'Financial Math', value: 20 },
   { topic: 'Risk Theory', value: 15 },
-  { topic: 'Other', value: 5 }
-]
+  { topic: 'Other', value: 5 },
+];
 
 export const MOCK_STUDY_STREAK = {
   currentStreak: 7,
-  studyDays: Array.from({ length: 14 }, (_, i) => 
-    format(subDays(today, i), 'yyyy-MM-dd')
-  ).filter(() => Math.random() > 0.3) // Randomly skip some days
-}
+  studyDays: Array.from({ length: 14 }, (_, i) =>
+    format(subDays(today, i), 'yyyy-MM-dd'),
+  ).filter(() => Math.random() > 0.3), // Randomly skip some days
+};
 
 export const MOCK_CONFIDENCE_MATRIX = [
-  [20, 80, 50],  // Very Low confidence
+  [20, 80, 50], // Very Low confidence
   [30, 70, 100], // Low confidence
   [40, 60, 150], // Medium confidence
   [60, 40, 120], // High confidence
-  [70, 30, 80]   // Very High confidence
-]
+  [70, 30, 80], // Very High confidence
+];
 
 export const MOCK_TIME_DISTRIBUTION = [
   { category: 'Easy', averageTime: 3 },
   { category: 'Medium', averageTime: 5 },
-  { category: 'Hard', averageTime: 8 }
-]
+  { category: 'Hard', averageTime: 8 },
+];
 
 export const MOCK_PROBLEM_DIFFICULTY = [
   { difficulty: 'Easy', accuracy: 85 },
   { difficulty: 'Medium', accuracy: 70 },
-  { difficulty: 'Hard', accuracy: 55 }
-]
+  { difficulty: 'Hard', accuracy: 55 },
+];
 
 export const MOCK_REVIEW_LIST = [
   {
@@ -71,25 +71,25 @@ export const MOCK_REVIEW_LIST = [
     questionNumber: 15,
     timeSpent: 180,
     isCorrect: false,
-    notes: 'Need to review probability concepts'
+    notes: 'Need to review probability concepts',
   },
   {
     id: '2',
     questionNumber: 23,
     timeSpent: 240,
     isCorrect: true,
-    notes: 'Good solution but took too long'
+    notes: 'Good solution but took too long',
   },
   {
     id: '3',
     questionNumber: 8,
     timeSpent: 150,
     isCorrect: false,
-    notes: 'Review financial mathematics formulas'
-  }
-]
+    notes: 'Review financial mathematics formulas',
+  },
+];
 
 export const MOCK_EXAM_INFO = {
   examType: 'P Exam',
-  examDate: addDays(today, 45).toISOString()
-}
+  examDate: addDays(today, 45).toISOString(),
+};

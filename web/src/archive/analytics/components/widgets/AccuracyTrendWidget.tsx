@@ -1,10 +1,18 @@
-import React, { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import { MOCK_ACCURACY_TREND } from '@/lib/mock/analytics'
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts';
+import { MOCK_ACCURACY_TREND } from '@/lib/mock/analytics';
 
 export function AccuracyTrendWidget() {
-  const [data, _setData] = useState(MOCK_ACCURACY_TREND)
+  const [data, _setData] = useState(MOCK_ACCURACY_TREND);
 
   return (
     <Card className="w-full h-full">
@@ -29,5 +37,5 @@ export function AccuracyTrendWidget() {
         </ResponsiveContainer>
       </CardContent>
     </Card>
-  )
+  );
 }
