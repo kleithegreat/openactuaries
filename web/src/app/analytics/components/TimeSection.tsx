@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { Calendar } from '@/components/ui/calendar'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface DayHours { name: string; hours: number }
 interface Performance { name: string; value: number; optimal: boolean }
@@ -11,6 +12,7 @@ const TimeSection = () => {
   const [studyDates, setStudyDates] = useState<Date[]>([])
   const [timePerformanceData, setTimePerformanceData] = useState<Performance[]>([])
   const [streak, setStreak] = useState<{ currentStreak: number; longestStreak: number; monthDays: number } | null>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetch('/api/analytics/time')
@@ -23,18 +25,31 @@ const TimeSection = () => {
           setStreak(res.streak)
         }
       })
+      .finally(() => setLoading(false))
   }, [])
+
+  if (loading) {
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
+        <Skeleton className="h-72 w-full bg-background-secondary" />
+        <Skeleton className="h-72 w-full bg-background-secondary" />
+        <Skeleton className="h-72 w-full bg-background-secondary" />
+        <Skeleton className="h-24 w-full bg-background-secondary xl:col-span-3" />
+      </div>
+    )
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
       <div className="bg-background-highlight p-4 rounded-xl border border-border xl:col-span-1 flex flex-col h-full">
         <h3 className="font-serif text-base font-semibold mb-3">Study Calendar</h3>
         <div className="flex flex-col h-full">
-          <div className="flex-grow w-full">
+          <div className="flex-grow w-full flex justify-center">
             <Calendar
               mode="multiple"
               selected={studyDates}
-              className="rounded-md border bg-background w-full h-full mx-auto"
+              className="rounded-md border bg-background w-full"
+              classNames={{ months: 'w-full flex justify-center' }}
             />
           </div>
           <div className="flex mt-2 divide-x divide-border">

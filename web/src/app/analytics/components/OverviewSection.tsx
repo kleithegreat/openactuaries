@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { Progress } from '@/components/ui/progress'
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { CheckCircle, Clock, Award } from 'lucide-react'
+import { Skeleton } from '@/components/ui/skeleton'
 import { differenceInCalendarDays, format } from 'date-fns'
 
 interface TrendPoint { date: string; value: number }
@@ -22,49 +23,67 @@ const OverviewSection = () => {
   const [accuracyData, setAccuracyData] = useState<TrendPoint[]>([])
   const [activityData, setActivityData] = useState<{ day: string; problems: number }[]>([])
   const [weekly, setWeekly] = useState<{ problems: number; problemsPrev: number; study: number; studyPrev: number; accuracy: number; accuracyPrev: number } | null>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/api/profile')
-      .then(res => res.ok ? res.json() : null)
-      .then(profile => {
+    async function load() {
+      try {
+        const profileRes = await fetch('/api/profile')
+        const profile = profileRes.ok ? await profileRes.json() : null
         if (profile?.examRegistrations?.length) {
           const reg = profile.examRegistrations[0]
           const date = new Date(reg.examDate)
           setExamDate(date)
           setDaysLeft(differenceInCalendarDays(date, new Date()))
         }
-      })
-      .catch(() => {})
 
-    fetch('/api/analytics/overview')
-      .then(res => res.ok ? res.json() : null)
-      .then(res => setData(res))
-      .catch(() => setData(null))
+        const [overviewRes, historyRes, timeRes] = await Promise.all([
+          fetch('/api/analytics/overview'),
+          fetch('/api/analytics/history'),
+          fetch('/api/analytics/time')
+        ])
 
-    fetch('/api/analytics/history')
-      .then(res => res.ok ? res.json() : null)
-      .then((res: { accuracyHistory: HistoryPoint[] } | null) => {
-        if (res) {
-          setAccuracyData(res.accuracyHistory.map(p => ({ date: p.month, value: p.value })))
+        if (overviewRes.ok) {
+          const overview = await overviewRes.json()
+          setData(overview)
         }
-      })
 
-    fetch('/api/analytics/time')
-      .then(res => res.ok ? res.json() : null)
-      .then(res => {
-        if (res) {
-          setActivityData(res.weekdayDistribution)
+        if (historyRes.ok) {
+          const history = await historyRes.json()
+          setAccuracyData(history.accuracyHistory.map((p: HistoryPoint) => ({ date: p.month, value: p.value })))
+        }
+
+        if (timeRes.ok) {
+          const time = await timeRes.json()
+          setActivityData(time.weekdayDistribution)
           setWeekly({
-            problems: res.weeklyReport.problems.current,
-            problemsPrev: res.weeklyReport.problems.previous,
-            study: res.weeklyReport.studyHours.current,
-            studyPrev: res.weeklyReport.studyHours.previous,
-            accuracy: res.weeklyReport.accuracy.current,
-            accuracyPrev: res.weeklyReport.accuracy.previous
+            problems: time.weeklyReport.problems.current,
+            problemsPrev: time.weeklyReport.problems.previous,
+            study: time.weeklyReport.studyHours.current,
+            studyPrev: time.weeklyReport.studyHours.previous,
+            accuracy: time.weeklyReport.accuracy.current,
+            accuracyPrev: time.weeklyReport.accuracy.previous
           })
         }
-      })
+      } finally {
+        setLoading(false)
+      }
+    }
+    load()
   }, [])
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-40 w-full bg-background-secondary" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Skeleton className="h-64 w-full bg-background-secondary" />
+          <Skeleton className="h-64 w-full bg-background-secondary" />
+        </div>
+        <Skeleton className="h-40 w-full bg-background-secondary" />
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-6">
       <div className="bg-background-highlight p-6 rounded-xl border border-border">

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { TriangleAlert } from 'lucide-react'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface BreakdownEntry { name: string; value: number; color: string }
 interface PerformanceEntry { subject: string; accuracy: number }
@@ -11,6 +12,7 @@ const TopicsSection = () => {
   const [topicBreakdown, setTopicBreakdown] = useState<BreakdownEntry[]>([])
   const [performanceData, setPerformanceData] = useState<PerformanceEntry[]>([])
   const [topicsToImprove, setTopicsToImprove] = useState<FocusEntry[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetch('/api/analytics/topics')
@@ -22,7 +24,20 @@ const TopicsSection = () => {
           setTopicsToImprove(res.toFocus.map(t => ({ ...t, description: '' })))
         }
       })
+      .finally(() => setLoading(false))
   }, [])
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Skeleton className="h-64 w-full bg-background-secondary" />
+          <Skeleton className="h-64 w-full bg-background-secondary" />
+        </div>
+        <Skeleton className="h-40 w-full bg-background-secondary" />
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-6">
       {/* Topic distribution and performance */}
