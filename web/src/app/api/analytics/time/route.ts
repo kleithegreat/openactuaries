@@ -7,6 +7,7 @@ import {
   subDays,
   differenceInCalendarDays,
   isSameMonth,
+  startOfDay,
 } from 'date-fns';
 
 export async function GET() {
@@ -32,21 +33,27 @@ export async function GET() {
     });
 
     const now = new Date();
+    const todayStart = startOfDay(now);
     const lastWeek = subDays(now, 7);
     const prevWeek = subDays(now, 14);
 
     let lastWeekMinutes = 0;
     let prevWeekMinutes = 0;
+    let todayMinutes = 0;
     for (const s of sessions) {
       if (s.startTime >= lastWeek) {
         lastWeekMinutes += s.minutesSpent ?? 0;
       } else if (s.startTime >= prevWeek) {
         prevWeekMinutes += s.minutesSpent ?? 0;
       }
+      if (s.startTime >= todayStart) {
+        todayMinutes += s.minutesSpent ?? 0;
+      }
     }
 
     let lastWeekProblems = 0;
     let prevWeekProblems = 0;
+    let todayProblems = 0;
     let lastWeekCorrect = 0;
     let prevWeekCorrect = 0;
     for (const a of attempts) {
@@ -56,6 +63,9 @@ export async function GET() {
       } else if (a.createdAt >= prevWeek) {
         prevWeekProblems++;
         if (a.isCorrect) prevWeekCorrect++;
+      }
+      if (a.createdAt >= todayStart) {
+        todayProblems++;
       }
     }
 
@@ -177,6 +187,7 @@ export async function GET() {
         },
         accuracy: { current: lastWeekAccuracy, previous: prevWeekAccuracy },
       },
+      today: { problems: todayProblems, studyMinutes: todayMinutes },
       streak: { currentStreak, longestStreak, monthDays },
     });
   } catch (error) {

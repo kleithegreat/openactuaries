@@ -12,23 +12,86 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { getRequiredServerSession } from '@/lib/auth/server';
-import { format, addDays } from 'date-fns';
+import { format, differenceInCalendarDays, startOfDay } from 'date-fns';
+import { prisma } from '@/lib/db';
 import PracticeExamDialog from './components/PracticeExamDialog';
 
 export default async function HomePage() {
   const session = await getRequiredServerSession();
 
-  // mock data
-  const examDate = addDays(new Date(), 45);
-  const dailyGoal = 10; // Problems per day
-  const problemsToday = 7;
+  const profile = await prisma.userProfile.findUnique({
+    where: { userId: session.user.id },
+    include: { examRegistrations: true },
+  });
 
-  const recommendedTopics = [
-    { name: 'Probability Distributions', percentage: 65 },
-    { name: 'Interest Rate Theory', percentage: 45 },
-    { name: 'Time Value of Money', percentage: 78 },
-    { name: 'Risk Management', percentage: 30 },
-  ];
+  let nextExamDate: Date | null = null;
+  let nextExamType: string | null = null;
+
+  if (profile?.examRegistrations.length) {
+    const upcoming = profile.examRegistrations
+      .filter(r => r.examDate >= new Date())
+      .sort((a, b) => a.examDate.getTime() - b.examDate.getTime())[0];
+    if (upcoming) {
+      nextExamDate = upcoming.examDate;
+      nextExamType = upcoming.examType;
+    }
+  }
+
+  const goalType = profile?.goalType ?? 'PROBLEMS';
+  const dailyGoal = profile?.goalAmount ?? 0;
+
+  const startToday = startOfDay(new Date());
+  const problemsToday = profile
+    ? await prisma.problemAttempt.count({
+        where: { profileId: profile.id, createdAt: { gte: startToday } },
+      })
+    : 0;
+
+  const minutesToday = profile
+    ?
+        (
+          await prisma.studySession.aggregate({
+            where: { profileId: profile.id, startTime: { gte: startToday } },
+            _sum: { minutesSpent: true },
+          })
+        )._sum.minutesSpent || 0
+    : 0;
+
+  let recommendedTopics: { name: string; percentage: number }[] = [];
+  if (profile) {
+    const attempts = await prisma.problemAttempt.findMany({
+      where: {
+        profileId: profile.id,
+        problem: { exam: nextExamType ?? 'P' },
+      },
+      include: { problem: { select: { syllabusCategory: true } } },
+    });
+
+    const topicStats: Record<string, { attempts: number; correct: number }> = {};
+    for (const a of attempts) {
+      const topic = a.problem.syllabusCategory;
+      if (!topicStats[topic]) {
+        topicStats[topic] = { attempts: 0, correct: 0 };
+      }
+      topicStats[topic].attempts += 1;
+      if (a.isCorrect) topicStats[topic].correct += 1;
+    }
+
+    const sorted = Object.entries(topicStats)
+      .map(([topic, data]) => ({
+        topic,
+        accuracy: data.attempts
+          ? Math.round((data.correct / data.attempts) * 100)
+          : 0,
+      }))
+      .sort((a, b) => a.accuracy - b.accuracy)
+      .slice(0, 4);
+
+    recommendedTopics = sorted.map(t => ({
+      name: t.topic,
+      percentage: t.accuracy,
+    }));
+  }
 
   return (
     <div className="min-h-screen bg-background p-6">
@@ -41,11 +104,15 @@ export default async function HomePage() {
                 !
               </h1>
               <p className="text-foreground-secondary mt-1">
-                You have an exam on{' '}
-                <span className="font-medium text-primary">
-                  {format(examDate, 'MMMM d, yyyy')}
-                </span>{' '}
-                (45 days remaining)
+                {nextExamDate ? (
+                  <>You have an exam on{' '}
+                  <span className="font-medium text-primary">
+                    {format(nextExamDate, 'MMMM d, yyyy')}
+                  </span>{' '}
+                  ({differenceInCalendarDays(nextExamDate, new Date())} days remaining)</>
+                ) : (
+                  'No exam scheduled'
+                )}
               </p>
             </div>
 
@@ -74,10 +141,20 @@ export default async function HomePage() {
               </div>
               <div>
                 <div className="font-medium text-foreground">
-                  {problemsToday}/{dailyGoal} Problems Today
+                  {goalType === 'PROBLEMS'
+                    ? `${problemsToday}/${dailyGoal} Problems Today`
+                    : `${Math.round(minutesToday)}/${dailyGoal} Minutes Today`}
                 </div>
                 <div className="text-sm text-foreground-secondary">
-                  {Math.round((problemsToday / dailyGoal) * 100)}% of daily goal
+                  {dailyGoal > 0
+                    ? `${Math.round(
+                        ((goalType === 'PROBLEMS'
+                          ? problemsToday
+                          : minutesToday) /
+                          dailyGoal) *
+                          100,
+                      )}% of daily goal`
+                    : 'No daily goal set'}
                 </div>
               </div>
             </div>

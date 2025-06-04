@@ -1,27 +1,16 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Calendar, Book, BarChart4, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Skeleton } from '@/components/ui/skeleton';
 import OverviewSection from './components/OverviewSection';
 import TopicsSection from './components/TopicsSection';
 import TimeSection from './components/TimeSection';
 import HistorySection from './components/HistorySection';
 
 export default function AnalyticsPage() {
-  const [loading, setLoading] = useState(true);
-
-  // Simulate data loading
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
     <div className="min-h-screen bg-background p-6">
@@ -72,35 +61,21 @@ export default function AnalyticsPage() {
             </TabsTrigger>
           </TabsList>
 
-          {loading ? (
-            <div className="space-y-4">
-              <Skeleton className="h-40 w-full bg-background-secondary" />
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Skeleton className="h-40 w-full bg-background-secondary" />
-                <Skeleton className="h-40 w-full bg-background-secondary" />
-                <Skeleton className="h-40 w-full bg-background-secondary" />
-              </div>
-              <Skeleton className="h-64 w-full bg-background-secondary" />
-            </div>
-          ) : (
-            <>
-              <TabsContent value="overview" className="mt-0">
-                <OverviewSection />
-              </TabsContent>
+          <TabsContent value="overview" className="mt-0">
+            <OverviewSection />
+          </TabsContent>
 
-              <TabsContent value="topics" className="mt-0">
-                <TopicsSection />
-              </TabsContent>
+          <TabsContent value="topics" className="mt-0">
+            <TopicsSection />
+          </TabsContent>
 
-              <TabsContent value="time" className="mt-0">
-                <TimeSection />
-              </TabsContent>
+          <TabsContent value="time" className="mt-0">
+            <TimeSection />
+          </TabsContent>
 
-              <TabsContent value="history" className="mt-0">
-                <HistorySection />
-              </TabsContent>
-            </>
-          )}
+          <TabsContent value="history" className="mt-0">
+            <HistorySection />
+          </TabsContent>
         </Tabs>
       </div>
     </div>

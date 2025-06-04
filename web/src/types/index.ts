@@ -28,4 +28,3 @@ export type ProblemWithTypedChoices = Omit<
 
 export type Problem = ProblemWithTypedChoices;
 
-export * from '../archive/analytics/types/analytics';
