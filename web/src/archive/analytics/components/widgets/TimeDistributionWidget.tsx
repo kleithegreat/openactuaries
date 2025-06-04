@@ -1,10 +1,18 @@
-import React, { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import { MOCK_TIME_DISTRIBUTION } from '@/lib/mock/analytics'
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts';
+import { MOCK_TIME_DISTRIBUTION } from '@/lib/mock/analytics';
 
 export function TimeDistributionWidget() {
-  const [data, _setData] = useState(MOCK_TIME_DISTRIBUTION)
+  const [data, _setData] = useState(MOCK_TIME_DISTRIBUTION);
 
   return (
     <Card className="w-full h-full">
@@ -20,7 +28,7 @@ export function TimeDistributionWidget() {
               label={{
                 value: 'Average Time (minutes)',
                 angle: -90,
-                position: 'insideLeft'
+                position: 'insideLeft',
               }}
             />
             <Tooltip />
@@ -29,5 +37,5 @@ export function TimeDistributionWidget() {
         </ResponsiveContainer>
       </CardContent>
     </Card>
-  )
+  );
 }

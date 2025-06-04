@@ -1,26 +1,36 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
-import { Loader2 } from 'lucide-react'
-import Link from 'next/link'
+import { useState } from 'react';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Loader2 } from 'lucide-react';
+import Link from 'next/link';
 
-export default function RegisterDialog({ defaultOpen = true }: { defaultOpen?: boolean }) {
-  const router = useRouter()
-  const [open, setOpen] = useState(defaultOpen)
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+export default function RegisterDialog({
+  defaultOpen = true,
+}: {
+  defaultOpen?: boolean;
+}) {
+  const router = useRouter();
+  const [open, setOpen] = useState(defaultOpen);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError('')
+    e.preventDefault();
+    setIsLoading(true);
+    setError('');
 
     try {
       const registerRes = await fetch('/api/register', {
@@ -33,38 +43,38 @@ export default function RegisterDialog({ defaultOpen = true }: { defaultOpen?: b
           email,
           password,
         }),
-      })
+      });
 
       if (!registerRes.ok) {
-        const data = await registerRes.json()
-        throw new Error(data.error || 'Registration failed')
+        const data = await registerRes.json();
+        throw new Error(data.error || 'Registration failed');
       }
 
       const signInRes = await signIn('credentials', {
         email,
         password,
         redirect: false,
-      })
+      });
 
       if (signInRes?.error) {
-        throw new Error('Failed to sign in after registration')
+        throw new Error('Failed to sign in after registration');
       }
 
-      router.push('/setup')
-      router.refresh()
+      router.push('/setup');
+      router.refresh();
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : 'Something went wrong')
+      setError(error instanceof Error ? error.message : 'Something went wrong');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleOpenChange = (o: boolean) => {
     if (!o) {
-      router.push('/')
+      router.push('/');
     }
-    setOpen(o)
-  }
+    setOpen(o);
+  };
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -81,7 +91,7 @@ export default function RegisterDialog({ defaultOpen = true }: { defaultOpen?: b
               id="name"
               type="text"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={e => setName(e.target.value)}
               className="w-full p-2 border rounded-md"
               required
               disabled={isLoading}
@@ -95,7 +105,7 @@ export default function RegisterDialog({ defaultOpen = true }: { defaultOpen?: b
               id="email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={e => setEmail(e.target.value)}
               className="w-full p-2 border rounded-md"
               required
               disabled={isLoading}
@@ -109,22 +119,16 @@ export default function RegisterDialog({ defaultOpen = true }: { defaultOpen?: b
               id="password"
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={e => setPassword(e.target.value)}
               className="w-full p-2 border rounded-md"
               required
               disabled={isLoading}
               minLength={6}
             />
           </div>
-          {error && (
-            <div className="text-red-500 text-sm">{error}</div>
-          )}
+          {error && <div className="text-red-500 text-sm">{error}</div>}
           <DialogFooter>
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isLoading}
-            >
+            <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -136,7 +140,11 @@ export default function RegisterDialog({ defaultOpen = true }: { defaultOpen?: b
             </Button>
             <p className="text-sm text-center w-full">
               Already have an account?{' '}
-              <Link href="/login" className="text-blue-500 hover:underline" onClick={() => setOpen(false)}>
+              <Link
+                href="/login"
+                className="text-blue-500 hover:underline"
+                onClick={() => setOpen(false)}
+              >
                 Login
               </Link>
             </p>
@@ -144,5 +152,5 @@ export default function RegisterDialog({ defaultOpen = true }: { defaultOpen?: b
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

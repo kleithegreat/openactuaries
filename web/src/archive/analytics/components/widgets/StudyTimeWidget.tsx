@@ -1,83 +1,92 @@
-"use client"
+'use client';
 
-import React, { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { 
-  Bar, 
-  BarChart, 
-  CartesianGrid, 
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
   ResponsiveContainer,
-  XAxis, 
-  YAxis 
-} from "recharts"
+  XAxis,
+  YAxis,
+} from 'recharts';
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
-import { MOCK_STUDY_TIME } from '@/lib/mock/analytics'
-import { WidgetSettings } from '@/archive/analytics/types/analytics'
-import { cn } from "@/lib/utils"
+} from '@/components/ui/chart';
+import { MOCK_STUDY_TIME } from '@/lib/mock/analytics';
+import { WidgetSettings } from '@/archive/analytics/types/analytics';
+import { cn } from '@/lib/utils';
 
 interface StudyTimeWidgetProps {
   settings?: WidgetSettings;
-  size?: "normal" | "wide" | "tall" | "large";
+  size?: 'normal' | 'wide' | 'tall' | 'large';
   onUpdateSettings?: (settings: WidgetSettings) => void;
 }
 
-export function StudyTimeWidget({ 
-  settings, 
-  size = "normal", 
-  onUpdateSettings 
+export function StudyTimeWidget({
+  settings,
+  size = 'normal',
+  onUpdateSettings,
 }: StudyTimeWidgetProps) {
-  const [data, _setData] = useState(MOCK_STUDY_TIME)
-  const displayType = (settings?.displayType ?? 'chart') as 'chart' | 'numbers'
+  const [data, _setData] = useState(MOCK_STUDY_TIME);
+  const displayType = (settings?.displayType ?? 'chart') as 'chart' | 'numbers';
 
   const chartConfig = {
     hours: {
-      label: "Study Hours",
-      color: "#0c4a6e"
+      label: 'Study Hours',
+      color: '#0c4a6e',
     },
-  } satisfies ChartConfig
+  } satisfies ChartConfig;
 
   const getChartMargins = () => {
     switch (size) {
-      case "wide":
-        return { left: 0, right: 16, top: 8, bottom: 0 }
-      case "tall":
-        return { left: 0, right: 16, top: 16, bottom: 0 }
-      case "large":
-        return { left: 0, right: 16, top: 16, bottom: 0 }
+      case 'wide':
+        return { left: 0, right: 16, top: 8, bottom: 0 };
+      case 'tall':
+        return { left: 0, right: 16, top: 16, bottom: 0 };
+      case 'large':
+        return { left: 0, right: 16, top: 16, bottom: 0 };
       default:
-        return { left: 0, right: 16, top: 8, bottom: 0 }
+        return { left: 0, right: 16, top: 8, bottom: 0 };
     }
-  }
+  };
 
   const getContentHeight = () => {
     switch (size) {
-      case "tall":
-      case "large":
-        return "h-[calc(100%-4rem)]"
+      case 'tall':
+      case 'large':
+        return 'h-[calc(100%-4rem)]';
       default:
-        return "h-[calc(100%-3.5rem)]"
+        return 'h-[calc(100%-3.5rem)]';
     }
-  }
+  };
 
   return (
     <Card className="w-full h-full">
       <CardHeader
         className={cn(
-          "flex flex-row items-center justify-between space-y-0 pt-4",
-          size === "tall" || size === "large" ? "pb-4" : "pb-2",
+          'flex flex-row items-center justify-between space-y-0 pt-4',
+          size === 'tall' || size === 'large' ? 'pb-4' : 'pb-2',
         )}
       >
         <CardTitle className="text-base font-medium">Study Time</CardTitle>
         <Select
           value={displayType}
-          onValueChange={(value) => {
-            onUpdateSettings?.({ ...settings, displayType: value as 'chart' | 'numbers' })
+          onValueChange={value => {
+            onUpdateSettings?.({
+              ...settings,
+              displayType: value as 'chart' | 'numbers',
+            });
           }}
         >
           <SelectTrigger className="w-32 h-8">
@@ -89,9 +98,12 @@ export function StudyTimeWidget({
           </SelectContent>
         </Select>
       </CardHeader>
-      <CardContent className={cn(getContentHeight(), "pt-0 px-2 pb-4")}>
+      <CardContent className={cn(getContentHeight(), 'pt-0 px-2 pb-4')}>
         {displayType === 'chart' ? (
-          <ChartContainer config={chartConfig} className="!aspect-none h-full w-full">
+          <ChartContainer
+            config={chartConfig}
+            className="!aspect-none h-full w-full"
+          >
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data} margin={getChartMargins()}>
                 <CartesianGrid vertical={false} strokeDasharray="3 3" />
@@ -103,7 +115,7 @@ export function StudyTimeWidget({
                   height={30}
                   fontSize={12}
                   interval={Math.ceil(data.length / 5)}
-                  tickFormatter={(dateStr) => {
+                  tickFormatter={dateStr => {
                     const date = new Date(dateStr);
                     return `Jan ${date.getDate()}`;
                   }}
@@ -120,13 +132,13 @@ export function StudyTimeWidget({
                 />
                 <ChartTooltip
                   cursor={{ fill: 'hsl(var(--muted))' }}
-                  content={(props) => {
+                  content={props => {
                     if (!props.active || !props.payload || !props.payload[0]) {
                       return null;
                     }
-                    
+
                     const data = props.payload[0].payload;
-                    
+
                     return (
                       <ChartTooltipContent
                         active={props.active}
@@ -136,9 +148,9 @@ export function StudyTimeWidget({
                     );
                   }}
                 />
-                <Bar 
-                  dataKey="hours" 
-                  fill="var(--color-hours)" 
+                <Bar
+                  dataKey="hours"
+                  fill="var(--color-hours)"
                   radius={[4, 4, 0, 0]}
                 />
               </BarChart>
@@ -154,9 +166,13 @@ export function StudyTimeWidget({
             </div>
             <div className="text-center flex flex-col justify-center items-center">
               <div className="text-2xl font-bold text-primary">
-                {(data.reduce((acc, d) => acc + d.hours, 0) / data.length).toFixed(1)}
+                {(
+                  data.reduce((acc, d) => acc + d.hours, 0) / data.length
+                ).toFixed(1)}
               </div>
-              <div className="text-sm text-muted-foreground">Average Daily Hours</div>
+              <div className="text-sm text-muted-foreground">
+                Average Daily Hours
+              </div>
             </div>
             <div className="text-center flex flex-col justify-center items-center">
               <div className="text-2xl font-bold text-primary">
@@ -174,5 +190,5 @@ export function StudyTimeWidget({
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

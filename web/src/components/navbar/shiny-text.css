@@ -7,13 +7,17 @@
 }
 
 .shiny-text::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle 80px at var(--mouse-x) var(--mouse-y), rgba(255, 255, 255, 0.6), transparent 100%);
+  background: radial-gradient(
+    circle 80px at var(--mouse-x) var(--mouse-y),
+    rgba(255, 255, 255, 0.6),
+    transparent 100%
+  );
   opacity: 0;
   transition: opacity 0.3s;
   pointer-events: none;

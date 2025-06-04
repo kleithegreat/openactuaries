@@ -1,63 +1,72 @@
-'use client'
+'use client';
 
-import { signOut } from "next-auth/react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Button } from "../ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
-import { Menu } from "lucide-react"
-import { useState, useEffect } from "react"
-import type { User } from "next-auth"
+import { signOut } from 'next-auth/react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Button } from '../ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
+import { Menu } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import type { User } from 'next-auth';
 
 interface NavbarProps {
-  user: User | null | undefined
+  user: User | null | undefined;
 }
 
 export function Navbar({ user }: NavbarProps) {
-  const pathname = usePathname()
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const [isNewUser, setIsNewUser] = useState<boolean | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const pathname = usePathname();
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isNewUser, setIsNewUser] = useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       if (!user) {
-        setIsLoading(false)
-        return
+        setIsLoading(false);
+        return;
       }
 
       try {
-        const res = await fetch('/api/profile')
+        const res = await fetch('/api/profile');
         if (!res.ok) {
-          throw new Error('Failed to fetch profile')
+          throw new Error('Failed to fetch profile');
         }
-        const data = await res.json()
-        setIsNewUser(!data.goalType && !data.goalAmount && (!data.examRegistrations || data.examRegistrations.length === 0))
+        const data = await res.json();
+        setIsNewUser(
+          !data.goalType &&
+            !data.goalAmount &&
+            (!data.examRegistrations || data.examRegistrations.length === 0),
+        );
       } catch (err) {
-        console.error('Error fetching profile:', err)
-        setIsNewUser(true)
+        console.error('Error fetching profile:', err);
+        setIsNewUser(true);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
-    fetchUserProfile()
-  }, [user])
+    fetchUserProfile();
+  }, [user]);
 
   const handleMouseMove = (event: React.MouseEvent<HTMLSpanElement>) => {
-    const rect = event.currentTarget.getBoundingClientRect()
+    const rect = event.currentTarget.getBoundingClientRect();
     setMousePosition({
       x: event.clientX - rect.left,
       y: event.clientY - rect.top,
-    })
-  }
+    });
+  };
 
   const getLinkDestination = () => {
-    if (!user) return "/"
-    if (isNewUser) return "/"
-    if (pathname === "/home") return "/"
-    return "/home"
-  }
+    if (!user) return '/';
+    if (isNewUser) return '/';
+    if (pathname === '/home') return '/';
+    return '/home';
+  };
 
   return (
     <nav className="bg-background border-b border-border">
@@ -65,14 +74,16 @@ export function Navbar({ user }: NavbarProps) {
         <div className="flex justify-between h-16">
           <div className="flex">
             <Link href={getLinkDestination()} className="flex items-center">
-              <span 
+              <span
                 className="text-xl font-bold shiny-text font-logo"
                 onMouseMove={handleMouseMove}
-                style={{
-                  '--mouse-x': `${mousePosition.x}px`,
-                  '--mouse-y': `${mousePosition.y}px`,
-                  'color': '#000000',
-                } as React.CSSProperties}
+                style={
+                  {
+                    '--mouse-x': `${mousePosition.x}px`,
+                    '--mouse-y': `${mousePosition.y}px`,
+                    color: '#000000',
+                  } as React.CSSProperties
+                }
               >
                 open/actuaries
               </span>
@@ -80,7 +91,9 @@ export function Navbar({ user }: NavbarProps) {
           </div>
           <div className="flex items-center gap-4">
             {isLoading ? (
-              <div className="animate-pulse text-foreground-secondary">Loading...</div>
+              <div className="animate-pulse text-foreground-secondary">
+                Loading...
+              </div>
             ) : user ? (
               <>
                 <span className="text-foreground-secondary">
@@ -91,7 +104,11 @@ export function Navbar({ user }: NavbarProps) {
                 </span>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="text-foreground">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-foreground"
+                    >
                       <Menu className="h-5 w-5" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -99,7 +116,7 @@ export function Navbar({ user }: NavbarProps) {
                     <DropdownMenuItem asChild>
                       <Link href="/setup">My Info</Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem 
+                    <DropdownMenuItem
                       onClick={() => signOut({ callbackUrl: '/' })}
                     >
                       Logout
@@ -110,7 +127,12 @@ export function Navbar({ user }: NavbarProps) {
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="ghost" className="text-foreground hover:text-foreground hover:bg-foreground/5">Login</Button>
+                  <Button
+                    variant="ghost"
+                    className="text-foreground hover:text-foreground hover:bg-foreground/5"
+                  >
+                    Login
+                  </Button>
                 </Link>
                 <Link href="/register">
                   <Button variant="primary">Register</Button>

@@ -1,4 +1,4 @@
-export type WidgetType = 
+export type WidgetType =
   | 'problemsSolved'
   | 'studyTime'
   | 'accuracyTrend'
@@ -8,11 +8,11 @@ export type WidgetType =
   | 'timeDistribution'
   | 'problemDifficulty'
   | 'reviewList'
-  | 'examCountdown'
+  | 'examCountdown';
 
-export type WidgetSize = 'normal' | 'wide' | 'tall' | 'large'
+export type WidgetSize = 'normal' | 'wide' | 'tall' | 'large';
 
-export type TimeRangeOption = "week" | "month" | "6months" | "day" | "year";
+export type TimeRangeOption = 'week' | 'month' | '6months' | 'day' | 'year';
 
 export interface WidgetSettings {
   timeRange?: TimeRangeOption;
@@ -23,11 +23,11 @@ export interface WidgetSettings {
 }
 
 export interface Widget {
-  id: string
-  type: WidgetType
-  position: number
-  size: WidgetSize
-  settings?: WidgetSettings
+  id: string;
+  type: WidgetType;
+  position: number;
+  size: WidgetSize;
+  settings?: WidgetSettings;
 }
 
 export interface ExamInfo {

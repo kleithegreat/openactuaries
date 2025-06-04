@@ -5,55 +5,55 @@
 @layer base {
   :root {
     /* Base/Background Colors */
-    --background: 43 45% 96%;     /* #FAF7EF */
-    --background-secondary: 44 40% 92%;   /* #F5F0E0 */
-    --background-tertiary: 44 35% 88%;    /* #EDE5D0 */
-    --background-highlight: 43 55% 98%;  /* #FDF9F3 */
-    
+    --background: 43 45% 96%; /* #FAF7EF */
+    --background-secondary: 44 40% 92%; /* #F5F0E0 */
+    --background-tertiary: 44 35% 88%; /* #EDE5D0 */
+    --background-highlight: 43 55% 98%; /* #FDF9F3 */
+
     /* Text Colors */
-    --foreground: 195 75% 16%;   /* #093948 */
-    --foreground-secondary: 195 60% 22%;/* #124A5F */
-    --muted-foreground: 195 30% 40%;    /* #486A7A */
-    --foreground-inverted: 0 0% 100%;   /* #FFFFFF */
-    
+    --foreground: 195 75% 16%; /* #093948 */
+    --foreground-secondary: 195 60% 22%; /* #124A5F */
+    --muted-foreground: 195 30% 40%; /* #486A7A */
+    --foreground-inverted: 0 0% 100%; /* #FFFFFF */
+
     /* Brand/Interactive Colors */
     --primary: 183 57% 24%; /* #195C62 */
-    --primary-dark: 183 60% 18%;    /* #124548 */
-    --primary-light: 183 40% 42%;   /* #387D83 */
-    --accent: 324 50% 33%;         /* #7C2C61 */
-    
+    --primary-dark: 183 60% 18%; /* #124548 */
+    --primary-light: 183 40% 42%; /* #387D83 */
+    --accent: 324 50% 33%; /* #7C2C61 */
+
     /* UI States */
     --card: 0 0% 100%;
     --card-foreground: 195 75% 16%;
     --popover: 0 0% 100%;
     --popover-foreground: 195 75% 16%;
-    --primary-foreground: 0 0% 100%;  /* White text on primary */
-    --secondary: 164 31% 75%;   /* #AECFC6 */
+    --primary-foreground: 0 0% 100%; /* White text on primary */
+    --secondary: 164 31% 75%; /* #AECFC6 */
     --secondary-foreground: 195 75% 16%;
     --muted: 43 45% 96%;
     --accent-foreground: 0 0% 100%;
-    
+
     /* Functional Colors */
-    --success: 155 40% 42%;       /* #3D9A72 */
-    --destructive: 0 65% 50%;     /* #D92929 */
+    --success: 155 40% 42%; /* #3D9A72 */
+    --destructive: 0 65% 50%; /* #D92929 */
     --destructive-foreground: 0 0% 100%;
-    --info: 205 65% 55%;          /* #4A90E2 */
-    --warning: 38 95% 55%;        /* #F5A623 */
-    --neutral: 44 10% 60%;         /* #A3A095 */
-    
+    --info: 205 65% 55%; /* #4A90E2 */
+    --warning: 38 95% 55%; /* #F5A623 */
+    --neutral: 44 10% 60%; /* #A3A095 */
+
     /* UI Element Colors */
-    --border: 43 20% 85%;         /* #DFD8C5 */
-    --input: 43 30% 93%;          /* #F2EDE2 */
-    --ring: 183 57% 24%;          /* #195C62 */
-    
+    --border: 43 20% 85%; /* #DFD8C5 */
+    --input: 43 30% 93%; /* #F2EDE2 */
+    --ring: 183 57% 24%; /* #195C62 */
+
     /* Chart Colors */
-    --chart-1: 183 57% 24%;       /* #195C62 */
-    --chart-2: 324 50% 33%;       /* #7C2C61 */
-    --chart-3: 155 40% 42%;       /* #3D9A72 */
-    --chart-4: 164 31% 75%;       /* #AECFC6 */
-    --chart-5: 45 70% 65%;        /* #EFC75E */
-    --chart-6: 195 60% 45%;       /* #2A7EA6 */
-    
+    --chart-1: 183 57% 24%; /* #195C62 */
+    --chart-2: 324 50% 33%; /* #7C2C61 */
+    --chart-3: 155 40% 42%; /* #3D9A72 */
+    --chart-4: 164 31% 75%; /* #AECFC6 */
+    --chart-5: 45 70% 65%; /* #EFC75E */
+    --chart-6: 195 60% 45%; /* #2A7EA6 */
+
     --radius: 0.5rem;
   }
 }
@@ -65,10 +65,21 @@
   body {
     @apply bg-background text-foreground;
   }
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-serif;
   }
-  p, span, a, button, input, select, textarea {
+  p,
+  span,
+  a,
+  button,
+  input,
+  select,
+  textarea {
     @apply font-sans;
   }
 }
@@ -100,12 +111,12 @@
 }
 
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari and Opera */
+  display: none; /* Chrome, Safari and Opera */
 }
 
 .btn-hover-effect {
@@ -114,11 +125,13 @@
 
 .btn-hover-effect:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .bg-grid-pattern {
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(25, 92, 98, 0.05) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(25, 92, 98, 0.05) 1px, transparent 1px);
   background-size: 30px 30px;
@@ -134,7 +147,7 @@
   }
 }
 
-.prose p, 
+.prose p,
 .prose li,
 .prose strong,
 .question-statement,
@@ -146,8 +159,8 @@
   font-family: var(--font-serif) !important;
 }
 
-.katex, 
-.katex *, 
+.katex,
+.katex *,
 .math,
 .math-inline,
 .math-display {

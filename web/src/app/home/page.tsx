@@ -2,13 +2,13 @@ import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { 
-  Compass, 
-  Search, 
-  BookOpen, 
-  ExternalLink, 
-  BarChart, 
-  CheckCircle, 
+import {
+  Compass,
+  Search,
+  BookOpen,
+  ExternalLink,
+  BarChart,
+  CheckCircle,
 } from 'lucide-react';
 import Link from 'next/link';
 import { getRequiredServerSession } from '@/lib/auth/server';
@@ -17,7 +17,7 @@ import PracticeExamDialog from './components/PracticeExamDialog';
 
 export default async function HomePage() {
   const session = await getRequiredServerSession();
-  
+
   // mock data
   const examDate = addDays(new Date(), 45);
   const dailyGoal = 10; // Problems per day
@@ -37,13 +37,18 @@ export default async function HomePage() {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
               <h1 className="text-3xl font-serif font-bold text-foreground">
-                Welcome back{session.user?.name ? `, ${session.user.name}` : ''}!
+                Welcome back{session.user?.name ? `, ${session.user.name}` : ''}
+                !
               </h1>
               <p className="text-foreground-secondary mt-1">
-                You have an exam on <span className="font-medium text-primary">{format(examDate, 'MMMM d, yyyy')}</span> (45 days remaining)
+                You have an exam on{' '}
+                <span className="font-medium text-primary">
+                  {format(examDate, 'MMMM d, yyyy')}
+                </span>{' '}
+                (45 days remaining)
               </p>
             </div>
-            
+
             <div className="flex gap-4 mt-2 md:mt-0">
               <PracticeExamDialog>
                 <Button className="gap-2 bg-primary hover:bg-primary-dark">
@@ -68,13 +73,21 @@ export default async function HomePage() {
                 <CheckCircle className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <div className="font-medium text-foreground">{problemsToday}/{dailyGoal} Problems Today</div>
-                <div className="text-sm text-foreground-secondary">{Math.round((problemsToday/dailyGoal) * 100)}% of daily goal</div>
+                <div className="font-medium text-foreground">
+                  {problemsToday}/{dailyGoal} Problems Today
+                </div>
+                <div className="text-sm text-foreground-secondary">
+                  {Math.round((problemsToday / dailyGoal) * 100)}% of daily goal
+                </div>
               </div>
             </div>
-            
+
             <PracticeExamDialog>
-              <Button variant="outline" size="sm" className="gap-2 border-primary/20 text-primary hover:bg-primary/5">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2 border-primary/20 text-primary hover:bg-primary/5"
+              >
                 <Compass className="h-4 w-4" />
                 Continue Practice
               </Button>
@@ -95,10 +108,13 @@ export default async function HomePage() {
               </CardHeader>
               <CardContent>
                 <p className="text-foreground-secondary text-sm">
-                  Get problems tailored to your needs and focus areas. Our algorithm adapts to your performance.
+                  Get problems tailored to your needs and focus areas. Our
+                  algorithm adapts to your performance.
                 </p>
                 <div className="flex justify-end mt-4">
-                  <span className="text-primary text-sm font-medium group-hover:underline">Start session →</span>
+                  <span className="text-primary text-sm font-medium group-hover:underline">
+                    Start session →
+                  </span>
                 </div>
               </CardContent>
             </Card>
@@ -116,29 +132,36 @@ export default async function HomePage() {
               </CardHeader>
               <CardContent>
                 <p className="text-foreground-secondary text-sm">
-                  Browse our extensive question bank with over 700 questions covering all exam topics.
+                  Browse our extensive question bank with over 700 questions
+                  covering all exam topics.
                 </p>
                 <div className="flex justify-end mt-4">
-                  <span className="text-accent text-sm font-medium group-hover:underline">Explore questions →</span>
+                  <span className="text-accent text-sm font-medium group-hover:underline">
+                    Explore questions →
+                  </span>
                 </div>
               </CardContent>
             </Card>
           </Link>
         </div>
 
-
-
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-xl font-serif font-semibold text-foreground">Recommended Focus Areas</h2>
+            <h2 className="text-xl font-serif font-semibold text-foreground">
+              Recommended Focus Areas
+            </h2>
             <Link href="/wiki">
-              <Button variant="ghost" size="sm" className="gap-2 text-primary hover:text-primary-dark hover:bg-primary/5">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="gap-2 text-primary hover:text-primary-dark hover:bg-primary/5"
+              >
                 <ExternalLink className="h-4 w-4" />
                 Exam Wiki
               </Button>
             </Link>
           </div>
-          
+
           <div className="bg-background-highlight rounded-xl border border-border p-5">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {recommendedTopics.map((topic, i) => (
@@ -146,13 +169,21 @@ export default async function HomePage() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <BookOpen className="h-4 w-4 text-primary" />
-                      <span className="font-medium text-foreground">{topic.name}</span>
+                      <span className="font-medium text-foreground">
+                        {topic.name}
+                      </span>
                     </div>
-                    <span className="text-sm text-foreground-secondary">{topic.percentage}%</span>
+                    <span className="text-sm text-foreground-secondary">
+                      {topic.percentage}%
+                    </span>
                   </div>
                   <Progress value={topic.percentage} className="h-1.5" />
                   <div className="flex justify-end">
-                    <Button variant="ghost" size="sm" className="h-7 px-2 text-xs text-primary hover:text-primary-dark hover:bg-primary/5">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 px-2 text-xs text-primary hover:text-primary-dark hover:bg-primary/5"
+                    >
                       Practice Now
                     </Button>
                   </div>
