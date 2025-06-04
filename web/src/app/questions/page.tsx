@@ -1,41 +1,61 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Check, X } from 'lucide-react'
-import { serialize } from 'next-mdx-remote/serialize'
-import { MDXRemote, MDXRemoteSerializeResult } from 'next-mdx-remote'
-import remarkMath from 'remark-math'
-import rehypeKatex from 'rehype-katex'
-import remarkGfm from 'remark-gfm'
-import type { Problem, Choice } from '@/types'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer"
-import { Skeleton } from '@/components/ui/skeleton'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Check, X } from 'lucide-react';
+import { serialize } from 'next-mdx-remote/serialize';
+import { MDXRemote, MDXRemoteSerializeResult } from 'next-mdx-remote';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import remarkGfm from 'remark-gfm';
+import type { Problem, Choice } from '@/types';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useRouter } from 'next/navigation';
 
-const LAST_QUESTION_KEY = 'lastQuestionIndex'
-const LAST_EXAM_KEY = 'lastExam'
-const LAST_CATEGORY_KEY = 'lastCategory'
+const LAST_QUESTION_KEY = 'lastQuestionIndex';
+const LAST_EXAM_KEY = 'lastExam';
+const LAST_CATEGORY_KEY = 'lastCategory';
 
 export default function QuestionsPage() {
-  const router = useRouter()
-  const [problems, setProblems] = useState<Problem[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({})
-  const [checkedAnswers, setCheckedAnswers] = useState<Record<string, boolean>>({})
-  const [currentProblemIndex, setCurrentProblemIndex] = useState(0)
-  const [serializedContent, setSerializedContent] = useState<MDXRemoteSerializeResult | null>(null)
-  const [serializedChoices, setSerializedChoices] = useState<MDXRemoteSerializeResult[]>([])
-  const [serializedExplanation, setSerializedExplanation] = useState<MDXRemoteSerializeResult | null>(null)
+  const router = useRouter();
+  const [problems, setProblems] = useState<Problem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedAnswers, setSelectedAnswers] = useState<
+    Record<string, string>
+  >({});
+  const [checkedAnswers, setCheckedAnswers] = useState<Record<string, boolean>>(
+    {},
+  );
+  const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
+  const [serializedContent, setSerializedContent] =
+    useState<MDXRemoteSerializeResult | null>(null);
+  const [serializedChoices, setSerializedChoices] = useState<
+    MDXRemoteSerializeResult[]
+  >([]);
+  const [serializedExplanation, setSerializedExplanation] =
+    useState<MDXRemoteSerializeResult | null>(null);
   const [filters, setFilters] = useState({
     exam: '',
     syllabusCategory: 'any',
-  })
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  });
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const LoadingState = () => {
     return (
@@ -52,13 +72,19 @@ export default function QuestionsPage() {
           <CardContent>
             <div className="flex gap-6">
               <div className="flex-1 space-y-4">
-                {[1, 2, 3, 4].map((i) => (
-                  <Skeleton key={i} className="h-4 w-full bg-background-secondary" />
+                {[1, 2, 3, 4].map(i => (
+                  <Skeleton
+                    key={i}
+                    className="h-4 w-full bg-background-secondary"
+                  />
                 ))}
               </div>
               <div className="w-1/2 space-y-3">
-                {[1, 2, 3, 4].map((i) => (
-                  <Skeleton key={i} className="h-20 w-full bg-background-secondary" />
+                {[1, 2, 3, 4].map(i => (
+                  <Skeleton
+                    key={i}
+                    className="h-20 w-full bg-background-secondary"
+                  />
                 ))}
               </div>
             </div>
@@ -71,122 +97,139 @@ export default function QuestionsPage() {
   useEffect(() => {
     async function fetchProblems() {
       try {
-        const response = await fetch('/api/problems')
-        if (!response.ok) throw new Error('Failed to fetch problems')
-        const data = await response.json()
-        
-        if (data.length > 0) {
-          const savedExam = localStorage.getItem(LAST_EXAM_KEY)
-          const savedCategory = localStorage.getItem(LAST_CATEGORY_KEY)
-          const savedIndex = parseInt(localStorage.getItem(LAST_QUESTION_KEY) || '0')
-          
-          const initialExam = savedExam || data[0].exam
-          const initialCategory = savedCategory || 'any'
-          
-          const validProblems = data.filter((p: Problem) => 
-            p.exam === initialExam && 
-            (initialCategory === 'any' || p.syllabusCategory === initialCategory)
-          )
+        const response = await fetch('/api/problems');
+        if (!response.ok) throw new Error('Failed to fetch problems');
+        const data = await response.json();
 
-          const validIndex = validProblems.length > 0 ? 
-            data.findIndex((p: Problem) => p.id === validProblems[0].id) : 0
-          
-          setProblems(data)
+        if (data.length > 0) {
+          const savedExam = localStorage.getItem(LAST_EXAM_KEY);
+          const savedCategory = localStorage.getItem(LAST_CATEGORY_KEY);
+          const savedIndex = parseInt(
+            localStorage.getItem(LAST_QUESTION_KEY) || '0',
+          );
+
+          const initialExam = savedExam || data[0].exam;
+          const initialCategory = savedCategory || 'any';
+
+          const validProblems = data.filter(
+            (p: Problem) =>
+              p.exam === initialExam &&
+              (initialCategory === 'any' ||
+                p.syllabusCategory === initialCategory),
+          );
+
+          const validIndex =
+            validProblems.length > 0
+              ? data.findIndex((p: Problem) => p.id === validProblems[0].id)
+              : 0;
+
+          setProblems(data);
           setFilters({
             exam: initialExam,
             syllabusCategory: initialCategory,
-          })
-          setCurrentProblemIndex(savedIndex < data.length ? savedIndex : validIndex)
-          
-          const problem = data[savedIndex < data.length ? savedIndex : validIndex]
-          
+          });
+          setCurrentProblemIndex(
+            savedIndex < data.length ? savedIndex : validIndex,
+          );
+
+          const problem =
+            data[savedIndex < data.length ? savedIndex : validIndex];
+
           const [serializedStatement, serializedExp] = await Promise.all([
             serialize(problem.statement, {
               mdxOptions: {
                 remarkPlugins: [remarkMath, remarkGfm],
                 rehypePlugins: [rehypeKatex],
-              }
+              },
             }),
             serialize(problem.explanation, {
               mdxOptions: {
                 remarkPlugins: [remarkMath, remarkGfm],
                 rehypePlugins: [rehypeKatex],
-              }
-            })
-          ])
-          
-          setSerializedContent(serializedStatement)
-          setSerializedExplanation(serializedExp)
+              },
+            }),
+          ]);
 
-          const serializedChoicesPromises = problem.choices.map((choice: Choice) => 
-            serialize(choice.content, {
-              mdxOptions: {
-                remarkPlugins: [remarkMath, remarkGfm],
-                rehypePlugins: [rehypeKatex],
-              }
-            })
-          )
-          const choicesContent = await Promise.all(serializedChoicesPromises)
-          setSerializedChoices(choicesContent)
+          setSerializedContent(serializedStatement);
+          setSerializedExplanation(serializedExp);
+
+          const serializedChoicesPromises = problem.choices.map(
+            (choice: Choice) =>
+              serialize(choice.content, {
+                mdxOptions: {
+                  remarkPlugins: [remarkMath, remarkGfm],
+                  rehypePlugins: [rehypeKatex],
+                },
+              }),
+          );
+          const choicesContent = await Promise.all(serializedChoicesPromises);
+          setSerializedChoices(choicesContent);
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load problems')
+        setError(
+          err instanceof Error ? err.message : 'Failed to load problems',
+        );
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
 
-    fetchProblems()
-  }, [])
+    fetchProblems();
+  }, []);
 
   useEffect(() => {
-    localStorage.setItem(LAST_QUESTION_KEY, currentProblemIndex.toString())
-    localStorage.setItem(LAST_EXAM_KEY, filters.exam)
-    localStorage.setItem(LAST_CATEGORY_KEY, filters.syllabusCategory)
-  }, [currentProblemIndex, filters])
+    localStorage.setItem(LAST_QUESTION_KEY, currentProblemIndex.toString());
+    localStorage.setItem(LAST_EXAM_KEY, filters.exam);
+    localStorage.setItem(LAST_CATEGORY_KEY, filters.syllabusCategory);
+  }, [currentProblemIndex, filters]);
 
   useEffect(() => {
     async function serializeNewProblem() {
-      if (!problems.length || currentProblemIndex >= problems.length) return
+      if (!problems.length || currentProblemIndex >= problems.length) return;
 
-      const currentProblem = problems[currentProblemIndex]
-      
+      const currentProblem = problems[currentProblemIndex];
+
       const [serializedStatement, serializedExp] = await Promise.all([
         serialize(currentProblem.statement, {
           mdxOptions: {
             remarkPlugins: [remarkMath, remarkGfm],
             rehypePlugins: [rehypeKatex],
-          }
+          },
         }),
         serialize(currentProblem.explanation, {
           mdxOptions: {
             remarkPlugins: [remarkMath, remarkGfm],
             rehypePlugins: [rehypeKatex],
-          }
-        })
-      ])
+          },
+        }),
+      ]);
 
-      setSerializedContent(serializedStatement)
-      setSerializedExplanation(serializedExp)
+      setSerializedContent(serializedStatement);
+      setSerializedExplanation(serializedExp);
 
-      const serializedChoicesPromises = currentProblem.choices.map((choice: Choice) => 
-        serialize(choice.content, {
-          mdxOptions: {
-            remarkPlugins: [remarkMath, remarkGfm],
-            rehypePlugins: [rehypeKatex],
-          }
-        })
-      )
-      const choicesContent = await Promise.all(serializedChoicesPromises)
-      setSerializedChoices(choicesContent)
+      const serializedChoicesPromises = currentProblem.choices.map(
+        (choice: Choice) =>
+          serialize(choice.content, {
+            mdxOptions: {
+              remarkPlugins: [remarkMath, remarkGfm],
+              rehypePlugins: [rehypeKatex],
+            },
+          }),
+      );
+      const choicesContent = await Promise.all(serializedChoicesPromises);
+      setSerializedChoices(choicesContent);
     }
 
-    serializeNewProblem()
-  }, [currentProblemIndex, problems])
+    serializeNewProblem();
+  }, [currentProblemIndex, problems]);
 
   const filteredProblems = problems.filter(problem => {
     if (problem.exam !== filters.exam) return false;
-    if (filters.syllabusCategory !== 'any' && problem.syllabusCategory !== filters.syllabusCategory) return false;
+    if (
+      filters.syllabusCategory !== 'any' &&
+      problem.syllabusCategory !== filters.syllabusCategory
+    )
+      return false;
     return true;
   });
 
@@ -195,64 +238,80 @@ export default function QuestionsPage() {
       <div className="container mx-auto px-4 py-8">
         <LoadingState />
       </div>
-    )
+    );
   }
 
   if (error) {
-    return <div className="container mx-auto px-4 py-8">Error: {error}</div>
+    return <div className="container mx-auto px-4 py-8">Error: {error}</div>;
   }
 
-  const currentProblem = problems[currentProblemIndex]
+  const currentProblem = problems[currentProblemIndex];
   if (!currentProblem || !serializedContent) {
-    return <div className="container mx-auto px-4 py-8">No questions available</div>
+    return (
+      <div className="container mx-auto px-4 py-8">No questions available</div>
+    );
   }
 
   const handleAnswerSelect = (problemId: string, answer: string) => {
     setSelectedAnswers(prev => ({
       ...prev,
-      [problemId]: answer
-    }))
+      [problemId]: answer,
+    }));
     setCheckedAnswers(prev => ({
       ...prev,
-      [problemId]: false
-    }))
-  }
+      [problemId]: false,
+    }));
+  };
 
   const checkAnswer = (problemId: string) => {
     setCheckedAnswers(prev => ({
       ...prev,
-      [problemId]: true
-    }))
-  }
+      [problemId]: true,
+    }));
+  };
 
   const navigateQuestion = (direction: 'prev' | 'next') => {
-    const currentExamProblems = filteredProblems
-    const currentExamIndex = currentExamProblems.findIndex(p => p.id === currentProblem.id)
-    
-    if (direction === 'next' && currentExamIndex < currentExamProblems.length - 1) {
-      const nextProblem = currentExamProblems[currentExamIndex + 1]
-      const nextIndex = problems.findIndex(p => p.id === nextProblem.id)
-      setCurrentProblemIndex(nextIndex)
+    const currentExamProblems = filteredProblems;
+    const currentExamIndex = currentExamProblems.findIndex(
+      p => p.id === currentProblem.id,
+    );
+
+    if (
+      direction === 'next' &&
+      currentExamIndex < currentExamProblems.length - 1
+    ) {
+      const nextProblem = currentExamProblems[currentExamIndex + 1];
+      const nextIndex = problems.findIndex(p => p.id === nextProblem.id);
+      setCurrentProblemIndex(nextIndex);
     } else if (direction === 'prev' && currentExamIndex > 0) {
-      const prevProblem = currentExamProblems[currentExamIndex - 1]
-      const prevIndex = problems.findIndex(p => p.id === prevProblem.id)
-      setCurrentProblemIndex(prevIndex)
+      const prevProblem = currentExamProblems[currentExamIndex - 1];
+      const prevIndex = problems.findIndex(p => p.id === prevProblem.id);
+      setCurrentProblemIndex(prevIndex);
     }
-  }
+  };
 
   const uniqueSyllabusCategories = Array.from(
-    new Set(problems.filter(p => p.exam === filters.exam).map(p => p.syllabusCategory))
+    new Set(
+      problems
+        .filter(p => p.exam === filters.exam)
+        .map(p => p.syllabusCategory),
+    ),
   );
 
-  const isCurrentAnswerCorrect = selectedAnswers[currentProblem.id] === currentProblem.correctAnswer
+  const isCurrentAnswerCorrect =
+    selectedAnswers[currentProblem.id] === currentProblem.correctAnswer;
 
   return (
     <div className="container mx-auto px-4 py-8 pb-24">
       <div className="flex gap-4 mb-8">
         <Select
           value={filters.exam}
-          onValueChange={(value) => {
-            setFilters(prev => ({ ...prev, exam: value, syllabusCategory: 'any' }));
+          onValueChange={value => {
+            setFilters(prev => ({
+              ...prev,
+              exam: value,
+              syllabusCategory: 'any',
+            }));
             const newIndex = problems.findIndex(p => p.exam === value);
             if (newIndex !== -1) setCurrentProblemIndex(newIndex);
           }}
@@ -262,9 +321,9 @@ export default function QuestionsPage() {
           </SelectTrigger>
           <SelectContent className="bg-background-highlight border-border">
             {Array.from(new Set(problems.map(p => p.exam))).map(exam => (
-              <SelectItem 
-                key={exam} 
-                value={exam} 
+              <SelectItem
+                key={exam}
+                value={exam}
                 className="text-foreground hover:bg-background-secondary"
               >
                 Exam {exam}
@@ -272,15 +331,14 @@ export default function QuestionsPage() {
             ))}
           </SelectContent>
         </Select>
-  
+
         <Select
           value={filters.syllabusCategory}
-          onValueChange={(value) => {
+          onValueChange={value => {
             setFilters(prev => ({ ...prev, syllabusCategory: value }));
             if (value !== 'any') {
-              const newIndex = problems.findIndex(p => 
-                p.exam === filters.exam && 
-                p.syllabusCategory === value
+              const newIndex = problems.findIndex(
+                p => p.exam === filters.exam && p.syllabusCategory === value,
               );
               if (newIndex !== -1) setCurrentProblemIndex(newIndex);
             }
@@ -290,13 +348,16 @@ export default function QuestionsPage() {
             <SelectValue placeholder="Select Topic" />
           </SelectTrigger>
           <SelectContent className="bg-background-highlight border-border">
-            <SelectItem value="any" className="text-foreground hover:bg-background-secondary">
+            <SelectItem
+              value="any"
+              className="text-foreground hover:bg-background-secondary"
+            >
               Any Topic
             </SelectItem>
             {uniqueSyllabusCategories.map(category => (
-              <SelectItem 
-                key={category} 
-                value={category} 
+              <SelectItem
+                key={category}
+                value={category}
                 className="text-foreground hover:bg-background-secondary"
               >
                 {category}
@@ -304,10 +365,10 @@ export default function QuestionsPage() {
             ))}
           </SelectContent>
         </Select>
-  
+
         <Select
           value={currentProblem.id}
-          onValueChange={(value) => {
+          onValueChange={value => {
             const newIndex = problems.findIndex(p => p.id === value);
             if (newIndex !== -1) setCurrentProblemIndex(newIndex);
           }}
@@ -316,9 +377,9 @@ export default function QuestionsPage() {
             <SelectValue placeholder="Select Question" />
           </SelectTrigger>
           <SelectContent className="bg-background-highlight border-border">
-            {filteredProblems.map((problem) => (
-              <SelectItem 
-                key={problem.id} 
+            {filteredProblems.map(problem => (
+              <SelectItem
+                key={problem.id}
                 value={problem.id}
                 className="text-foreground hover:bg-background-secondary"
               >
@@ -328,10 +389,12 @@ export default function QuestionsPage() {
           </SelectContent>
         </Select>
       </div>
-  
+
       <Card className="bg-background-highlight border-border">
         <CardHeader className="border-b border-border">
-          <CardTitle className="text-foreground font-serif">Question {currentProblem.questionNumber}</CardTitle>
+          <CardTitle className="text-foreground font-serif">
+            Question {currentProblem.questionNumber}
+          </CardTitle>
         </CardHeader>
         <CardContent className="p-6">
           <div className="flex gap-6">
@@ -345,7 +408,9 @@ export default function QuestionsPage() {
               {currentProblem.choices.map((choice, index) => (
                 <button
                   key={choice.letter}
-                  onClick={() => handleAnswerSelect(currentProblem.id, choice.letter)}
+                  onClick={() =>
+                    handleAnswerSelect(currentProblem.id, choice.letter)
+                  }
                   className={`w-full p-4 text-left rounded-lg border transition-colors ${
                     selectedAnswers[currentProblem.id] === choice.letter
                       ? 'bg-primary/10 border-primary text-foreground'
@@ -360,14 +425,15 @@ export default function QuestionsPage() {
                   </div>
                 </button>
               ))}
-  
+
               {checkedAnswers[currentProblem.id] && (
-                <Alert 
-                  variant={isCurrentAnswerCorrect ? "success" : "destructive"}
+                <Alert
+                  variant={isCurrentAnswerCorrect ? 'success' : 'destructive'}
                   className={`
-                    ${isCurrentAnswerCorrect 
-                      ? "bg-success/10 text-success border-success/20" 
-                      : "bg-destructive/10 text-destructive border-destructive/20"
+                    ${
+                      isCurrentAnswerCorrect
+                        ? 'bg-success/10 text-success border-success/20'
+                        : 'bg-destructive/10 text-destructive border-destructive/20'
                     }
                   `}
                 >
@@ -379,7 +445,7 @@ export default function QuestionsPage() {
                     )}
                     <AlertDescription>
                       {isCurrentAnswerCorrect
-                        ? "Correct!"
+                        ? 'Correct!'
                         : `Incorrect. The correct answer is ${currentProblem.correctAnswer}.`}
                     </AlertDescription>
                   </div>
@@ -389,7 +455,7 @@ export default function QuestionsPage() {
           </div>
         </CardContent>
       </Card>
-  
+
       <div className="fixed bottom-0 left-0 right-0 bg-background-highlight border-t border-border p-4">
         <div className="container mx-auto flex items-center justify-between max-w-4xl">
           <Button
@@ -399,20 +465,23 @@ export default function QuestionsPage() {
           >
             Back to Home
           </Button>
-  
+
           <div className="flex items-center gap-4">
             <Button
               variant="outline"
               onClick={() => navigateQuestion('prev')}
-              disabled={filteredProblems.findIndex(p => p.id === currentProblem.id) === 0}
+              disabled={
+                filteredProblems.findIndex(p => p.id === currentProblem.id) ===
+                0
+              }
               className="w-24 border-border text-foreground hover:bg-background-secondary disabled:opacity-50 transition-colors"
             >
               Previous
             </Button>
-  
+
             <div className="w-36">
               {!checkedAnswers[currentProblem.id] ? (
-                <Button 
+                <Button
                   onClick={() => checkAnswer(currentProblem.id)}
                   disabled={!selectedAnswers[currentProblem.id]}
                   className="bg-primary hover:bg-primary-dark text-white w-full disabled:opacity-50 transition-colors"
@@ -429,21 +498,28 @@ export default function QuestionsPage() {
                   <DrawerContent className="bg-background-highlight">
                     <div className="mx-auto w-full max-w-4xl">
                       <DrawerHeader className="border-b border-border">
-                        <DrawerTitle className="text-foreground font-serif">Explanation</DrawerTitle>
+                        <DrawerTitle className="text-foreground font-serif">
+                          Explanation
+                        </DrawerTitle>
                       </DrawerHeader>
                       <div className="p-6 prose max-w-none h-[500px] overflow-auto text-foreground font-serif [&_.math]:font-sans">
-                        {serializedExplanation && <MDXRemote {...serializedExplanation} />}
+                        {serializedExplanation && (
+                          <MDXRemote {...serializedExplanation} />
+                        )}
                       </div>
                     </div>
                   </DrawerContent>
                 </Drawer>
               )}
             </div>
-  
+
             <Button
               variant="outline"
               onClick={() => navigateQuestion('next')}
-              disabled={filteredProblems.findIndex(p => p.id === currentProblem.id) === filteredProblems.length - 1}
+              disabled={
+                filteredProblems.findIndex(p => p.id === currentProblem.id) ===
+                filteredProblems.length - 1
+              }
               className="w-24 border-border text-foreground hover:bg-background-secondary disabled:opacity-50 transition-colors"
             >
               Next

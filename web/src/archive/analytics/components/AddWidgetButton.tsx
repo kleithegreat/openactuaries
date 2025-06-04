@@ -1,21 +1,24 @@
-import React from 'react'
-import { Button } from '@/components/ui/button'
-import { Plus } from 'lucide-react'
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { AVAILABLE_WIDGETS } from '@/archive/analytics/hooks/useAnalyticsDashboard'
-import { WidgetType } from '@/types'
+} from '@/components/ui/dropdown-menu';
+import { AVAILABLE_WIDGETS } from '@/archive/analytics/hooks/useAnalyticsDashboard';
+import { WidgetType } from '@/types';
 
 interface AddWidgetButtonProps {
-  availableWidgets: typeof AVAILABLE_WIDGETS
-  onAddWidget: (type: WidgetType) => void
+  availableWidgets: typeof AVAILABLE_WIDGETS;
+  onAddWidget: (type: WidgetType) => void;
 }
 
-export function AddWidgetButton({ availableWidgets, onAddWidget }: AddWidgetButtonProps) {
+export function AddWidgetButton({
+  availableWidgets,
+  onAddWidget,
+}: AddWidgetButtonProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -36,5 +39,5 @@ export function AddWidgetButton({ availableWidgets, onAddWidget }: AddWidgetButt
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

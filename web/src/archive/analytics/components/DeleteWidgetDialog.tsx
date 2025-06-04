@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,20 +8,20 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
+} from '@/components/ui/alert-dialog';
 
 interface DeleteWidgetDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  onConfirm: () => void
-  widgetTitle: string
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onConfirm: () => void;
+  widgetTitle: string;
 }
 
 export function DeleteWidgetDialog({
   open,
   onOpenChange,
   onConfirm,
-  widgetTitle
+  widgetTitle,
 }: DeleteWidgetDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -29,14 +29,17 @@ export function DeleteWidgetDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Delete Widget</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to remove the {widgetTitle} widget? This action cannot be undone.
+            Are you sure you want to remove the {widgetTitle} widget? This
+            action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction className="rose" onClick={onConfirm}>Delete</AlertDialogAction>
+          <AlertDialogAction className="rose" onClick={onConfirm}>
+            Delete
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  )
+  );
 }

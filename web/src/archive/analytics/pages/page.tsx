@@ -1,17 +1,17 @@
-"use client"
+'use client';
 
-import { useEffect, useState, useRef } from "react"
-import { DashboardGrid } from "@/archive/analytics/components/DashboardGrid"
-import { useAnalyticsDashboard } from "@/archive/analytics/hooks/useAnalyticsDashboard"
-import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import type { WidgetType } from "@/archive/analytics/types/analytics"
+import { useEffect, useState, useRef } from 'react';
+import { DashboardGrid } from '@/archive/analytics/components/DashboardGrid';
+import { useAnalyticsDashboard } from '@/archive/analytics/hooks/useAnalyticsDashboard';
+import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import type { WidgetType } from '@/archive/analytics/types/analytics';
 
 export default function AnalyticsPage() {
-  const [isClient, setIsClient] = useState(false)
-  const [scrollPosition, setScrollPosition] = useState(0)
-  const gridRef = useRef<HTMLDivElement>(null)
+  const [isClient, setIsClient] = useState(false);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   const {
     widgets,
@@ -20,7 +20,7 @@ export default function AnalyticsPage() {
     moveWidget,
     updateWidgetSettings,
     updateWidgetSize,
-  } = useAnalyticsDashboard()
+  } = useAnalyticsDashboard();
 
   const getContentWidth = () => {
     if (!gridRef.current) return 0;
@@ -29,18 +29,19 @@ export default function AnalyticsPage() {
     return scrollWidth - containerWidth;
   };
 
-  const handleScroll = (direction: "left" | "right") => {
+  const handleScroll = (direction: 'left' | 'right') => {
     if (!gridRef.current) return;
 
     const scrollAmount = 376; // 360px (widget) + 16px (gap)
     const currentScroll = gridRef.current.scrollLeft;
-    const targetScroll = direction === "left" 
-      ? Math.max(0, currentScroll - scrollAmount)
-      : currentScroll + scrollAmount;
+    const targetScroll =
+      direction === 'left'
+        ? Math.max(0, currentScroll - scrollAmount)
+        : currentScroll + scrollAmount;
 
     gridRef.current.scrollTo({
       left: targetScroll,
-      behavior: "smooth",
+      behavior: 'smooth',
     });
   };
 
@@ -52,18 +53,18 @@ export default function AnalyticsPage() {
       setScrollPosition(grid.scrollLeft);
     };
 
-    grid.addEventListener("scroll", handleScrollEvent);
-    return () => grid.removeEventListener("scroll", handleScrollEvent);
+    grid.addEventListener('scroll', handleScrollEvent);
+    return () => grid.removeEventListener('scroll', handleScrollEvent);
   }, []);
 
   useEffect(() => {
     if (!gridRef.current) return;
-    gridRef.current.scrollTo({ left: 0, behavior: "smooth" });
+    gridRef.current.scrollTo({ left: 0, behavior: 'smooth' });
     setScrollPosition(0);
   }, [widgets.length]);
 
   const addWidget = (type: WidgetType, rowIndex: number) => {
-    addWidgetOriginal(type, rowIndex === 0 ? "top" : "bottom");
+    addWidgetOriginal(type, rowIndex === 0 ? 'top' : 'bottom');
   };
 
   useEffect(() => {
@@ -98,7 +99,8 @@ export default function AnalyticsPage() {
           <div>
             <h1 className="text-3xl font-bold text-text">My Analytics</h1>
             <p className="text-foreground-muted mt-2">
-              Customize your analytics view by adding, removing, and rearranging widgets
+              Customize your analytics view by adding, removing, and rearranging
+              widgets
             </p>
           </div>
         </div>
@@ -107,13 +109,13 @@ export default function AnalyticsPage() {
           <Button
             variant="secondary"
             size="icon"
-            onClick={() => handleScroll("left")}
+            onClick={() => handleScroll('left')}
             disabled={!canScrollLeft}
             className="rounded-full shadow-lg shrink-0"
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          
+
           <div className="border rounded-lg shadow-sm overflow-hidden p-4 w-full">
             <DashboardGrid
               widgets={widgets}
@@ -130,7 +132,7 @@ export default function AnalyticsPage() {
           <Button
             variant="secondary"
             size="icon"
-            onClick={() => handleScroll("right")}
+            onClick={() => handleScroll('right')}
             disabled={!canScrollRight}
             className="rounded-full shadow-lg shrink-0"
           >

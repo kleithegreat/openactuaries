@@ -1,5 +1,5 @@
-import LandingPage from "../../page"
-import LoginDialog from '@/components/auth/LoginDialog'
+import LandingPage from '../../page';
+import LoginDialog from '@/components/auth/LoginDialog';
 
 export default async function LoginPage() {
   return (
@@ -8,5 +8,5 @@ export default async function LoginPage() {
       <LandingPage />
       <LoginDialog />
     </>
-  )
+  );
 }

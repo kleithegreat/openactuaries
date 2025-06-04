@@ -1,33 +1,65 @@
-'use client'
-import React, { useEffect, useState } from 'react'
-import { format } from 'date-fns'
-import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import { CheckCircle, XCircle, ArrowRight, TrendingUp } from 'lucide-react'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Skeleton } from '@/components/ui/skeleton'
+'use client';
+import React, { useEffect, useState } from 'react';
+import { format } from 'date-fns';
+import {
+  LineChart,
+  Line,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts';
+import { CheckCircle, XCircle, ArrowRight, TrendingUp } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Skeleton } from '@/components/ui/skeleton';
 
-interface AccuracyPoint { month: string; value: number }
-interface VolumePoint { month: string; problems: number }
-interface RecentProblem { id: string; questionNumber: number; exam: string; date: string; category: string; isCorrect: boolean; timeSpent: number }
+interface AccuracyPoint {
+  month: string;
+  value: number;
+}
+interface VolumePoint {
+  month: string;
+  problems: number;
+}
+interface RecentProblem {
+  id: string;
+  questionNumber: number;
+  exam: string;
+  date: string;
+  category: string;
+  isCorrect: boolean;
+  timeSpent: number;
+}
 
 const HistorySection = () => {
-  const [accuracyHistoryData, setAccuracyHistoryData] = useState<AccuracyPoint[]>([])
-  const [volumeHistoryData, setVolumeHistoryData] = useState<VolumePoint[]>([])
-  const [recentProblems, setRecentProblems] = useState<RecentProblem[]>([])
-  const [loading, setLoading] = useState(true)
+  const [accuracyHistoryData, setAccuracyHistoryData] = useState<
+    AccuracyPoint[]
+  >([]);
+  const [volumeHistoryData, setVolumeHistoryData] = useState<VolumePoint[]>([]);
+  const [recentProblems, setRecentProblems] = useState<RecentProblem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch('/api/analytics/history')
-      .then(res => res.ok ? res.json() : null)
+      .then(res => (res.ok ? res.json() : null))
       .then(res => {
         if (res) {
-          setAccuracyHistoryData(res.accuracyHistory)
-          setVolumeHistoryData(res.volumeHistory)
-          setRecentProblems(res.recentProblems)
+          setAccuracyHistoryData(res.accuracyHistory);
+          setVolumeHistoryData(res.volumeHistory);
+          setRecentProblems(res.recentProblems);
         }
       })
-      .finally(() => setLoading(false))
-  }, [])
+      .finally(() => setLoading(false));
+  }, []);
 
   if (loading) {
     return (
@@ -39,7 +71,7 @@ const HistorySection = () => {
           <Skeleton className="h-[400px] w-full bg-background-secondary" />
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -52,17 +84,23 @@ const HistorySection = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="p-3 bg-background rounded-lg border border-success/20">
             <p className="text-foreground-secondary text-sm">
-              Your accuracy has increased from <span className="text-foreground">60%</span> to <span className="text-success font-medium">82%</span> in 6 months.
+              Your accuracy has increased from{' '}
+              <span className="text-foreground">60%</span> to{' '}
+              <span className="text-success font-medium">82%</span> in 6 months.
             </p>
           </div>
           <div className="p-3 bg-background rounded-lg border border-primary/20">
             <p className="text-foreground-secondary text-sm">
-              Problem-solving speed improved by <span className="text-primary font-medium">15%</span> since you began studying.
+              Problem-solving speed improved by{' '}
+              <span className="text-primary font-medium">15%</span> since you
+              began studying.
             </p>
           </div>
           <div className="p-3 bg-background rounded-lg border border-chart-2/20">
             <p className="text-foreground-secondary text-sm">
-              Weekly problem volume is up <span className="text-chart-2 font-medium">3.4×</span> since you started.
+              Weekly problem volume is up{' '}
+              <span className="text-chart-2 font-medium">3.4×</span> since you
+              started.
             </p>
           </div>
         </div>
@@ -71,18 +109,27 @@ const HistorySection = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-background-highlight p-4 rounded-xl border border-border">
-            <h3 className="font-serif text-base font-semibold mb-3">Accuracy History</h3>
+            <h3 className="font-serif text-base font-semibold mb-3">
+              Accuracy History
+            </h3>
             <div className="h-56">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                   data={accuracyHistoryData}
                   margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
-                  <XAxis dataKey="month" stroke="hsl(var(--foreground-secondary))" />
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    vertical={false}
+                    stroke="hsl(var(--border))"
+                  />
+                  <XAxis
+                    dataKey="month"
+                    stroke="hsl(var(--foreground-secondary))"
+                  />
                   <YAxis
                     domain={[50, 100]}
-                    tickFormatter={(value) => `${value}%`}
+                    tickFormatter={value => `${value}%`}
                     stroke="hsl(var(--foreground-secondary))"
                   />
                   <Tooltip
@@ -91,7 +138,7 @@ const HistorySection = () => {
                       borderColor: 'hsl(var(--border))',
                       borderRadius: '0.375rem',
                     }}
-                    formatter={(value) => [`${value}%`, 'Accuracy']}
+                    formatter={value => [`${value}%`, 'Accuracy']}
                   />
                   <Line
                     type="monotone"
@@ -106,15 +153,24 @@ const HistorySection = () => {
           </div>
 
           <div className="bg-background-highlight p-4 rounded-xl border border-border">
-            <h3 className="font-serif text-base font-semibold mb-3">Problems Solved</h3>
+            <h3 className="font-serif text-base font-semibold mb-3">
+              Problems Solved
+            </h3>
             <div className="h-56">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart
                   data={volumeHistoryData}
                   margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
-                  <XAxis dataKey="month" stroke="hsl(var(--foreground-secondary))" />
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    vertical={false}
+                    stroke="hsl(var(--border))"
+                  />
+                  <XAxis
+                    dataKey="month"
+                    stroke="hsl(var(--foreground-secondary))"
+                  />
                   <YAxis stroke="hsl(var(--foreground-secondary))" />
                   <Tooltip
                     contentStyle={{
@@ -122,7 +178,7 @@ const HistorySection = () => {
                       borderColor: 'hsl(var(--border))',
                       borderRadius: '0.375rem',
                     }}
-                    formatter={(value) => [value, 'Problems']}
+                    formatter={value => [value, 'Problems']}
                   />
                   <Area
                     type="monotone"
@@ -139,7 +195,9 @@ const HistorySection = () => {
 
         <div className="bg-background-highlight p-4 rounded-xl border border-border flex flex-col h-full overflow-y-auto">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-serif text-base font-semibold">Recently Solved Problems</h3>
+            <h3 className="font-serif text-base font-semibold">
+              Recently Solved Problems
+            </h3>
             <Select defaultValue="problems">
               <SelectTrigger className="w-[140px] h-8 text-xs bg-background-highlight">
                 <SelectValue />
@@ -153,8 +211,11 @@ const HistorySection = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-1 gap-3">
-            {recentProblems.map((problem) => (
-              <div key={problem.id} className="p-3 rounded-lg border border-border bg-background flex flex-col h-28">
+            {recentProblems.map(problem => (
+              <div
+                key={problem.id}
+                className="p-3 rounded-lg border border-border bg-background flex flex-col h-28"
+              >
                 <div className="flex items-center gap-1.5 mb-1.5">
                   {problem.isCorrect ? (
                     <CheckCircle className="h-3.5 w-3.5 text-success flex-shrink-0" />
@@ -172,13 +233,21 @@ const HistorySection = () => {
 
                 <div className="flex items-center gap-5 mt-1">
                   <div>
-                    <div className="text-foreground-secondary text-xs">Category</div>
-                    <div className="text-foreground text-xs font-medium">{problem.category}</div>
+                    <div className="text-foreground-secondary text-xs">
+                      Category
+                    </div>
+                    <div className="text-foreground text-xs font-medium">
+                      {problem.category}
+                    </div>
                   </div>
 
                   <div>
-                    <div className="text-foreground-secondary text-xs">Time</div>
-                    <div className="text-foreground text-xs font-medium">{problem.timeSpent}s</div>
+                    <div className="text-foreground-secondary text-xs">
+                      Time
+                    </div>
+                    <div className="text-foreground text-xs font-medium">
+                      {problem.timeSpent}s
+                    </div>
                   </div>
                 </div>
 
@@ -193,8 +262,7 @@ const HistorySection = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-
-export default HistorySection
+export default HistorySection;

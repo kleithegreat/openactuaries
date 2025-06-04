@@ -1,12 +1,12 @@
-import type { Config } from "tailwindcss";
-import tailwindAnimate from "tailwindcss-animate";
+import type { Config } from 'tailwindcss';
+import tailwindAnimate from 'tailwindcss-animate';
 
 export default {
-  darkMode: ["class"],
+  darkMode: ['class'],
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
@@ -37,27 +37,27 @@ export default {
         },
         card: {
           DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))'
+          foreground: 'hsl(var(--card-foreground))',
         },
         popover: {
           DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))'
+          foreground: 'hsl(var(--popover-foreground))',
         },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))'
+          foreground: 'hsl(var(--secondary-foreground))',
         },
         muted: {
           DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))'
+          foreground: 'hsl(var(--muted-foreground))',
         },
         accent: {
           DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))'
+          foreground: 'hsl(var(--accent-foreground))',
         },
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))'
+          foreground: 'hsl(var(--destructive-foreground))',
         },
         success: 'hsl(var(--success))',
         info: 'hsl(var(--info))',
@@ -72,7 +72,7 @@ export default {
           '3': 'hsl(var(--chart-3))',
           '4': 'hsl(var(--chart-4))',
           '5': 'hsl(var(--chart-5))',
-          '6': 'hsl(var(--chart-6))'
+          '6': 'hsl(var(--chart-6))',
         },
         palette: {
           text: '#093948',
@@ -80,17 +80,18 @@ export default {
           primary: '#195c62',
           secondary: '#aecfc6',
           accent: '#7c2c61',
-        }
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)'
+        sm: 'calc(var(--radius) - 4px)',
       },
       boxShadow: {
-        'soft': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
-        'medium': '0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04)',
-        'hard': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+        soft: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+        medium:
+          '0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04)',
+        hard: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
       },
       typography: {
         DEFAULT: {
@@ -99,33 +100,33 @@ export default {
             '--tw-prose-headings': 'var(--font-serif)',
             maxWidth: '65ch',
             p: {
-              fontFamily: 'var(--font-serif)'
+              fontFamily: 'var(--font-serif)',
             },
             h1: {
-              fontFamily: 'var(--font-serif)'
+              fontFamily: 'var(--font-serif)',
             },
             h2: {
-              fontFamily: 'var(--font-serif)'
+              fontFamily: 'var(--font-serif)',
             },
             h3: {
-              fontFamily: 'var(--font-serif)'
+              fontFamily: 'var(--font-serif)',
             },
             h4: {
-              fontFamily: 'var(--font-serif)'
+              fontFamily: 'var(--font-serif)',
             },
             li: {
-              fontFamily: 'var(--font-serif)'
+              fontFamily: 'var(--font-serif)',
             },
             blockquote: {
-              fontFamily: 'var(--font-serif)'
+              fontFamily: 'var(--font-serif)',
             },
             '.math, .math-inline, .math-display': {
-              fontFamily: 'KaTeX_Main, serif !important'
-            }
-          }
-        }
-      }
-    }
+              fontFamily: 'KaTeX_Main, serif !important',
+            },
+          },
+        },
+      },
+    },
   },
   plugins: [tailwindAnimate],
 } satisfies Config;

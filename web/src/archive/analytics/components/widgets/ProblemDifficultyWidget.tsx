@@ -1,10 +1,17 @@
-import React, { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer } from 'recharts'
-import { MOCK_PROBLEM_DIFFICULTY } from '@/lib/mock/analytics'
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar,
+  ResponsiveContainer,
+} from 'recharts';
+import { MOCK_PROBLEM_DIFFICULTY } from '@/lib/mock/analytics';
 
 export function ProblemDifficultyWidget() {
-  const [data, _setData] = useState(MOCK_PROBLEM_DIFFICULTY)
+  const [data, _setData] = useState(MOCK_PROBLEM_DIFFICULTY);
 
   return (
     <Card className="w-full h-full">
@@ -28,5 +35,5 @@ export function ProblemDifficultyWidget() {
         </ResponsiveContainer>
       </CardContent>
     </Card>
-  )
+  );
 }
