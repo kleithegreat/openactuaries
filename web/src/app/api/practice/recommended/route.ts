@@ -2,6 +2,12 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/auth';
 import { prisma } from '@/lib/db';
+import { z } from 'zod';
+
+const recommendedSchema = z.object({
+  problemCount: z.coerce.number().int().positive().optional(),
+  examType: z.string().optional(),
+});
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
@@ -11,8 +17,15 @@ export async function POST(request: Request) {
   }
 
   try {
-    const requestData = await request.json();
-    const { problemCount = 10, examType = 'P' } = requestData;
+    const body = await request.json();
+    const parsed = recommendedSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.flatten().fieldErrors },
+        { status: 400 },
+      );
+    }
+    const { problemCount = 10, examType = 'P' } = parsed.data;
 
     const userProfile = await prisma.userProfile.findUnique({
       where: { userId: session.user.id },
