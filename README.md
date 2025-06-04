@@ -1,0 +1,13 @@
+todo:
+- guided practice
+    - implement spaced repetition algorithm
+    - better summary page?
+- analytics page
+    - improve ui
+- overhaul home page
+- data
+    - improve prompts
+    - get all P and FM questions
+    - start testing on other
+- dark mode (gruvbox dark medium)
+- make a proper README
