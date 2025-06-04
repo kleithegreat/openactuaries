@@ -11,7 +11,6 @@ import TimeSection from './components/TimeSection';
 import HistorySection from './components/HistorySection';
 
 export default function AnalyticsPage() {
-
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto">

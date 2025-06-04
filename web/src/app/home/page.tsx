@@ -1,15 +1,7 @@
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import {
-  Compass,
-  Search,
-  BookOpen,
-  ExternalLink,
-  BarChart,
-  CheckCircle,
-} from 'lucide-react';
+import { Compass, Search, BarChart, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { getRequiredServerSession } from '@/lib/auth/server';
 import { format, differenceInCalendarDays, startOfDay } from 'date-fns';
@@ -25,7 +17,6 @@ export default async function HomePage() {
   });
 
   let nextExamDate: Date | null = null;
-  let nextExamType: string | null = null;
 
   if (profile?.examRegistrations.length) {
     const upcoming = profile.examRegistrations
@@ -33,7 +24,6 @@ export default async function HomePage() {
       .sort((a, b) => a.examDate.getTime() - b.examDate.getTime())[0];
     if (upcoming) {
       nextExamDate = upcoming.examDate;
-      nextExamType = upcoming.examType;
     }
   }
 
@@ -48,50 +38,13 @@ export default async function HomePage() {
     : 0;
 
   const minutesToday = profile
-    ?
-        (
-          await prisma.studySession.aggregate({
-            where: { profileId: profile.id, startTime: { gte: startToday } },
-            _sum: { minutesSpent: true },
-          })
-        )._sum.minutesSpent || 0
+    ? (
+        await prisma.studySession.aggregate({
+          where: { profileId: profile.id, startTime: { gte: startToday } },
+          _sum: { minutesSpent: true },
+        })
+      )._sum.minutesSpent || 0
     : 0;
-
-  let recommendedTopics: { name: string; percentage: number }[] = [];
-  if (profile) {
-    const attempts = await prisma.problemAttempt.findMany({
-      where: {
-        profileId: profile.id,
-        problem: { exam: nextExamType ?? 'P' },
-      },
-      include: { problem: { select: { syllabusCategory: true } } },
-    });
-
-    const topicStats: Record<string, { attempts: number; correct: number }> = {};
-    for (const a of attempts) {
-      const topic = a.problem.syllabusCategory;
-      if (!topicStats[topic]) {
-        topicStats[topic] = { attempts: 0, correct: 0 };
-      }
-      topicStats[topic].attempts += 1;
-      if (a.isCorrect) topicStats[topic].correct += 1;
-    }
-
-    const sorted = Object.entries(topicStats)
-      .map(([topic, data]) => ({
-        topic,
-        accuracy: data.attempts
-          ? Math.round((data.correct / data.attempts) * 100)
-          : 0,
-      }))
-      .sort((a, b) => a.accuracy - b.accuracy)
-      .slice(0, 4);
-
-    recommendedTopics = sorted.map(t => ({
-      name: t.topic,
-      percentage: t.accuracy,
-    }));
-  }
 
   return (
     <div className="min-h-screen bg-background p-6">
@@ -105,11 +58,14 @@ export default async function HomePage() {
               </h1>
               <p className="text-foreground-secondary mt-1">
                 {nextExamDate ? (
-                  <>You have an exam on{' '}
-                  <span className="font-medium text-primary">
-                    {format(nextExamDate, 'MMMM d, yyyy')}
-                  </span>{' '}
-                  ({differenceInCalendarDays(nextExamDate, new Date())} days remaining)</>
+                  <>
+                    You have an exam on{' '}
+                    <span className="font-medium text-primary">
+                      {format(nextExamDate, 'MMMM d, yyyy')}
+                    </span>{' '}
+                    ({differenceInCalendarDays(nextExamDate, new Date())} days
+                    remaining)
+                  </>
                 ) : (
                   'No exam scheduled'
                 )}
@@ -220,54 +176,6 @@ export default async function HomePage() {
               </CardContent>
             </Card>
           </Link>
-        </div>
-
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-xl font-serif font-semibold text-foreground">
-              Recommended Focus Areas
-            </h2>
-            <Link href="/wiki">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="gap-2 text-primary hover:text-primary-dark hover:bg-primary/5"
-              >
-                <ExternalLink className="h-4 w-4" />
-                Exam Wiki
-              </Button>
-            </Link>
-          </div>
-
-          <div className="bg-background-highlight rounded-xl border border-border p-5">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {recommendedTopics.map((topic, i) => (
-                <div key={i} className="space-y-1.5">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <BookOpen className="h-4 w-4 text-primary" />
-                      <span className="font-medium text-foreground">
-                        {topic.name}
-                      </span>
-                    </div>
-                    <span className="text-sm text-foreground-secondary">
-                      {topic.percentage}%
-                    </span>
-                  </div>
-                  <Progress value={topic.percentage} className="h-1.5" />
-                  <div className="flex justify-end">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-7 px-2 text-xs text-primary hover:text-primary-dark hover:bg-primary/5"
-                    >
-                      Practice Now
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     </div>

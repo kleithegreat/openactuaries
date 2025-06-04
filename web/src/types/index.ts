@@ -27,4 +27,3 @@ export type ProblemWithTypedChoices = Omit<
 };
 
 export type Problem = ProblemWithTypedChoices;
-
