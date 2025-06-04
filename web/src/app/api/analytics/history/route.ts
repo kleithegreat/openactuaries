@@ -79,6 +79,7 @@ export async function GET() {
       category: a.problem.syllabusCategory,
       isCorrect: a.isCorrect,
       timeSpent: a.timeSpent,
+      isFlagged: a.reviewMarked,
     }));
 
     return NextResponse.json({

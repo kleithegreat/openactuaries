@@ -38,6 +38,7 @@ interface RecentProblem {
   category: string;
   isCorrect: boolean;
   timeSpent: number;
+  isFlagged: boolean;
 }
 
 const HistorySection = () => {
@@ -46,6 +47,8 @@ const HistorySection = () => {
   >([]);
   const [volumeHistoryData, setVolumeHistoryData] = useState<VolumePoint[]>([]);
   const [recentProblems, setRecentProblems] = useState<RecentProblem[]>([]);
+  type FilterOption = 'problems' | 'incorrect' | 'flagged';
+  const [filter, setFilter] = useState<FilterOption>('problems');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -61,6 +64,16 @@ const HistorySection = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  const filteredProblems = recentProblems.filter(p => {
+    if (filter === 'incorrect') {
+      return !p.isCorrect;
+    }
+    if (filter === 'flagged') {
+      return p.isFlagged;
+    }
+    return true;
+  });
+
   if (loading) {
     return (
       <div className="space-y-6">
@@ -68,7 +81,7 @@ const HistorySection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <Skeleton className="h-56 w-full bg-background-secondary lg:col-span-2" />
           <Skeleton className="h-56 w-full bg-background-secondary lg:col-span-2" />
-          <Skeleton className="h-[400px] w-full bg-background-secondary" />
+          <Skeleton className="h-[560px] w-full bg-background-secondary" />
         </div>
       </div>
     );
@@ -193,12 +206,17 @@ const HistorySection = () => {
           </div>
         </div>
 
-        <div className="bg-background-highlight p-4 rounded-xl border border-border flex flex-col h-full overflow-y-auto">
+        <div className="bg-background-highlight p-4 rounded-xl border border-border flex flex-col max-h-[560px] overflow-y-auto">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-serif text-base font-semibold">
               Recently Solved Problems
             </h3>
-            <Select defaultValue="problems">
+            <Select
+              value={filter}
+              onValueChange={(value: string) =>
+                setFilter(value as FilterOption)
+              }
+            >
               <SelectTrigger className="w-[140px] h-8 text-xs bg-background-highlight">
                 <SelectValue />
               </SelectTrigger>
@@ -211,7 +229,7 @@ const HistorySection = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-1 gap-3">
-            {recentProblems.map(problem => (
+            {filteredProblems.map(problem => (
               <div
                 key={problem.id}
                 className="p-3 rounded-lg border border-border bg-background flex flex-col h-28"
