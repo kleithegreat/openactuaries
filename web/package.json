@@ -12,7 +12,8 @@
     "seed:all": "npm run seed:problems && npm run seed:test",
     "test": "jest",
     "test:e2e": "playwright test",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@auth/core": "^0.37.4",

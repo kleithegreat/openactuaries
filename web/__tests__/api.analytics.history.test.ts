@@ -53,7 +53,9 @@ describe('GET /api/analytics/history', () => {
   it('returns history analytics', async () => {
     jest.useFakeTimers().setSystemTime(new Date('2023-05-15T12:00:00Z'));
     (getServerSession as jest.Mock).mockResolvedValue({ user: { id: '1' } });
-    (prisma.userProfile.findUnique as jest.Mock).mockResolvedValue({ id: 'p1' });
+    (prisma.userProfile.findUnique as jest.Mock).mockResolvedValue({
+      id: 'p1',
+    });
     (prisma.problemAttempt.findMany as jest.Mock).mockResolvedValue([]);
 
     const response = await GET();

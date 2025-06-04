@@ -418,9 +418,13 @@ export default function QuestionsPage() {
                   }`}
                 >
                   <div className="flex">
-                    <span className="font-medium !font-serif mr-2 min-w-[1.5rem]">{choice.letter})</span>
+                    <span className="font-medium !font-serif mr-2 min-w-[1.5rem]">
+                      {choice.letter})
+                    </span>
                     <div className="flex-1 !font-serif">
-                      {serializedChoices[index] && <MDXRemote {...serializedChoices[index]} />}
+                      {serializedChoices[index] && (
+                        <MDXRemote {...serializedChoices[index]} />
+                      )}
                     </div>
                   </div>
                 </button>
