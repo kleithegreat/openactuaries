@@ -13,6 +13,7 @@ import {
 import Link from 'next/link';
 import { getRequiredServerSession } from '@/lib/auth/server';
 import { format, addDays } from 'date-fns';
+import PracticeExamDialog from './components/PracticeExamDialog';
 
 export default async function HomePage() {
   const session = await getRequiredServerSession();
@@ -44,12 +45,12 @@ export default async function HomePage() {
             </div>
             
             <div className="flex gap-4 mt-2 md:mt-0">
-              <Link href="/guided-practice">
+              <PracticeExamDialog>
                 <Button className="gap-2 bg-primary hover:bg-primary-dark">
                   <Compass className="h-4 w-4" />
                   Start Practice
                 </Button>
-              </Link>
+              </PracticeExamDialog>
               <Link href="/analytics">
                 <Button variant="outline" className="gap-2 border-border">
                   <BarChart className="h-4 w-4" />
@@ -72,16 +73,18 @@ export default async function HomePage() {
               </div>
             </div>
             
-            <Button variant="outline" size="sm" className="gap-2 border-primary/20 text-primary hover:bg-primary/5">
-              <Compass className="h-4 w-4" />
-              Continue Practice
-            </Button>
+            <PracticeExamDialog>
+              <Button variant="outline" size="sm" className="gap-2 border-primary/20 text-primary hover:bg-primary/5">
+                <Compass className="h-4 w-4" />
+                Continue Practice
+              </Button>
+            </PracticeExamDialog>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
-          <Link href="/guided-practice" className="group">
-            <Card className="hover:shadow-md bg-background-highlight border-border transition-all duration-200 h-full overflow-hidden group-hover:border-primary/50">
+          <PracticeExamDialog>
+            <Card className="hover:shadow-md bg-background-highlight border-border transition-all duration-200 h-full overflow-hidden group-hover:border-primary/50 cursor-pointer">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <div className="p-2 rounded-full bg-primary/10 text-primary">
@@ -99,7 +102,7 @@ export default async function HomePage() {
                 </div>
               </CardContent>
             </Card>
-          </Link>
+          </PracticeExamDialog>
 
           <Link href="/questions" className="group">
             <Card className="hover:shadow-md bg-background-highlight border-border transition-all duration-200 h-full overflow-hidden group-hover:border-primary/50">

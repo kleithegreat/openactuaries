@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import PracticeProblem from './components/PracticeProblem'
@@ -21,6 +21,7 @@ export default function GuidedPracticePage() {
   const [error, setError] = useState<string | null>(null)
   const [userExams, setUserExams] = useState<string[]>([])
   const [selectedExam, setSelectedExam] = useState<string>('')
+  const searchParams = useSearchParams()
   
   useEffect(() => {
     async function fetchUserData() {
@@ -40,7 +41,12 @@ export default function GuidedPracticePage() {
           return
         }
         
-        if (exams.length === 1) {
+        const examParam = searchParams.get('exam')
+
+        if (examParam && exams.includes(examParam)) {
+          setSelectedExam(examParam)
+          startSession(examParam)
+        } else if (exams.length === 1) {
           setSelectedExam(exams[0])
           startSession(exams[0])
         } else {
@@ -55,7 +61,7 @@ export default function GuidedPracticePage() {
     }
     
     fetchUserData()
-  }, [])
+  }, [searchParams])
   
   const startSession = async (examType: string) => {
     setLoading(true)
