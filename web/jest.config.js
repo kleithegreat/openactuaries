@@ -14,6 +14,7 @@ const customJestConfig = {
       '<rootDir>/node_modules/lucide-react/dist/cjs/lucide-react.js',
   },
   transformIgnorePatterns: ['/node_modules/(?!(lucide-react)/)'],
+  testPathIgnorePatterns: ['<rootDir>/e2e/'],
 };
 
 module.exports = createJestConfig(customJestConfig);
