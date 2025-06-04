@@ -34,8 +34,12 @@ interface OverviewData {
 
 const OverviewSection = () => {
   const [data, setData] = useState<OverviewData | null>(null);
-  const [examDate, setExamDate] = useState<Date | null>(null);
-  const [daysLeft, setDaysLeft] = useState<number | null>(null);
+  interface ExamInfo {
+    examType: string;
+    examDate: Date;
+    daysLeft: number;
+  }
+  const [exams, setExams] = useState<ExamInfo[]>([]);
   const [accuracyData, setAccuracyData] = useState<TrendPoint[]>([]);
   const [activityData, setActivityData] = useState<
     { day: string; problems: number }[]
@@ -56,10 +60,15 @@ const OverviewSection = () => {
         const profileRes = await fetch('/api/profile');
         const profile = profileRes.ok ? await profileRes.json() : null;
         if (profile?.examRegistrations?.length) {
-          const reg = profile.examRegistrations[0];
-          const date = new Date(reg.examDate);
-          setExamDate(date);
-          setDaysLeft(differenceInCalendarDays(date, new Date()));
+          const regs = profile.examRegistrations.map((reg: { examType: string; examDate: string }) => {
+            const date = new Date(reg.examDate);
+            return {
+              examType: reg.examType,
+              examDate: date,
+              daysLeft: Math.max(0, differenceInCalendarDays(date, new Date())),
+            };
+          });
+          setExams(regs);
         }
 
         const [overviewRes, historyRes, timeRes] = await Promise.all([
@@ -119,44 +128,37 @@ const OverviewSection = () => {
       <div className="bg-background-highlight p-6 rounded-xl border border-border">
         <div className="flex flex-col md:flex-row gap-6 items-center">
           <div className="flex-1">
-            <h3 className="font-serif text-lg font-semibold text-foreground">
-              {examDate
-                ? `Exam: ${format(examDate, 'MMMM d, yyyy')}`
-                : 'No Exam Registered'}
-            </h3>
-            {daysLeft !== null && (
-              <p className="text-foreground-secondary text-sm mb-4">
-                {daysLeft} days remaining
-              </p>
-            )}
-
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-foreground-secondary">
-                  Study Progress
-                </span>
-                <span className="text-sm font-medium">
-                  {daysLeft !== null
-                    ? `${Math.max(0, 100 - Math.round((daysLeft / 90) * 100))}%`
-                    : '–'}
-                </span>
+            {exams.length > 0 ? (
+              <div className="space-y-4">
+                {exams.map((exam, i) => {
+                  const progress = Math.max(0, Math.min(100, 100 - Math.round((exam.daysLeft / 90) * 100)));
+                  return (
+                    <div key={i} className="space-y-2">
+                      <h3 className="font-serif text-lg font-semibold text-foreground">
+                        Exam {exam.examType}: {format(exam.examDate, 'MMMM d, yyyy')}
+                      </h3>
+                      <p className="text-foreground-secondary text-sm">
+                        {exam.daysLeft} days remaining
+                      </p>
+                      <div className="space-y-1">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-foreground-secondary">Study Progress</span>
+                          <span className="text-sm font-medium">{progress}%</span>
+                        </div>
+                        <Progress value={progress} className="h-2" />
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-              <Progress
-                value={
-                  daysLeft !== null
-                    ? Math.max(0, 100 - Math.round((daysLeft / 90) * 100))
-                    : 0
-                }
-                className="h-2"
-              />
-              <p className="text-sm text-foreground-secondary">
-                Based on your targeted study plan
-              </p>
-            </div>
+            ) : (
+              <h3 className="font-serif text-lg font-semibold text-foreground">No Exam Registered</h3>
+            )}
+            <p className="text-sm text-foreground-secondary mt-2">Based on your targeted study plan</p>
           </div>
 
-          <div className="flex gap-4 md:gap-6">
-            <div className="text-center">
+          <div className="flex gap-4 md:gap-6 w-full md:w-auto">
+            <div className="text-center flex-1">
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-2">
                 <CheckCircle className="h-7 w-7 text-primary" />
               </div>
@@ -167,8 +169,7 @@ const OverviewSection = () => {
                 Problems Solved
               </div>
             </div>
-
-            <div className="text-center">
+            <div className="text-center flex-1">
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-2">
                 <Clock className="h-7 w-7 text-primary" />
               </div>
@@ -179,8 +180,7 @@ const OverviewSection = () => {
                 Study Hours
               </div>
             </div>
-
-            <div className="text-center">
+            <div className="text-center flex-1">
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-2">
                 <Award className="h-7 w-7 text-primary" />
               </div>

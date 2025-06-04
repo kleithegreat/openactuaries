@@ -193,7 +193,7 @@ const HistorySection = () => {
           </div>
         </div>
 
-        <div className="bg-background-highlight p-4 rounded-xl border border-border flex flex-col h-full overflow-y-auto">
+        <div className="bg-background-highlight p-4 rounded-xl border border-border flex flex-col max-h-[400px] overflow-y-auto">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-serif text-base font-semibold">
               Recently Solved Problems
