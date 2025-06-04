@@ -1,62 +1,68 @@
-import React from 'react'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts'
+'use client'
+import React, { useEffect, useState } from 'react'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { Calendar } from '@/components/ui/calendar'
+import { Skeleton } from '@/components/ui/skeleton'
 
-// Mock data for now
-const weekdayDistribution = [
-  { name: 'Mon', hours: 2.5 },
-  { name: 'Tue', hours: 1.8 },
-  { name: 'Wed', hours: 3.2 },
-  { name: 'Thu', hours: 1.5 },
-  { name: 'Fri', hours: 1.0 },
-  { name: 'Sat', hours: 4.5 },
-  { name: 'Sun', hours: 3.8 },
-]
-
-// random study dates for the calendar
-const today = new Date()
-const studyDates: Date[] = []
-
-for (let i = 0; i < 20; i++) {
-  const date = new Date()
-  date.setDate(today.getDate() - Math.floor(Math.random() * 60))
-  studyDates.push(date)
-}
-
-const timePerformanceData = [
-  { name: 'Morning (5AM-9AM)', value: 78, optimal: true },
-  { name: 'Midday (9AM-2PM)', value: 72, optimal: false },
-  { name: 'Afternoon (2PM-6PM)', value: 65, optimal: false },
-  { name: 'Evening (6PM-10PM)', value: 85, optimal: true },
-  { name: 'Night (10PM-1AM)', value: 70, optimal: false },
-]
-
-const COLORS = ['#3D9A72', '#AECFC6', '#AECFC6', '#3D9A72', '#AECFC6']
+interface DayHours { name: string; hours: number }
+interface Performance { name: string; value: number; optimal: boolean }
 
 const TimeSection = () => {
+  const [weekdayDistribution, setWeekdayDistribution] = useState<DayHours[]>([])
+  const [studyDates, setStudyDates] = useState<Date[]>([])
+  const [timePerformanceData, setTimePerformanceData] = useState<Performance[]>([])
+  const [streak, setStreak] = useState<{ currentStreak: number; longestStreak: number; monthDays: number } | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/analytics/time')
+      .then(res => res.ok ? res.json() : null)
+      .then(res => {
+        if (res) {
+          setWeekdayDistribution(res.weekdayDistribution)
+          setStudyDates(res.studyDates.map((d: string) => new Date(d)))
+          setTimePerformanceData(res.timePerformance)
+          setStreak(res.streak)
+        }
+      })
+      .finally(() => setLoading(false))
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
+        <Skeleton className="h-72 w-full bg-background-secondary" />
+        <Skeleton className="h-72 w-full bg-background-secondary" />
+        <Skeleton className="h-72 w-full bg-background-secondary" />
+        <Skeleton className="h-24 w-full bg-background-secondary xl:col-span-3" />
+      </div>
+    )
+  }
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
       <div className="bg-background-highlight p-4 rounded-xl border border-border xl:col-span-1 flex flex-col h-full">
         <h3 className="font-serif text-base font-semibold mb-3">Study Calendar</h3>
         <div className="flex flex-col h-full">
-          <div className="flex-grow">
+          <div className="flex-grow w-full flex justify-center">
             <Calendar
               mode="multiple"
               selected={studyDates}
-              className="rounded-md border bg-background w-full h-full"
+              className="rounded-md border bg-background w-full"
+              classNames={{ months: 'w-full flex justify-center' }}
             />
           </div>
           <div className="flex mt-2 divide-x divide-border">
             <div className="flex-1 text-center px-2">
-              <div className="text-xl font-semibold text-foreground">7</div>
+              <div className="text-xl font-semibold text-foreground">{streak ? streak.currentStreak : '–'}</div>
               <div className="text-foreground-secondary text-xs">Current streak</div>
             </div>
             <div className="flex-1 text-center px-2">
-              <div className="text-xl font-semibold text-foreground">12</div>
+              <div className="text-xl font-semibold text-foreground">{streak ? streak.longestStreak : '–'}</div>
               <div className="text-foreground-secondary text-xs">Longest streak</div>
             </div>
             <div className="flex-1 text-center px-2">
-              <div className="text-xl font-semibold text-foreground">18</div>
+              <div className="text-xl font-semibold text-foreground">{streak ? streak.monthDays : '–'}</div>
               <div className="text-foreground-secondary text-xs">Days this month</div>
             </div>
           </div>
@@ -114,27 +120,10 @@ const TimeSection = () => {
         <h3 className="font-serif text-base font-semibold mb-3">Performance by Time of Day</h3>
         <div className="flex-grow w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={timePerformanceData}
-                cx="50%"
-                cy="50%"
-                innerRadius={60}
-                outerRadius={80}
-                paddingAngle={2}
-                dataKey="value"
-                startAngle={90}
-                endAngle={-270}
-              >
-                {timePerformanceData.map((entry, index) => (
-                  <Cell 
-                    key={`cell-${index}`} 
-                    fill={COLORS[index % COLORS.length]}
-                    stroke="hsl(var(--background))"
-                    strokeWidth={1}
-                  />
-                ))}
-              </Pie>
+            <BarChart data={timePerformanceData} margin={{ top: 5, right: 5, left: 0, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.5} />
+              <XAxis dataKey="name" stroke="hsl(var(--foreground-secondary))" fontSize={12} tickLine={false} axisLine={false} />
+              <YAxis type="number" domain={[0, 100]} stroke="hsl(var(--foreground-secondary))" tickFormatter={(v) => `${v}%`} fontSize={12} />
               <Tooltip
                 formatter={(value) => [`${value}%`, 'Accuracy']}
                 contentStyle={{
@@ -146,24 +135,8 @@ const TimeSection = () => {
                   fontSize: '12px'
                 }}
               />
-              <Legend 
-                verticalAlign="bottom"
-                layout="vertical"
-                align="right"
-                wrapperStyle={{
-                  paddingLeft: "10px",
-                  fontSize: "12px"
-                }}
-                formatter={(value, entry) => {
-                  const val = entry && entry.payload ? entry.payload.value : 0;
-                  return (
-                    <span style={{ color: 'hsl(var(--foreground))', fontSize: '12px' }}>
-                      {value}: {val}%
-                    </span>
-                  );
-                }}
-              />
-            </PieChart>
+              <Bar dataKey="value" fill="hsl(var(--primary))" radius={[4,4,0,0]} barSize={30} />
+            </BarChart>
           </ResponsiveContainer>
         </div>
       </div>

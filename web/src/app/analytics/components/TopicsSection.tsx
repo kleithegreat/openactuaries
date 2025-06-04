@@ -1,46 +1,43 @@
-import React from 'react'
-import { PieChart, Pie, Cell, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer } from 'recharts'
+'use client'
+import React, { useEffect, useState } from 'react'
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { TriangleAlert } from 'lucide-react'
+import { Skeleton } from '@/components/ui/skeleton'
 
-// Mock data for demonstration
-const topicBreakdown = [
-  { name: 'Probability', value: 35, color: 'hsl(var(--chart-1))' },
-  { name: 'Statistics', value: 25, color: 'hsl(var(--chart-2))' },
-  { name: 'Risk Theory', value: 20, color: 'hsl(var(--chart-3))' },
-  { name: 'Financial Math', value: 15, color: 'hsl(var(--chart-4))' },
-  { name: 'Other', value: 5, color: 'hsl(var(--chart-5))' },
-]
-
-const performanceData = [
-  { subject: 'Probability', accuracy: 85 },
-  { subject: 'Statistics', accuracy: 65 },
-  { subject: 'Risk Theory', accuracy: 90 },
-  { subject: 'Financial Math', accuracy: 70 },
-  { subject: 'Other', accuracy: 75 },
-]
-
-const topicsToImprove = [
-  { 
-    topic: 'Joint Distributions', 
-    accuracy: 58, 
-    problems: 12,
-    description: 'Focus on the concept of covariance and correlation between random variables.' 
-  },
-  { 
-    topic: 'Sampling Distributions', 
-    accuracy: 62, 
-    problems: 8,
-    description: 'Review properties of the t-distribution and chi-square distribution.' 
-  },
-  { 
-    topic: 'Central Limit Theorem', 
-    accuracy: 65, 
-    problems: 10,
-    description: 'Practice applications of CLT in various contexts.' 
-  },
-]
+interface BreakdownEntry { name: string; value: number; color: string }
+interface PerformanceEntry { subject: string; accuracy: number }
+interface FocusEntry { topic: string; accuracy: number; problems: number; description: string }
 
 const TopicsSection = () => {
+  const [topicBreakdown, setTopicBreakdown] = useState<BreakdownEntry[]>([])
+  const [performanceData, setPerformanceData] = useState<PerformanceEntry[]>([])
+  const [topicsToImprove, setTopicsToImprove] = useState<FocusEntry[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/analytics/topics')
+      .then(res => res.ok ? res.json() : null)
+      .then((res: { breakdown: { topic: string; value: number }[]; performance: PerformanceEntry[]; toFocus: { topic: string; accuracy: number; problems: number }[] } | null) => {
+        if (res) {
+          setTopicBreakdown(res.breakdown.map((b, i) => ({ name: b.topic, value: b.value, color: `hsl(var(--chart-${(i%5)+1}))` })))
+          setPerformanceData(res.performance)
+          setTopicsToImprove(res.toFocus.map(t => ({ ...t, description: '' })))
+        }
+      })
+      .finally(() => setLoading(false))
+  }, [])
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Skeleton className="h-64 w-full bg-background-secondary" />
+          <Skeleton className="h-64 w-full bg-background-secondary" />
+        </div>
+        <Skeleton className="h-40 w-full bg-background-secondary" />
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-6">
       {/* Topic distribution and performance */}
@@ -76,26 +73,20 @@ const TopicsSection = () => {
           <h3 className="font-serif text-base font-semibold mb-4">Topic Performance</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <RadarChart cx="50%" cy="50%" outerRadius="80%" data={performanceData}>
-                <PolarGrid stroke="hsl(var(--border))" />
-                <PolarAngleAxis 
-                  dataKey="subject" 
-                  tick={{ fill: 'hsl(var(--foreground-secondary))', fontSize: 12 }}
+              <BarChart data={performanceData} layout="vertical" margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="hsl(var(--border))" />
+                <XAxis type="number" domain={[0, 100]} tickFormatter={(v) => `${v}%`} stroke="hsl(var(--foreground-secondary))" />
+                <YAxis type="category" dataKey="subject" stroke="hsl(var(--foreground-secondary))" width={90} />
+                <Tooltip
+                  formatter={(value: number) => [`${value}%`, 'Accuracy']}
+                  contentStyle={{
+                    backgroundColor: 'hsl(var(--background-highlight))',
+                    borderColor: 'hsl(var(--border))',
+                    borderRadius: '0.375rem'
+                  }}
                 />
-                <PolarRadiusAxis
-                  angle={90}
-                  domain={[0, 100]}
-                  tick={{ fill: 'hsl(var(--foreground-secondary))', fontSize: 10 }}
-                  tickFormatter={(value) => `${value}%`}
-                />
-                <Radar
-                  name="Accuracy"
-                  dataKey="accuracy"
-                  stroke="hsl(var(--primary))"
-                  fill="hsl(var(--primary))"
-                  fillOpacity={0.5}
-                />
-              </RadarChart>
+                <Bar dataKey="accuracy" fill="hsl(var(--primary))" radius={[0, 4, 4, 0]} barSize={20} />
+              </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
