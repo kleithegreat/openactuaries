@@ -47,9 +47,8 @@ const HistorySection = () => {
   >([]);
   const [volumeHistoryData, setVolumeHistoryData] = useState<VolumePoint[]>([]);
   const [recentProblems, setRecentProblems] = useState<RecentProblem[]>([]);
-  const [filter, setFilter] = useState<'problems' | 'incorrect' | 'flagged'>(
-    'problems',
-  );
+  type FilterOption = 'problems' | 'incorrect' | 'flagged';
+  const [filter, setFilter] = useState<FilterOption>('problems');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -212,7 +211,12 @@ const HistorySection = () => {
             <h3 className="font-serif text-base font-semibold">
               Recently Solved Problems
             </h3>
-            <Select value={filter} onValueChange={setFilter}>
+            <Select
+              value={filter}
+              onValueChange={(value: string) =>
+                setFilter(value as FilterOption)
+              }
+            >
               <SelectTrigger className="w-[140px] h-8 text-xs bg-background-highlight">
                 <SelectValue />
               </SelectTrigger>
